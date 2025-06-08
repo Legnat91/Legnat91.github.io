@@ -1,0 +1,68 @@
+*{
+    font-size: 100%;
+    line-height: 100%;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+content{
+    margin: 10px;
+    padding: 20px;
+}
+
+.secciones{
+    display: grid;
+    min-height: 100dvh;
+    grid-template-rows: auto 1fr auto;
+}
+
+body{
+    background: rgba(54, 98, 216, 0.884);
+}
+main{
+    margin-left: 10% ;
+    margin-right: 10%;
+    border: solid rgb(0, 0, 0);
+    padding-left: 5% ;
+    padding-right: 5%;
+    background-color: orange;
+}
+
+li{
+    line-height: 150%;
+}
+h1{
+    color: rgba(226, 139, 8, 0.849); 
+    text-align: center;
+    font-size: 8rem;
+    text-shadow: 2px 3px 10px rgb(61, 24, 223);
+ 
+}
+header{
+       background:rgb(95, 163, 228);
+}
+
+h2{
+    font-size: 3rem;
+    color:blueviolet;
+    text-align: center;    
+}
+h3{   
+    font-size: 2rem;
+    color:rgba(183, 43, 201, 0.849);
+    text-align: left;
+}
+
+.colummLegal{
+    text-align: center;
+    line-height: 3.5; /*Espacio que damos*/
+    background-color:  rgba(252, 232, 210, 0.918);
+    width: 100%;
+    flex-wrap: nowrap;/*Para que los enlaces se ajusten a la pantalla*/
+    white-space: nowrap;/*Para que no se separen las palabras*/
+ }
+
+
+a{
+    color:rgb(94, 19, 235);
+    padding: 5px;
+}
