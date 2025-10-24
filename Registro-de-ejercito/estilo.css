@@ -1,0 +1,78 @@
+:root{
+    
+    background: rgb(7, 80, 7);
+    font-family: 'Times New Roman', Times, serif;
+    background-image:url("./fondo.webp")
+}
+body{
+    margin:0;
+    min-height: 100vh;         /* asegura que el cuerpo ocupe toda la pantalla */
+    display: flex;
+    flex-direction: column;
+
+}
+h1{
+    color:white;
+    text-align: center;
+    font-size: 4vw;    
+}
+h1::first-letter{
+    color:rgb(180, 180, 23);
+    font-size: 7vw;
+}
+.intro{
+    color: rgb(255, 255, 255);
+    text-align: center;
+    font-size: 1vw;
+    background-color: rgba(255, 0, 0, 0.514);
+    margin-left: 15vw;
+    margin-right: 15vw;
+    text-shadow: 1px 8px 5px rgb(255, 16, 16);
+
+}
+form{
+    border: 7px solid rgb(163, 25, 25);
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    background: rgba(194, 109, 53, 0.815);
+    margin:2rem auto;
+    padding: 1rem;
+    width: 50%;
+    box-shadow: 1px 12px 120px rgb(209, 145, 92);
+    
+}
+fieldset{
+    margin: 2rem;
+    padding: 0.5rem;
+}
+legend{
+    font-size: 3vw;
+    text-shadow: 2px 3px 10px red ;
+}
+.box{
+    border-radius: 10px;   
+    width: 50%;
+    font-size: 1vw;
+    text-align: center;        
+}
+
+label{
+    display: block;
+    font-size: 2vw;
+}
+button{
+    color: rgb(245, 245, 245);
+    background: rgb(55, 184, 55);
+    box-shadow: 1px 1px 12px red;
+    font-size: 2vw;
+}
+span{
+    font-size: 2vw;
+}
+footer{
+    color:white;
+    font-size: 1vw;
+    margin-top:auto ;
+    text-align: right;
+}
