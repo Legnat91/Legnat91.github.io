@@ -36,7 +36,7 @@ h1 {
     text-align: center;
     font-size: 8rem;
     text-shadow: 2px 3px 10px rgb(61, 24, 223);
-
+    overflow: clip;
 }
 
 header {
@@ -47,12 +47,14 @@ h2 {
     font-size: 3rem;
     color: blueviolet;
     text-align: center;
+    overflow: clip;
 }
 
 h3 {
     font-size: 2rem;
     color: rgba(183, 43, 201, 0.849);
     text-align: left;
+    overflow: clip;
 }
 
 .enlaces {
@@ -71,4 +73,7 @@ h3 {
 a {
     color: rgb(94, 19, 235);
     padding: 5px;
+}
+p{
+    overflow: clip;
 }
