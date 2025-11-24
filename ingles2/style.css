@@ -14,6 +14,8 @@
 
 body {
     background-color: var(--principal);
+    display: flex;
+    flex-direction: column;
 }
 header {
     position: sticky;
@@ -47,17 +49,24 @@ nav ul {
 nav ul li a {
     text-decoration: none;
 }
+
 main{   
+    
     max-width: 1400px;   /* ancho máximo del contenido */
     margin: 0 auto;     /* centra horizontalmente */
     padding: 1rem;      /* un poco de aire */
+    background-color: bisque;
+    width: 100vw;
+    min-height: 100vh;
 }
 
+
+
 footer {
-   position:fixed;
    left:0px;
    bottom:0px;
    height:30px;
    width:100%;
    background:#999;
+   text-align: center;
 }
