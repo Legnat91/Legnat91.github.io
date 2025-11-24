@@ -118,7 +118,28 @@ h3,h4{
     padding-top: 1rem;
 }
 
-@media (max-width:740px) {
+table{
+    margin: 1rem;
+    border-collapse: collapse;
+    border:2px solid black;
+    text-align: center; 
+}
+
+tr,td,th{
+        border:2px solid rgb(255, 115, 0);
+}
+
+th{
+    background-color: rgba(248, 164, 8, 0.726);
+}
+
+.columna1{
+    text-align: left;
+    padding-left:0.5rem;
+}
+
+/*MOVILES*/
+@media (max-width:767px) {
     .columnas{
     display: grid;
     grid-template-columns: repeat(1, 1fr);
@@ -132,5 +153,20 @@ header {
 }
 h1,h2,h3,h4{
     font-size: 1.5rem;
+}
+}
+
+/*TABLETAS*/
+@media (min-width: 768px) and (max-width: 1024px) {
+    .columnas{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-row-gap: 3rem;
+    grid-column-gap:3rem ;
+    }
+    header {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);   
+    text-align: center;
 }
 }
