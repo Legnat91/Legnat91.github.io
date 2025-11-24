@@ -1,18 +1,22 @@
 *{
-    --principal:rgb(104, 172, 218);
-    --titulos:orange;
+    --principal:rgb(241, 233, 208);
+    --titulos:rgb(75, 116, 206);
     --bordes:rgb(148, 28, 28);
+   margin:0;
+    padding: 0;
+}
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 body{
-    margin:0;
-    padding: 0;
+    
     background-color: var(--principal);
     
 }
 header{
     position: sticky; /*Para que el menu se quede arriba siempre pero al principio ocupe su espacio*/
     top: 0;
-    background-color: rgb(43, 98, 247); 
+    background-color: rgb(224, 200, 164); 
     z-index: 1;           /*Esto sirve para que el contenido este por encima, cuanto más alto el número significa que pisa a otros de numero inferior */
     padding: 1rem;
     display: flex;
@@ -31,9 +35,9 @@ nav ul{
     list-style: none;
     
 }
-nav ul li,a{
+nav ul li a{
     text-decoration: none;
-    color: #fff;
+    color: #3485ff;
 }
 main{
     
