@@ -1,44 +1,63 @@
-*{
-    --principal:rgb(241, 233, 208);
-    --titulos:rgb(75, 116, 206);
-    --bordes:rgb(148, 28, 28);
-   margin:0;
+* {
+    --principal: rgb(241, 233, 208);
+    --titulos: rgb(75, 116, 206);
+    --bordes: rgb(148, 28, 28);
+    margin: 0;
     padding: 0;
 }
-*, *::before, *::after {
-  box-sizing: border-box;
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
-body{
-    
+
+body {
     background-color: var(--principal);
-    
 }
-header{
-    position: sticky; /*Para que el menu se quede arriba siempre pero al principio ocupe su espacio*/
+header {
+    position: sticky;
+    /*Para que el menu se quede arriba siempre pero al principio ocupe su espacio*/
     top: 0;
-    background-color: rgb(224, 200, 164); 
-    z-index: 1;           /*Esto sirve para que el contenido este por encima, cuanto más alto el número significa que pisa a otros de numero inferior */
+    background-color: rgb(224, 200, 164);
+    z-index: 1;
+    /*Esto sirve para que el contenido este por encima, cuanto más alto el número significa que pisa a otros de numero inferior */
     padding: 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-h1{
-    color: var(--titulos);
+    width: 100%;
+    padding: 0 auto;
 }
 
-nav ul{
+h1, nav {
+    color: var(--titulos);
+    max-width: 1400px;   /* ancho máximo del contenido */
+    margin: 0 auto;     /* centra horizontalmente */
+    padding: 1rem;  
+}
+nav ul {
     display: flex;
     justify-content: space-between;
-    gap:2rem;
+    gap: 2rem;
     position: relative;
     list-style: none;
-    
+
 }
-nav ul li a{
+nav ul li a {
     text-decoration: none;
-    color: #3485ff;
 }
-main{
-    
+main{   
+    max-width: 1400px;   /* ancho máximo del contenido */
+    margin: 0 auto;     /* centra horizontalmente */
+    padding: 1rem;      /* un poco de aire */
+}
+
+footer {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height:30px;
+   width:100%;
+   background:#999;
 }
