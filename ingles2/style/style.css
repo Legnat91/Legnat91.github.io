@@ -71,6 +71,27 @@ nav ul {
 
 }
 
+#menu-toggle{
+    display: none;/*Check box no visible*/
+}
+/*CREACION DEL ICONO*/
+.menu-btn{
+    width: 32px;
+    height: 24px;
+    display: none; /*lo ocultamos todo*/
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    margin-left: auto;/*Cuando es necesario ajusta el icono a la derecha*/
+}
+
+.menu-btn span{
+    display: block;
+    height: 3px;
+    background:white;
+    border-radius:4px ;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
 nav ul li a {
     text-decoration: none;
 }
@@ -196,7 +217,7 @@ th {
 
     header {
         display: grid;
-        grid-template-columns: repeat(1, 1fr);
+        grid-template-columns: 1fr auto; /*titulo+icono/menu*/
         text-align: center;
     }
 
@@ -206,6 +227,30 @@ th {
     h4 {
         font-size: 1.5rem;
     }
+    /*Se oculta el navegador normal*/
+    nav{
+        display: none;
+        grid-column: 1/-1; /*que ocupe todo el ancho cuando se muestre*/
+    }
+    /*Se revera menu hamburguesa */
+    .menu-btn{
+        display: flex;
+        justify-self: end;
+    }
+    /*en columna caundo se revera*/
+    nav ul{
+        flex-direction: column;
+        gap:0
+    }
+    nav ul li a {
+        display: block;
+        padding: 0.5rem 0;
+    }
+    /*Para controlar el check box*/
+    #menu-toggle:checked ~ nav{
+        display: block;
+    }
+
 }
 
 /*TABLETAS*/
