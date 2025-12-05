@@ -66,7 +66,7 @@ h1 {
     font-weight: 700;
     background-image: url(../img/bandera.png);
     background-size: cover;
-    background-repeat: no-repeat;
+    background-clip:text;
     color: transparent;
     background-clip: text;
     display: inline-block;
