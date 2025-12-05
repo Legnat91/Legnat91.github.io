@@ -62,15 +62,18 @@ nav {
 
 }
 
-h1 {
+
+h1 a{
+    text-decoration: none;
     font-size: 3.5rem;
     font-weight: 700;
-    background-image: url(../img/bandera.png);
+     background-image: url(../img/bandera.png);
     background-size: cover;
     background-clip:text;
     color: transparent;
     background-clip: text;
     display: inline-block;
+    
 }
 
 nav ul {
