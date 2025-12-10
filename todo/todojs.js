@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             li.innerHTML = `
             <span class="texto">${nuevoTexto}</span>
-            <button class="btnEliminar" type="button">Eliminar</button>
+            <button class="btnDelete" type="button">Eliminar</button>
             <button class="btnMod" type="button">Modificar</button>
         `;
         }
