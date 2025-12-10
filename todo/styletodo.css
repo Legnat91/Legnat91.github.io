@@ -1,0 +1,128 @@
+* {
+    margin: 0;
+    padding: 0;
+    --fond: rgb(240, 197, 168);
+    --subfondo: rgb(250, 191, 142);
+    --lista:aliceblue;
+    --border:orange;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-width: 100vw;
+    background-color: var(--fond);
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+
+header {
+    background-color: var(--subfondo);
+    text-align: center;
+    height: 4rem;
+    padding: 1rem;
+}
+
+
+
+main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem 1rem;
+}
+
+
+.tareas {
+    border: 2px solid var(--border);
+    border-radius: 12px 12px 0  0;
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--subfondo);
+}
+
+.listaTarea{
+    background-color:var(--lista) ;
+    box-shadow: 0 0 12px var(--subfondo);
+    border-radius: 0 0 12px 12px;
+}
+
+h2 {
+    padding: 1rem;
+}
+
+#nuevaLista{
+    border-radius: 12px;
+    padding: 0.5rem;
+    border: transparent;
+}
+
+
+button{
+    border: transparent;
+    border-radius: 12px;
+    padding: 0.5rem;
+
+}
+
+#btnAdd{
+    background: rgba(252, 176, 69, 1);
+
+}
+#btnAdd:hover{
+    background: linear-gradient(90deg,rgba(131, 58, 180, 1) 0%, rgba(253, 29, 29, 1) 50%, rgba(252, 176, 69, 1) 100%);
+    cursor: pointer;
+}
+
+.btnDelete{
+    background-color: rgb(189, 49, 49);
+    color: wheat;
+}
+
+.btnDelete:hover{
+    background: linear-gradient(red, rgb(217, 255, 0));
+    cursor: pointer
+}
+
+.btnMod{
+    background-color: aquamarine;
+    
+}
+.btnMod:hover{
+    background: linear-gradient(rgb(60, 255, 0), rgb(217, 255, 0));
+    cursor: pointer;
+}
+.btnGuardar{
+    background:green
+}
+
+.btnGuardar:hover{
+    background: linear-gradient(rgb(0, 109, 128), rgb(23, 201, 23));
+    cursor: pointer;
+}
+.btnCancelar{
+    background: white;
+    
+}
+
+.btnCancelar:hover{
+    background: linear-gradient(rgb(224, 224, 212), rgb(10, 10, 10));
+    cursor: pointer;
+}
+#lista{
+    padding: 0 0 2rem 2rem;
+    list-style: none;
+
+}
+
+.completado{
+    color: rgb(102, 101, 101);
+    text-decoration: line-through;
+}
+
