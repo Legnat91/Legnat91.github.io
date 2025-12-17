@@ -17,7 +17,6 @@ html,
 body {
     margin: 0;
     padding: 0;
-    min-width: 100vw;
     background-color: var(--fond);
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
@@ -139,7 +138,7 @@ button {
     align-items: center;
     width: 100vw;
     height: 100vh;
-    
+
 }
 
 .acceso {
@@ -177,31 +176,34 @@ button {
     padding: 12px;
 }
 
-.imagen{
+.imagen {
     width: 50vw;
     height: 50vh;
 }
-.imagen img{
+
+.imagen img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-footer{   
+footer {
     height: 30px;
     width: 100%;
     background: var(--subfondo);
     text-align: center;
 }
 
-.acceder:hover{
-    background:linear-gradient(rgb(160, 145, 145), rgb(236, 150, 150));
+.acceder:hover {
+    background: linear-gradient(rgb(160, 145, 145), rgb(236, 150, 150));
 }
 
-#valiUser, #valiPass{
+#valiUser,
+#valiPass {
     font-size: .75rem;
 }
-#mostrar{
+
+#mostrar {
     position: absolute;
     border-radius: 100%;
     width: 2rem;
@@ -210,6 +212,20 @@ footer{
     place-items: center;
 }
 
-@media (max-width:767px){}
+@media (max-width:767px) {
+    .inicio {
+        display: flex;
+        flex-direction: column;
+    }
 
-@media (min-width: 768px) and (max-width: 1024px){}
+    .imagen{
+        width: 100%;
+        height: 20rem;
+        position: absolute;
+    }
+
+    .acceso{
+        width: 100%;
+        height: 20rem;
+    }
+}
