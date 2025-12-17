@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const valiUser = document.getElementById("valiUser");
     const valiPass = document.getElementById("valiPass");
     const mostrar = document.getElementById("mostrar");
-
+    //esta funcion esta para poder reutilizarse tanto en registro como en index
     function validar(user, pass) {
-
+        //estos son regex para comprobar que los campos email como contraseña tiene un minimo
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const passRegex = /^(?=.+[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$%*?&.-_]).{8,}$/;
 
