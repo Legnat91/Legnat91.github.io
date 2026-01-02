@@ -1,0 +1,322 @@
+* {
+    padding: 0;
+    margin: 0;
+    --fondo: rgb(145, 23, 23);
+    --navegador: rgb(218, 103, 36);
+    --texto: #ffff;
+    --fondoCar: rgb(218, 133, 36);
+    --asidesFondo: rgb(184, 142, 93);
+
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+    min-width: 100vw;
+    background-color: var(--fondo);
+    color: var(--texto);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+    position: sticky;
+    z-index: 1000;
+    top: 0;
+    background-image: url(../img/fondo.jpg);
+    background-repeat: no-repeat;
+    width: 100%;
+    box-shadow: 0 0 15px var(--fondoCar);
+}
+
+.cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+nav ul {
+    list-style: none;
+    margin: 2rem;
+    display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav ul a {
+    text-decoration: none;
+    background-color: var(--navegador);
+    padding: 1rem;
+    color: var(--texto);
+    border-radius: 2rem;
+    font-size: 1rem;
+    box-shadow: 0 0 20px var(--fondo);
+}
+
+nav ul a:hover {
+    background-color: var(--fondo);
+}
+
+
+.inicio-pag {
+    position: relative;
+    height: 75%;
+}
+
+.titulo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.315);
+    font-size: 3rem;
+}
+
+.foto-inicio {
+    width: 100%;
+    height: 75vh;
+}
+
+main {
+    font-size: 1.15rem;
+    letter-spacing: 2px;
+}
+
+h3 {
+    font-size: 3rem;
+
+}
+
+h2 {
+    padding-bottom: 2rem;
+    font-size: 3rem;
+}
+
+img {
+
+    border-radius: 12px;
+}
+
+.contenedor {
+    max-width: 1400px;
+    /* ancho máximo del contenido */
+    margin: 0 auto;
+    /* centra horizontalmente */
+    padding: 4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.img-conocenos {
+    float: left;
+    padding-right: 1rem;
+
+}
+
+
+
+
+
+.conte-conocer p {
+    font-size: 1.15rem;
+    letter-spacing: 2px;
+
+}
+
+.aside-conocer {
+    background-color: var(--asidesFondo);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 3rem;
+}
+
+.aside-conocer h3 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.aside-conocer p {
+    padding-bottom: 1rem;
+}
+
+.contenedor-tarjetas {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 6rem;
+    row-gap: 6rem;
+    justify-content: space-between;
+}
+
+.tarjetas {
+    padding: 2rem;
+    box-shadow: 0 0 20px rgb(255, 123, 0);
+    background-color: rgba(245, 187, 79, 0.61);
+    border-radius: 12px;
+    align-content: center;
+}
+
+.tarjetas-img {
+    width: 100%;
+    height: auto;
+    padding-bottom: 1rem;
+}
+
+.tarjetas:hover {
+    background-color: var(--navegador);
+}
+
+.lugar-horario {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.lugar-horario iframe {
+    width: 100%;
+    max-width: 100%;
+    height: 300px;
+}
+
+.lugar-horario ul {
+    list-style: none;
+}
+
+
+.dia {
+    font-size: 2rem;
+    padding: 1rem 0;
+}
+
+.formulario {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.formulario textarea {
+    height: 25vh;
+    width: 40vw;
+    font-size: 1.5rem;
+    box-shadow: 0 0 0 5px var(--navegador);
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.datos {
+    padding-left: 2rem;
+}
+
+
+
+.datos input,
+.datos select {
+    width: 100%;
+    height: 2rem;
+    font-size: 1.5rem;
+}
+
+.datos button {
+    margin-top: 1rem;
+    width: 100px;
+    height: 30px;
+    border-radius: 12px;
+    background-color: var(--fondoCar);
+}
+
+.datos button:hover {
+    background: linear-gradient(0deg, rgba(193, 44, 44, 1) 8%, rgba(253, 187, 45, 1) 100%);
+    cursor: pointer;
+}
+
+footer {
+    height: 100%;
+    width: 100%;
+    background: var(--asidesFondo);
+    text-align: center;
+    padding: 2rem;
+}
+
+footer ul {
+    list-style: none;
+    padding-bottom: 1rem;
+}
+
+footer ul a {
+    text-decoration: none;
+
+
+}
+
+
+/*MOVILES*/
+@media (max-width:767px) {
+
+    header {
+        text-align: center;
+    }
+
+    .cabecera {
+        display: flex;
+        flex-direction: column;
+
+    }
+
+
+    nav ul {
+        margin: 2rem;
+        padding: 0 1rem;
+        gap: 12px;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .contenedor-tarjetas {
+        grid-template-columns: 1fr;
+        row-gap: 2rem;
+    }
+
+    .lugar-horario {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .img-conocenos {
+        float: none;
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        padding-right: 0;
+        margin: 0 0 1rem 0;
+    }
+
+    .formulario input,
+    .formulario textarea,
+    .formulario select {
+        font-size: 16px;
+        /* Tamaño de letra deseado */
+    }
+
+}
+
+/*TABLETAS*/
+@media (min-width: 768px) and (max-width: 1024px) {
+    .contenedor-tarjetas {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
