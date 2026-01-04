@@ -17,12 +17,13 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
+  overflow-x: hidden;
+  
 }
 
 .contenedor {
   background-color: var(--fondo-contendor);
   box-shadow: 0 0 20px 12px rgba(0, 0, 255, 0.226);
-
   min-height: 250px;
   width: 900px;
   display: flex;
@@ -147,6 +148,10 @@ button:hover {
     width: 100%;
     max-width: 900px;
   }
+  .contenedor{
+    padding-left:15px ;
+  }
+
 
   input {
     width: 100%;
