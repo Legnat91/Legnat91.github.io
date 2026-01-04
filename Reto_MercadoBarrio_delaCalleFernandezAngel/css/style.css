@@ -23,7 +23,7 @@ body {
     min-height: 100vh;
     background-color: var(--fondo);
     color: var(--texto);
-    font-family: Arial, Helvetica, sans-serif; 
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 header {
@@ -276,6 +276,11 @@ footer ul a {
 
 /*MOVILES*/
 @media (max-width:767px) {
+
+    html,
+    body {
+        overflow-x: hidden;
+    }
 
     header {
         text-align: center;
