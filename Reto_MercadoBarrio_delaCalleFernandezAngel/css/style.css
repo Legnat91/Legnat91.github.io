@@ -101,12 +101,13 @@ main {
 
 h3 {
     font-size: 3rem;
-
+    text-align: center;
 }
 
 h2 {
     padding-bottom: 2rem;
     font-size: 3rem;
+    text-align: center;
 }
 
 img {
