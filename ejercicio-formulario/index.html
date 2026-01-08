@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="img/icon.png">
+  <title>Ejercicio Formulario</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main class="contenedor">
+    <h1>EJERCICIO FORMULARIO</h1>
+    <form id="formulario" method="post">
+      <div class="fila">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Nombre" class="caja">
+      </div>
+      <div class="fila">
+        <label for="apellido1">Primer Apellido:</label>
+        <input type="text" id="apellido1" name="apellido1" placeholder="Primer Apellido"class="caja">
+      </div>
+      <div class="fila">
+      <label for="apellido2">Segundo Apellido (Opcional):</label>
+      <input type="text" id="apellido2" name="apellido2" placeholder="Segundo Apellido (Opcional)" class="caja">
+      </div>
+      <div class="fila">
+        <label for="email">Correo Electrónico:</label>
+        <input type="text" id="email" name="email" placeholder="Introduce un e-mail" class="caja">
+      </div>
+      <div class="fila">
+        <label for="telefono">Número de teléfono (Opcional):</label>
+        <input type="tel" id="telefono" name="telefono" placeholder="Solo números (ej. 600123123)" class="caja">
+      </div>
+      <div class="fila">
+        <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+        <input type="date" id="fechaNacimiento" name="fechaNacimiento"  class="caja">
+      </div>
+      <div class="fila">
+        <fieldset>
+          <legend>Elige un género:</legend>
+
+          <input type="radio" id="genMas" name="genero" value="masculino">
+          <label for="genMas">Masculino</label>
+
+          <input type="radio" id="genFem" name="genero" value="femenino">
+          <label for="genFem">Femenino</label>
+
+          <input type="radio" id="genOtro" name="genero" value="otro">
+          <label for="genOtro">Otro</label>
+        </fieldset>
+      </div>
+      <div class="fila">
+        <label for="pais">Pais:</label>
+        <select name="pais" id="pais" class="caja">
+          <option value="" selected disabled class="opdisabled">--Elija un país--</option>
+          <option value="espana">España</option>
+          <option value="portugal">Portugal</option>
+          <option value="fracia">Francia</option>
+        </select>
+      </div>
+
+      <div class="terminos">
+        <input type="checkbox" id="terminos" name="terminos">
+        <label for="terminos">
+          <a href="#">Aceptación de Términos y Condiciones</a>
+        </label>
+      </div>
+      <button type="submit">Enviar Formulario</button>
+    </form>
+
+  </main>
+  <script src="app.js"></script>
+</body>
+
+</html>
