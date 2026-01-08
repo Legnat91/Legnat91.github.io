@@ -12,9 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const telefonoRegex = /^[0-9]{9}$/;
 
-
-
-
   function validarVacio(input) {
     if (input.value.trim() === "") {
       input.classList.add("cajaError");
@@ -55,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function validarNumero() {
     telefono.classList.remove("cajaError");
-    if(telefono.value.trim()===""){
+    if (telefono.value.trim() === "") {
       return true;
     }
     if (!telefonoRegex.test(telefono.value)) {
@@ -63,6 +60,19 @@ document.addEventListener('DOMContentLoaded', () => {
       telefono.focus();
       return false;
     }
+    return true;
+  }
+
+  function validarFechaNacimiento() {
+    const controlFecha = new Date();
+    const fecha = new Date(fechaNacimiento.value);
+    if (fecha > controlFecha) {
+      fechaNacimiento.classList.add("cajaError");
+      alert('La fecha de nacimiento no puede ser mayor a la fecha de hoy');
+      fechaNacimiento.focus();
+      return false
+    }
+    fechaNacimiento.classList.remove('cajaError');
     return true;
   }
 
@@ -83,28 +93,33 @@ document.addEventListener('DOMContentLoaded', () => {
       validalor = false
 
     };
-    if (!validarVacio(fechaNacimiento)) {
-      validalor = false
 
+    if (!validarVacio(fechaNacimiento)) {
+           validalor = false;
     };
+
     if (!validarVacio(pais)) {
       validalor = false
 
     };
     if (!validarGenero()) {
-      validalor = false
+      validalor = false;
 
     };
     if (!validarTerminos()) {
-      validalor = false
+      validalor = false;
 
     };
     if (!validarEmail()) {
-      validalor = false
+      validalor = false;
 
     };
 
     if (!validarNumero()) {
+      validalor = false;
+    }
+
+    if (!validarFechaNacimiento()) {
       validalor = false;
     }
 
