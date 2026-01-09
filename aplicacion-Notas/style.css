@@ -124,20 +124,31 @@ input:focus {
   overflow-wrap: break-word;
 }
 
-.nota button {
+.nota button{
   font-size: 20px;
   padding: 10px 20px;
   border-radius: 12px;
-  background-color: rgb(190, 46, 82);
-  color: white;
   border: none;
   cursor: pointer;
   white-space: nowrap;
-
+  color:white
 }
 
-button:hover {
+.btnBorrar {
+  
+  background-color: rgb(190, 46, 82);
+}
+
+.btnBorrar:hover {
   background-color: rgb(235, 14, 88);
+  box-shadow: 0 0 20px 15px blanchedalmond;
+}
+
+.btnModificar{
+  background-color: rgb(207, 139, 37);
+}
+.btnModificar:hover{
+  background-color: rgb(235, 121, 14);
   box-shadow: 0 0 20px 15px blanchedalmond;
 }
 
