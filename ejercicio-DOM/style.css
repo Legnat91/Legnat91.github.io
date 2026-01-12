@@ -29,6 +29,7 @@ h1 {
   font-size: 50px;
   font-weight: bold;
   padding-bottom: 1rem;
+  text-align: center;
   
 }
 
@@ -116,20 +117,6 @@ button {
 
 
 .btn-enviar {
-  margin:10px ;
-  color: white;
-  background-color: #1ea70c;
-}
-
-
-
-.btn-limpiar {
-  color: white;
-  background-color: #ff0095;
-}
-
-.btn-previsualizar {
-  width: 150px;
   color: white;
   background-color: #194FE4;
 }
@@ -144,9 +131,6 @@ button {
 }
 
 
-.btn-limpiar:hover {
-  background-color: #a10661;
-}
 
 .vista-previa {
   background-color: wheat;
@@ -172,9 +156,6 @@ button {
   min-height: 50px;
 }
 
-.btn-previsualizar:hover {
-  background-color: #1312A8;
-}
 
 @media (max-width:767px) {
   .estilo-form {
