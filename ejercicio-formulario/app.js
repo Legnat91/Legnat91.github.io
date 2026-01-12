@@ -36,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function validarGenero() {
     for (let g of genero) {
-      if (g.checked){
+      if (g.checked) {
         return true;
-      } 
+      }
     }
     alert("Selecciona un género");
     return false;
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (!validarVacio(fechaNacimiento)) {
-           validalor = false;
+      validalor = false;
     };
 
     if (!validarVacio(pais)) {
