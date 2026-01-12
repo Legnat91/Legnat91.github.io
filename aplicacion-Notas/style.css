@@ -18,7 +18,7 @@ body {
   justify-content: center;
   text-align: center;
   overflow-x: hidden;
-  
+
 }
 
 .contenedor {
@@ -39,6 +39,7 @@ body {
 h1 {
   font-size: 50px;
   font-weight: bold;
+  text-align: center;
 }
 
 h2 {
@@ -46,7 +47,7 @@ h2 {
   font-weight: bold;
 }
 
-input {
+#inpNota {
   width: 80%;
   font-size: 25px;
   margin: 20px;
@@ -124,43 +125,64 @@ input:focus {
   overflow-wrap: break-word;
 }
 
-.nota button{
+.nota button {
   font-size: 20px;
   padding: 10px 20px;
   border-radius: 12px;
   border: none;
   cursor: pointer;
   white-space: nowrap;
-  color:white
+  color: white
 }
 
-.btnBorrar {
-  
+.btnBorrar, .btnCancelar {
   background-color: rgb(190, 46, 82);
 }
 
-.btnBorrar:hover {
+.btnBorrar:hover,.btnCancelar:hover {
   background-color: rgb(235, 14, 88);
   box-shadow: 0 0 20px 15px blanchedalmond;
 }
 
-.btnModificar{
+.btnModificar {
   background-color: rgb(207, 139, 37);
 }
-.btnModificar:hover{
+
+.btnModificar:hover {
   background-color: rgb(235, 121, 14);
   box-shadow: 0 0 20px 15px blanchedalmond;
 }
 
-@media (max-width:767px) {
+.btnGuardar{
+  background-color: rgb(9, 133, 61);
 
+}
+.btnGuardar:hover{
+  background-color: rgb(22, 192, 93);
+  box-shadow: 0 0 20px 15px blanchedalmond;
+
+}
+.inputMod{
+  background-color: aliceblue;
+  border: 2px solid orange;
+  border-radius: 12px;
+  padding: 5px;
+}
+
+
+
+@media (max-width:767px) {
+h1 {
+  font-size: 35px;
+}
   .contenedor,
   #lista-nota {
     width: 100%;
     max-width: 900px;
   }
-  .contenedor{
-    padding-left:15px ;
+
+  .contenedor {
+    padding-left: 15px;
   }
 
 
@@ -174,4 +196,26 @@ input:focus {
     padding: 15px;
   }
 
+  .nota {
+    font-size: 15px;
+  }
+
+  .nota button {
+    font-size: 10px;
+    padding: 8px 10px;
+  }
+
+  #inpNota {
+  width: 80%;
+  font-size: 15px;
+ }
+ .contenedor {
+  min-height: 250px;;
+  padding: 40px;
+  
+}
+
+.btnGuardar{
+  margin-bottom:5px ;
+}
 }
