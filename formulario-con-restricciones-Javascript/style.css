@@ -1,0 +1,156 @@
+:root {
+  --fondo: rgba(150, 168, 68, 0.644);
+  --fondoBody: rgb(138, 209, 156);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: var(--fondoBody);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contenedor {
+  max-width: 720px;
+  padding: 40px 45px;
+  gap: 20px;
+  justify-content: flex-start;
+  background-color: var(--fondo);
+  border-radius: 20px;
+  margin: 20px;
+  box-shadow: 0 0 12px rgba(210, 231, 226, 0.8);
+}
+
+
+h1 {
+  height: 50%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 45px;
+  color: rgba(42, 59, 216, 0.747);
+}
+
+#formulario {
+  margin-top: 10px;
+  width: 100%;
+  padding-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.fila {
+  display: grid;
+  gap: 6px;
+}
+
+label {
+  font-size: 19px;
+  font-weight: bold;
+}
+
+.caja {
+  width: 100%;
+  height: 40px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, .25);
+  background: rgba(255, 255, 255, .75);
+  font-size: 15px;
+  transition: 0.40s;
+  cursor: pointer;
+}
+
+.caja:focus {
+  background-color: rgb(201, 223, 247);
+  box-shadow: 0 0 12px rgb(68, 0, 255);
+}
+
+legend {
+  padding-top: 12px;
+  font-weight: bold;
+
+}
+
+fieldset {
+  padding: 12px;
+  background-color: rgba(240, 248, 255, 0.212);
+  border: 1px solid rgba(0, 0, 0, 0.233);
+  border-radius: 12px;
+}
+
+input {
+  cursor: pointer;
+}
+
+.terminos {
+  padding: 12px;
+}
+
+button {
+  border-radius: 20px;
+  padding: 15px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  border: 2px solid rgba(105, 105, 175, 0.24);
+  transition: 0.40s;
+
+}
+
+button:hover {
+  background-color: rgb(35, 113, 216);
+  box-shadow: 0 0 20px rgb(55, 0, 255);
+  color: aliceblue
+}
+
+.cajaError {
+  border: 3px solid red;
+  box-shadow: 0 0 12px 5px red;
+  background: rgba(243, 105, 105, 0.205);
+  width: 100%;
+  height: 40px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: 0.40s;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.generoError {
+  background-color: rgba(252, 6, 6, 0.39);
+  box-shadow: 0 0 12px 5px red;
+
+}
+
+.cajaError:focus {
+  border: 3px solid red;
+  box-shadow: 0 0 8px 3px red;
+  background: rgba(243, 105, 105, 0.205);
+}
+
+.cajaError::placeholder {
+  color: white;
+}
+
+.nota {
+  margin-bottom: 10px;
+  color: rgb(209, 54, 54);
+  font-weight: bold;
+  font-size: 13px;
+}
+
+@media (max-width:767px) {
+  fieldset>label {
+    font-size: 15px;
+  }
+}
