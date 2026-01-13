@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.+[^\s@]+$/;
   const numeroRegex = /^\d{9}$/;
-  const textoRegex = /^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ]{3,}$/;
+  const textoRegex = /^[^\s][A-Za-zÁÉÍÓÚÜáéíóúüÑñ\s]{3,}$/;
 
   function comprobarVacio(input) {
     const span = input.parentElement.querySelector('.nota');
