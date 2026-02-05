@@ -12,11 +12,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const condiciones = document.getElementById("condiciones");
 
   const nombreRegex = /^[^\s][a-zA-ZÁáÈéÍíÓóÚúÜüÑñ\s]{2,}/; //No permite salto al principio pero si luego
-  const emailRegex = /^[^\s@]+@+[^\s@]+\.+[^\s@]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const contraseñaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$%*?&.-_]).{8,}$/;//Debe tener al menos una o mas de una de estas condiciones
   const telefonoRegex = /^\+?[\d\s]{9,12}$/;//El +numero de pais opcional, y permite numeros y salto pero entre 9 a 12 numeros.
 
-  function comprobarVacios(input) {
+  function comprobarVacios(input) {//comprobamos los vacios, el input se añade el que queremos.
     const texto = input.nextElementSibling;
     if (input.value.trim() === "") {
       if (texto) texto.textContent = "Campo obligatorio, no puede estar vacio";
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     input.classList.remove("cajaError");
     return true;
   };
-
+  //Comprobamos el Regex de nombre, si no cumple nos avisa
   function comprobarNombre() {
     const texto = nombre.nextElementSibling;
 
@@ -40,6 +40,56 @@ document.addEventListener("DOMContentLoaded", () => {
     nombre.classList.remove("cajaError");
     return true;
   };
+  //Comprobamos el regex de email
+  function comprobarEmail() {
+    const texto = email.nextElementSibling;
+    if (!emailRegex.test(email.value.trim())) {
+      if (texto) texto.textContent = "El correo debe tener el formato correo@correo.es";
+      email.classList.add("cajaError");
+      return false;
+    }
+    if (texto) texto.textContent = "";
+    email.classList.remove("cajaError");
+    return true;
+  };
+  //Comprobamos tanto el Regex de contraseña como que coincidan, en contraseña2 no hace falta comprobar el Regex porque sino se cumple en la primera se para las comprobaciones y para seguir con la comparacion de contraseñas debe pasar primero
+  function comprobarContraseña() {
+    const texto = contraseña.nextElementSibling;
+    const texto2 = contraseña2.nextElementSibling;
+
+    if (!contraseñaRegex.test(contraseña.value.trim())) {
+      if (texto) texto.textContent = "La contraseña debe tener al menos una mayuscula, una minuscula, un numero o caracter especial. Minimo 8 caracteres";
+      contraseña.classList.add("cajaError");
+      return false;
+    }
+    if (texto) texto.textContent = "";
+    contraseña.classList.remove("cajaError");
+
+    if (contraseña.value.trim() !== contraseña2.value.trim()) {
+      if (texto2) texto2.textContent = "Las constraseña deben coincidir";
+      contraseña2.classList.add("cajaError");
+      return false
+    }
+    if (texto2) texto2.textContent = "";
+    contraseña2.classList.remove("cajaError");
+    return true;
+  };
+
+function comprobarTelefono(){
+  const texto=telefono.nextElementSibling;
+
+  if(!telefonoRegex.test(telefono.value.trim())){
+    if(texto)texto.textContent="El telefono debe tener estos formatos. ej:+34xxxxxxxxx o xxxxxxxxx";
+    telefono.classList.add("cajaError");
+    return false;
+  };
+
+  if(texto)texto.textContent="";
+  telefono.classList.remove("cajaError");
+  return true
+};
+
+
 
 
   formulario.addEventListener("submit", (e) => {
@@ -48,7 +98,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let control = true;
 
     if (!comprobarVacios(nombre) || !comprobarNombre()) control = false;
-
+    if (!comprobarVacios(email) || !comprobarEmail()) control = false;
+    if (!comprobarVacios(contraseña) || !comprobarContraseña()) control = false;
+    if(!comprobarVacios(telefono)||!comprobarTelefono())control=false;
 
     if (control) {
       alert("¡Todo ok! Datos enviados correctamente.");
