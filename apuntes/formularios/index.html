@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Formularios</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main>
+    <h1>Formulario Completo</h1>
+    <form action="/" method="post" id="formulario">
+      <label for="nombre">Nombre </label>
+      <input type="text" name="nombre" id="nombre" placeholder="Nombre completo" required>
+      <span class="aviso"></span>
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" placeholder="ej:correo@correo.es" required>
+      <span class="aviso"></span>
+      <label for="contraseña">Contraseña</label>
+      <input type="password" name="contraseña" id="contraseña" required>
+      <span class="aviso"></span>
+      <label for="contraseña2">Repetir contraseña</label>
+      <input type="password" name="contraseña2" id="contraseña2" required>
+      <span class="aviso"></span>
+      <label for="telefono">Telefono</label>
+      <input type="text" name="telefono" id="telefono" placeholder="xxx-xx-xx-xx">
+      <span class="aviso"></span>
+      <label for="pais">Selecione un pais</label>
+      <select name="pais" id="pais">
+        <option value="" selected disabled>--Pais--</option>
+        <optgroup label="Europa">
+          <option value="españa">España</option>
+          <option value="francia">Fracia</option>
+        </optgroup>
+        <optgroup label="Fuera de Europa">
+          <option value="eeuu">Estados unidos</option>
+          <option value="china">China</option>
+        </optgroup>
+      </select>
+      <span class="aviso"></span>
+      <label for="fNacimiento">Fecha de Nacimiento</label>
+      <input type="date" name="fNacimiento" id="fNacimiento">
+      <span class="aviso"></span>
+      <fieldset class="styGenero">
+        <legend>Elige un genero</legend>
+        <input type="radio" name="genero" id="gHombre" value="hombre" required>
+        <label for="genero">Masculiono</label>
+        <input type="radio" name="genero" id="gMujer" value="mujer" required>
+        <label for="genero">Femenino</label>
+        <input type="radio" name="genero" id="gOtro" value="otro" required>
+        <label for="genero">Otro</label>
+      </fieldset>
+      <span class="aviso"></span>
+      <fieldset class="styRango">
+        <label for="rango">Rango</label>
+        <input type="range" name="rango" id="rango" min="0" max="10" value="5" step="1">
+      </fieldset>
+      <span class="aviso"></span>
+      <fieldset class="styCondi">
+        <input type="checkbox" id="condiciones" name="condiciones">
+        <label for="condiciones">Aceptas los terminos de uso</label>
+      </fieldset>
+      <span class="aviso"></span>
+      <div>
+        <button id="btnEnviar" type="submit">Enviar Formulario</button>
+        <button id="btnReiniciar" type="reset">Limpiar Formulario</button>
+      </div>
+    </form>
+  </main>
+  <script src="app.js"></script>
+</body>
+
+</html>
