@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const genero = document.querySelectorAll('input[name="genero"]');
   const rango = document.getElementById("rango");
   const condiciones = document.getElementById("condiciones");
+  const valorRango = document.getElementById("valorRango");
 
   const nombreRegex = /^[^\s][a-zA-ZÁáÈéÍíÓóÚúÜüÑñ\s]{2,}/; //No permite salto al principio pero si luego
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -75,22 +76,82 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   };
 
-function comprobarTelefono(){
-  const texto=telefono.nextElementSibling;
+  function comprobarTelefono() {
+    const texto = telefono.nextElementSibling;
 
-  if(!telefonoRegex.test(telefono.value.trim())){
-    if(texto)texto.textContent="El telefono debe tener estos formatos. ej:+34xxxxxxxxx o xxxxxxxxx";
-    telefono.classList.add("cajaError");
+    if (!telefonoRegex.test(telefono.value.trim())) {
+      if (texto) texto.textContent = "El telefono debe tener estos formatos. ej:+34xxxxxxxxx o xxxxxxxxx";
+      telefono.classList.add("cajaError");
+      return false;
+    };
+
+    if (texto) texto.textContent = "";
+    telefono.classList.remove("cajaError");
+    return true
+  };
+
+  function comprobarFecha() {
+    const texto = fNacimiento.nextElementSibling;
+
+    const hoy = new Date();
+    const fechaNa = new Date(fNacimiento.value);
+
+    let edad = hoy.getFullYear() - fechaNa.getFullYear();
+
+    const mes = hoy.getMonth() - fechaNa.getMonth();
+
+    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNa.getDate())) {
+      edad--;
+    }
+
+    if (edad < 18) {
+      if (texto) texto.textContent = "Debes ser mayor de 18 años"
+      fNacimiento.classList.add("cajaError");
+      return false;
+    }
+
+    if (texto) texto.textContent = "";
+    fNacimiento.classList.remove("cajaError");
+    return true;
+  };
+
+  function comprobarGenero() {
+    const contenGenero = document.querySelector(".styGenero");
+    const texto = contenGenero.nextElementSibling;
+
+    for (let g of genero) {
+      if (g.checked) {
+        if (texto) texto.textContent = ""
+        contenGenero.classList.remove("cajaError");
+        return true;
+      }
+    }
+    if (texto) texto.textContent = "Debe selecionar un genero"
+    contenGenero.classList.add("cajaError");
     return false;
   };
 
-  if(texto)texto.textContent="";
-  telefono.classList.remove("cajaError");
-  return true
-};
+  function comprobarTerminos() {
+    const contenCondi = document.querySelector(".styCondi");
+    const texto = contenCondi.nextElementSibling;
+    if (condiciones.checked) {
+      if (texto) texto.textContent = ""
+      condiciones.classList.remove("cajaError");
+      return true;
 
+    }
+    if (texto) texto.textContent = "Debes aceptar los terminos"
+    condiciones.classList.add("cajaError");
+    return false;
+  };
 
+  function comprobarRango() {
+  return rango.value >= 0 && rango.value <= 10;
+}
 
+  rango.addEventListener("input", () => {
+    valorRango.textContent = rango.value;
+  });
 
   formulario.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -100,7 +161,13 @@ function comprobarTelefono(){
     if (!comprobarVacios(nombre) || !comprobarNombre()) control = false;
     if (!comprobarVacios(email) || !comprobarEmail()) control = false;
     if (!comprobarVacios(contraseña) || !comprobarContraseña()) control = false;
-    if(!comprobarVacios(telefono)||!comprobarTelefono())control=false;
+    if (!comprobarVacios(telefono) || !comprobarTelefono()) control = false;
+    if (!comprobarVacios(pais)) control = false;//Solo es necesario si se intenta pasar un vacio
+    if (!comprobarVacios(fNacimiento) || !comprobarFecha()) control = false;
+    if (!comprobarGenero()) control = false;
+    if (!comprobarTerminos()) control = false;
+    if(!comprobarRango())control=false;
+
 
     if (control) {
       alert("¡Todo ok! Datos enviados correctamente.");
@@ -108,4 +175,12 @@ function comprobarTelefono(){
     };
 
   });
+
+  formulario.addEventListener("reset", () => {
+    document.querySelectorAll('.aviso').forEach(avisoTexto => avisoTexto.textContent = "")
+    document.querySelectorAll('.cajaError').forEach(clase => clase.classList.remove('cajaError'));
+
+  })
+
+
 });

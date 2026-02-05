@@ -25,18 +25,18 @@
       <label for="contraseña2">Repetir contraseña</label>
       <input type="password" name="contraseña2" id="contraseña2" required>
       <span class="aviso"></span>
-      <label for="telefono">Telefono</label>
+      <label for="telefono">Teléfono</label>
       <input type="text" name="telefono" id="telefono" placeholder="xxx-xx-xx-xx">
       <span class="aviso"></span>
-      <label for="pais">Selecione un pais</label>
+      <label for="pais">Seleccione un pais</label>
       <select name="pais" id="pais">
-        <option value="" selected disabled>--Pais--</option>
+        <option value="" selected disabled>--País--</option>
         <optgroup label="Europa">
           <option value="españa">España</option>
           <option value="francia">Francia</option>
         </optgroup>
         <optgroup label="Fuera de Europa">
-          <option value="eeuu">Estados unidos</option>
+          <option value="eeuu">Estados Unidos</option>
           <option value="china">China</option>
         </optgroup>
       </select>
@@ -47,7 +47,7 @@
       <fieldset class="styGenero">
         <legend>Elige un genero</legend>
         <input type="radio" name="genero" id="gHombre" value="hombre" required>
-        <label for="genero">Masculiono</label>
+        <label for="genero">Masculino</label>
         <input type="radio" name="genero" id="gMujer" value="mujer" required>
         <label for="genero">Femenino</label>
         <input type="radio" name="genero" id="gOtro" value="otro" required>
@@ -55,7 +55,9 @@
       </fieldset>
       <span class="aviso"></span>
       <fieldset class="styRango">
-        <label for="rango">Rango</label>
+        <label for="rango">
+          Rango: <span id="valorRango">5</span>
+        </label>
         <input type="range" name="rango" id="rango" min="0" max="10" value="5" step="1">
       </fieldset>
       <span class="aviso"></span>
