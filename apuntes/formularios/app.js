@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const rango = document.getElementById("rango");
   const condiciones = document.getElementById("condiciones");
   const valorRango = document.getElementById("valorRango");
+  const mensaje = document.getElementById("mensajeEn");
 
   const nombreRegex = /^[^\s][a-zA-ZÁáÈéÍíÓóÚúÜüÑñ\s]{2,}/; //No permite salto al principio pero si luego
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,6 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!nombreRegex.test(nombre.value.trim())) {
       if (texto) texto.textContent = "El texto debe tener al menos tres letras, no empezar por espacio";
       nombre.classList.add("cajaError");
+      //nombre.style.border="3px solid rgb(60, 235, 37)";
+      //nombre.setAttribute=nombre.setAttribute('style', 'box-shadow: 0 0 8px 2px rgb(247, 109, 173);');
       return false;
     };
     if (texto) texto.textContent = "";
@@ -146,12 +149,67 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   function comprobarRango() {
-  return rango.value >= 0 && rango.value <= 10;
+    return rango.value >= 0 && rango.value <= 10;
+  }
+
+  function generoSeleccionado() {
+    for (let g of genero) {
+      if (g.checked) {
+        return g.value;
+      }
+    }
+    return null;
+  }
+
+  function mensajeTexto() {
+    //const generoSeleccionado = [...genero].find(g => g.checked)?.value || null;
+    let datosFormulario = {
+      nombre: nombre.value.trim(),
+      email: email.value.trim(),
+      telefono: telefono.value.trim(),
+      pais: pais.value.trim(),
+      fNacimiento: fNacimiento.value.trim(),
+      genero: generoSeleccionado(),
+      rango: rango.value.trim(),
+      terminos: condiciones.checked
+    };
+    return datosFormulario
+  }
+
+
+  function guardarFormulario(datos) {
+    localStorage.setItem('formularioCompletro', JSON.stringify(datos));
+  }
+
+ function mostrarForGuar(datos) {
+  mensaje.style.display = "block"; 
+  mensaje.innerHTML = `
+    <div class="exito-box">
+      <h2>Se han guardado los datos correctamente</h2>
+      <p><strong>Nombre:</strong> ${datos.nombre}</p> 
+      <p><strong>E-mail:</strong> ${datos.email}</p> 
+      <p><strong>Telefono:</strong> ${datos.telefono}</p> 
+      <p><strong>Pais:</strong> ${datos.pais}</p> 
+      <p><strong>Fecha de Nacimiento:</strong> ${datos.fNacimiento}</p> 
+      <p><strong>Genero:</strong> ${datos.genero}</p> 
+      <p><strong>Rango:</strong> ${datos.rango}</p> 
+      <p><strong>Terminos:</strong> ${datos.terminos ? "Aceptados" : "No aceptados"}</p> 
+    </div>
+  `;
 }
+
+  function cargarFormulario() {
+    const datosForGuar = JSON.parse(localStorage.getItem('formularioCompletro'));
+    if (datosForGuar) {
+      mostrarForGuar(datosForGuar);
+    }
+  }
+
 
   rango.addEventListener("input", () => {
     valorRango.textContent = rango.value;
   });
+
 
   formulario.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -161,16 +219,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!comprobarVacios(nombre) || !comprobarNombre()) control = false;
     if (!comprobarVacios(email) || !comprobarEmail()) control = false;
     if (!comprobarVacios(contraseña) || !comprobarContraseña()) control = false;
-    if (!comprobarVacios(telefono) || !comprobarTelefono()) control = false;
+    if (telefono.value.trim() !== "" && !comprobarTelefono()) control = false;
     if (!comprobarVacios(pais)) control = false;//Solo es necesario si se intenta pasar un vacio
     if (!comprobarVacios(fNacimiento) || !comprobarFecha()) control = false;
     if (!comprobarGenero()) control = false;
     if (!comprobarTerminos()) control = false;
-    if(!comprobarRango())control=false;
+    if (!comprobarRango()) control = false;
 
 
     if (control) {
-      alert("¡Todo ok! Datos enviados correctamente.");
+      const datos = mensajeTexto();
+      guardarFormulario(datos);
+      mostrarForGuar(datos);
       formulario.reset();
     };
 
@@ -181,6 +241,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.cajaError').forEach(clase => clase.classList.remove('cajaError'));
 
   })
-
+  cargarFormulario();
 
 });
