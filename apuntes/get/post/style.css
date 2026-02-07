@@ -1,0 +1,155 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  --fondo: rgb(13, 82, 122);
+  --subFondo: rgba(85, 183, 221, 0.493);
+  --fondoLista: rgb(174, 232, 240);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background-color: var(--fondo);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 35px;
+  padding: 25px;
+  width: 80%;
+  background-color: var(--subFondo);
+  border-radius: 25px;
+  box-shadow: 0 0 25px 2px rgb(2, 5, 37);
+}
+
+h1 {
+  font-size: 4rem;
+  text-align: center;
+  text-shadow: 10px 5px 10px blue;
+  margin-bottom: 25px;
+  font-weight: bold;
+  user-select: none;
+
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 2rem;
+  user-select: none;
+}
+
+input,
+button {
+  border-radius: 5px;
+  padding-left: 5px;
+  width: 350px;
+  height: 30px;
+  font-size: 15px;
+  margin: 5px;
+}
+
+button {
+  text-align: center;
+  font-weight: bold;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: rgb(199, 85, 32);
+}
+
+button:active {
+  box-shadow: 0 0 15px 7px rgb(167, 16, 16);
+}
+
+input:focus {
+  background-color: antiquewhite;
+
+}
+
+#listaTareas {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  background-color: rgba(250, 235, 215, 0.233);
+  padding: 23px;
+  border-radius: 25px;
+  box-shadow: 0 0 22px rgb(138, 120, 93);
+}
+
+
+#listaTareas .titulo::first-letter {
+  text-transform: uppercase;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+li span:first-child {
+  flex: 0 0 auto;
+  min-width: 30px;
+  text-align: right;
+}
+
+li span:last-child {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+li .titulo {
+  flex: 1 1 auto;
+  min-width: 0;              
+  overflow-wrap: anywhere;   
+  white-space: normal;
+}
+
+span {
+  padding:0;
+}
+
+.completado {
+  color: green;
+}
+
+.terminado {
+  color: brown;
+}
+
+@media(max-width:765px) {
+
+  input,
+  button {
+    width: 100%;
+    height: 25px;
+    font-size: 15px;
+  }
+
+  #listaTareas {
+    margin: 10px 0;
+    padding: 10px 10px 0 0;
+    font-size: 12px;
+  }
+
+  main {
+    width: 95%;
+  }
+
+}

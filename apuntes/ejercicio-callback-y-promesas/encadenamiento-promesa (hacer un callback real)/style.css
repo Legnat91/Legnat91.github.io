@@ -1,0 +1,96 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  background-color: rgba(192, 111, 91, 0.596);
+}
+
+
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 4rem;
+}
+
+
+button {
+  margin-top: 12px;
+  width: 150px;
+  height: 40px;
+  border-radius: 25px;
+  border: none;
+  background-color: rgba(155, 80, 19, 0.712);
+  box-shadow: 0 0 5px 0 rgb(179, 255, 0);
+  font-weight: bold;
+  color: aliceblue;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+button:hover {
+  background-color: rgb(180, 107, 12);
+  box-shadow: 0 0 20px yellowgreen;
+}
+
+button:active {
+  background-color: rgb(51, 30, 3);
+  box-shadow: 0 0 25px yellow;
+}
+
+div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+  padding-bottom: 25px;
+  width: 90%;
+  border: none;
+  border-radius: 25px;
+  background-color: rgba(165, 42, 42, 0.308);
+  box-shadow: 0 0 12px;
+}
+
+p {
+  text-align: center;
+  font-size: 25px;
+  margin: 15px;
+}
+
+.obteniendo {
+  color: green;
+}
+
+.procesando {
+  text-align: center;
+  color: rgb(6, 99, 6);
+  font-size: 30px;
+  border: none;
+  background-color: rgba(127, 255, 212, 0.308);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 0 23px forestgreen;
+}
+
+.error {
+  color: rgb(224, 114, 23);
+  background-color: rgb(117, 62, 62);
+  padding: 25px;
+  border-radius: 25px;
+  box-shadow: 0 0 23px rebeccapurple;
+}
+
+.cargando{
+  color: aliceblue;
+}

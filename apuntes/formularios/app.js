@@ -95,18 +95,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function comprobarFecha() {
     const texto = fNacimiento.nextElementSibling;
-
+    //Recogemos los datos
     const hoy = new Date();
     const fechaNa = new Date(fNacimiento.value);
-
+    //De los datos de fecha cogemos los años y los restamos para saber si es 18 o mas años
     let edad = hoy.getFullYear() - fechaNa.getFullYear();
-
+    //Comprobamos los meses
     const mes = hoy.getMonth() - fechaNa.getMonth();
-
+    //Si los meses son 0 o negativo, pues comprobamos que el dia hoy sea menor que el dia de cumpleaños
     if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNa.getDate())) {
       edad--;
     }
-
+    //Si edad es menor a 18 pues no entra
     if (edad < 18) {
       if (texto) texto.textContent = "Debes ser mayor de 18 años"
       fNacimiento.classList.add("cajaError");
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function comprobarRango() {
     return rango.value >= 0 && rango.value <= 10;
   }
-
+  //se Puede usar este o el comentado para coger el valor de genero
   function generoSeleccionado() {
     for (let g of genero) {
       if (g.checked) {
@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-
+  //Para que se vea el valor de rango
   rango.addEventListener("input", () => {
     valorRango.textContent = rango.value;
   });
