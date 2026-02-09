@@ -17,6 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const contraseñaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$%*?&.-_]).{8,}$/;//Debe tener al menos una o mas de una de estas condiciones
   const telefonoRegex = /^\+?[\d\s]{9,12}$/;//El +numero de pais opcional, y permite numeros y salto pero entre 9 a 12 numeros.
+  const fechaRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;//Fecha del input
+  //const fechaRegexES = /^(0[1-9]|[12]\d|3[01])[/](0[1-9]|1[0-2])[/]\d{4}$/;//Fecha Español
 
   function comprobarVacios(input) {//comprobamos los vacios, el input se añade el que queremos.
     const texto = input.nextElementSibling;
@@ -99,6 +101,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const hoy = new Date();
     const fechaNa = new Date(fNacimiento.value);
     //De los datos de fecha cogemos los años y los restamos para saber si es 18 o mas años
+
+    if (!fechaRegex.test(valor)) {
+      if (texto) texto.textContent = "Formato de fecha no válido";
+      fNacimiento.classList.add("cajaError");
+      return false;
+    }
+
     let edad = hoy.getFullYear() - fechaNa.getFullYear();
     //Comprobamos los meses
     const mes = hoy.getMonth() - fechaNa.getMonth();
@@ -181,9 +190,9 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem('formularioCompletro', JSON.stringify(datos));
   }
 
- function mostrarForGuar(datos) {
-  mensaje.style.display = "block"; 
-  mensaje.innerHTML = `
+  function mostrarForGuar(datos) {
+    mensaje.style.display = "block";
+    mensaje.innerHTML = `
     <div class="exito-box">
       <h2>Se han guardado los datos correctamente</h2>
       <p><strong>Nombre:</strong> ${datos.nombre}</p> 
@@ -196,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <p><strong>Terminos:</strong> ${datos.terminos ? "Aceptados" : "No aceptados"}</p> 
     </div>
   `;
-}
+  }
 
   function cargarFormulario() {
     const datosForGuar = JSON.parse(localStorage.getItem('formularioCompletro'));
