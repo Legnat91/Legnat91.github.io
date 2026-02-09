@@ -45,41 +45,58 @@ form {
   gap: 5px;
 }
 
-input,select,button{
+input,
+select,
+button {
   padding: 5px;
   border-radius: 15px;
 }
 
-.styCondi,.styRango{
-  border:none;
+.styCondi,
+.styRango {
+  border: none;
   margin: 5px;
 }
-button{
+
+button {
   cursor: pointer;
   color: rgb(247, 241, 230);
 }
 
-#btnReiniciar{
+#btnReiniciar {
   background-color: rgb(248, 67, 97);
 }
-#btnEnviar{
- background-color: rgb(98, 98, 233);
+
+#btnEnviar {
+  background-color: rgb(98, 98, 233);
 }
 
-#btnEnviar:hover{
- background-color: rgb(31, 31, 226);
- box-shadow: 0 0 10px 5px rgb(0, 217, 255);
+#btnEnviar:hover {
+  background-color: rgb(31, 31, 226);
+  box-shadow: 0 0 10px 5px rgb(0, 217, 255);
 }
-#btnReiniciar:hover{
+
+#btnReiniciar:hover {
   background-color: rgb(247, 3, 44);
   box-shadow: 0 0 10px 5px rgb(247, 109, 173);
 }
+
+#btnBorrarTodo {
+  background-color: rgb(255, 0, 0);
+}
+
+#btnBorrarTodo:hover {
+  background-color: rgb(235, 82, 22);
+  box-shadow: 0 0 10px 5px rgb(247, 4, 4);
+}
+
 .cajaError {
   border: 3px solid red;
   box-shadow: 0 0 8px 2px red;
 }
-.aviso{
-  color:rgb(226, 64, 64);
+
+.aviso {
+  color: rgb(226, 64, 64);
   font-size: small;
   font-weight: bold;
 }

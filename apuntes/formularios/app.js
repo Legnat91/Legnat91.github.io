@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const condiciones = document.getElementById("condiciones");
   const valorRango = document.getElementById("valorRango");
   const mensaje = document.getElementById("mensajeEn");
+  const btnBorrarTodo=document.getElementById("btnBorrarTodo");
 
   const nombreRegex = /^[^\s][a-zA-ZÁáÈéÍíÓóÚúÜüÑñ\s]{2,}/; //No permite salto al principio pero si luego
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -97,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function comprobarFecha() {
     const texto = fNacimiento.nextElementSibling;
+    const valor = fNacimiento.value;
     //Recogemos los datos
     const hoy = new Date();
     const fechaNa = new Date(fNacimiento.value);
@@ -243,6 +245,12 @@ document.addEventListener("DOMContentLoaded", () => {
       formulario.reset();
     };
 
+  });
+
+  btnBorrarTodo.addEventListener("click", () => {
+    localStorage.removeItem('formularioCompletro');
+    mensaje.innerHTML = "";
+    alert("Memoria limpia");
   });
 
   formulario.addEventListener("reset", () => {
