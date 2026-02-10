@@ -8,7 +8,7 @@
 
 body,
 html {
-  height: auto;
+  min-height: 100vh;
   width: auto;
   font-family: Arial, Helvetica, sans-serif;
   display: flex;
@@ -136,5 +136,10 @@ input[type="checkbox"]:invalid {
 
   h1 {
     font-size: 2em;
+  }
+  .conteneodorBotones{
+    display: flex;
+    flex-direction: column;
+    gap:5px;
   }
 }

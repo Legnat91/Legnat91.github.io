@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Examen 2º de DAW</title>
+  <meta name="author" content="Angel de la Calle Fernandez">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main class="contenedor-principal">
+    <h1 class="bungee-regular">FORMULARIO DE EXAMEN</h1>
+    <form action="/" method="post" id="formulario"class="container">
+      <div class="sepa">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Introduzca su nombre" required>
+      </div>
+      <span class="texto"></span>
+      <div class="sepa">
+        <label for="correo">E-mail</label>
+        <input type="email" id="correo" name="correo" placeholder="correo@correo.es" required>
+      </div>
+      <span class="texto"></span>
+      <div class="sepa">
+        <label for="contrasena">Contraseña</label>
+        <input type="password" id="contrasena" name="contrasena" placeholder="Introduce una contraseña" required>
+      </div>
+      <span class="texto"></span>
+      <div class="sepa">
+        <label for="telefono">Teléfono</label>
+        <input type="tel" id="telefono" name="telefono" placeholder="xxxxxxxxx">
+      </div>
+      <span class="texto"></span>
+      <div class="sepa">
+        <label for="fNacimiento">Fecha de Nacimiento</label>
+        <input type="date" id="fNacimiento" name="fNacimientos" required>
+      </div>
+      <span class="texto"></span>
+      <div class="sepa">
+        <input type="checkbox" name="terminos" id="terminos" required>
+        <label for="terminos"><a href="/">Acepto los terminos de uso</a></label>
+      </div>
+      <span class="texto"></span>
+      <div class="sepa">
+        <button type="submit" id="btnEnviar" class="enviar" >Enviar Formunlario</button>
+        <button type="reset" class="borrar">Borrar Formunlario</button>
+      </div>
+    </form>
+    <div id="mensajeEn">
+
+    </div>
+  </main>
+  <script src="app.js"></script>
+</body>
+
+</html>
