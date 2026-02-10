@@ -14,10 +14,10 @@
     <h1>Formulario Completo</h1>
     <form action="/" method="post" id="formulario">
       <label for="nombre">Nombre </label>
-      <input type="text" name="nombre" id="nombre" placeholder="Nombre completo" required>
+      <input type="text" name="nombre" id="nombre" placeholder="Nombre completo" autocomplete="name" required>
       <span class="aviso"></span>
       <label for="email">Email</label>
-      <input type="email" name="email" id="email" placeholder="ej:correo@correo.es" required>
+      <input type="email" name="email" id="email" placeholder="ej:correo@correo.es" autocomplete="email" required>
       <span class="aviso"></span>
       <label for="contraseña">Contraseña</label>
       <input type="password" name="contraseña" id="contraseña" placeholder="Introduzca una Contraseña" required>
@@ -26,7 +26,7 @@
       <input type="password" name="contraseña2" id="contraseña2" placeholder="Repita la contraseña" required>
       <span class="aviso"></span>
       <label for="telefono">Teléfono</label>
-      <input type="text" name="telefono" id="telefono" placeholder="xxx-xx-xx-xx">
+      <input type="tel" name="telefono" id="telefono" autocomplete="tel" placeholder="xxx-xx-xx-xx">
       <span class="aviso"></span>
       <label for="pais">Seleccione un pais</label>
       <select name="pais" id="pais">
@@ -47,11 +47,11 @@
       <fieldset class="styGenero">
         <legend>Elige un genero</legend>
         <input type="radio" name="genero" id="gHombre" value="hombre" required>
-        <label for="genero">Masculino</label>
+        <label for="gHombre">Masculino</label>
         <input type="radio" name="genero" id="gMujer" value="mujer" required>
-        <label for="genero">Femenino</label>
+        <label for="gMujer">Femenino</label>
         <input type="radio" name="genero" id="gOtro" value="otro" required>
-        <label for="genero">Otro</label>
+        <label for="gOtro">Otro</label>
       </fieldset>
       <span class="aviso"></span>
       <fieldset class="styRango">
@@ -66,7 +66,7 @@
         <label for="condiciones">Aceptas los terminos de uso</label>
       </fieldset>
       <span class="aviso"></span>
-      <div>
+      <div class="conteneodorBotones">
         <button id="btnEnviar" type="submit">Enviar Formulario</button>
         <button id="btnReiniciar" type="reset">Limpiar Formulario</button>
         <button id="btnBorrarTodo" type="button">Borrar Todo</button>

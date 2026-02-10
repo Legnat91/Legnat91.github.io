@@ -14,10 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const mensaje = document.getElementById("mensajeEn");
   const btnBorrarTodo=document.getElementById("btnBorrarTodo");
 
-  const nombreRegex = /^[^\s][a-zA-ZÁáÈéÍíÓóÚúÜüÑñ\s]{2,}/; //No permite salto al principio pero si luego
+  const nombreRegex = /^[^\s][a-zA-ZÁáÉéÍíÓóÚúÜüÑñ\s]{2,}$/; //No permite salto al principio pero si luego
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const contraseñaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$%*?&.-_]).{8,}$/;//Debe tener al menos una o mas de una de estas condiciones
-  const telefonoRegex = /^\+?[\d\s]{9,12}$/;//El +numero de pais opcional, y permite numeros y salto pero entre 9 a 12 numeros.
+  const telefonoRegex = /^\+?[\d\s-]{9,12}$/;//El +numero de pais opcional, y permite numeros y salto pero entre 9 a 12 numeros.
   const fechaRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;//Fecha del input
   //const fechaRegexES = /^(0[1-9]|[12]\d|3[01])[/](0[1-9]|1[0-2])[/]\d{4}$/;//Fecha Español
 
@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   function guardarFormulario(datos) {
-    localStorage.setItem('formularioCompletro', JSON.stringify(datos));
+    localStorage.setItem('formularioCompleto', JSON.stringify(datos));
   }
 
   function mostrarForGuar(datos) {
@@ -210,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function cargarFormulario() {
-    const datosForGuar = JSON.parse(localStorage.getItem('formularioCompletro'));
+    const datosForGuar = JSON.parse(localStorage.getItem('formularioCompleto'));
     if (datosForGuar) {
       mostrarForGuar(datosForGuar);
     }
