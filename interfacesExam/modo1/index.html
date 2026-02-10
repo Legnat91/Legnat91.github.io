@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Práctica de Exámenes (Local)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">✓</div>
+      <div>
+        <h1>Práctica de Exámenes</h1>
+        <p class="muted">Local · Sin backend · Progreso en tu navegador</p>
+      </div>
+    </div>
+
+    <nav class="top-actions" aria-label="Acciones">
+      <button class="btn btn-ghost" id="btnStats" type="button" title="Ver estadísticas">Estadísticas</button>
+      <button class="btn btn-ghost" id="btnData" type="button" title="Exportar/Importar">Datos</button>
+      <button class="btn btn-ghost danger" id="btnResetAll" type="button" title="Borrar todo el progreso">Reset</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- HOME -->
+    <section class="card screen" id="screenHome" aria-labelledby="homeTitle">
+      <div class="card-header">
+        <h2 id="homeTitle">Configurar sesión</h2>
+        <p class="muted">Selecciona modo, temarios y filtros. Luego pulsa “Empezar”.</p>
+      </div>
+
+      <div class="grid two">
+        <div class="field">
+          <label for="mode">Modo</label>
+          <select id="mode">
+            <option value="training">Entrenamiento (feedback inmediato)</option>
+            <option value="exam">Examen (feedback al final)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="numQuestions">Nº preguntas</label>
+          <input id="numQuestions" type="number" min="1" step="1" value="20" />
+          <small class="muted">Se ajusta automáticamente si hay menos disponibles.</small>
+        </div>
+
+        <div class="field">
+          <label>Temarios (multi-selección)</label>
+          <div class="chipbox" id="topicsBox" aria-label="Selector de temarios"></div>
+          <div class="row gap">
+            <button class="btn btn-ghost" id="btnSelectAllTopics" type="button">Seleccionar todos</button>
+            <button class="btn btn-ghost" id="btnSelectNoneTopics" type="button">Ninguno</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Filtros</label>
+          <div class="toggles">
+            <label class="toggle"><input type="checkbox" id="onlyProfesor" /> <span>Solo profesor</span></label>
+            <label class="toggle"><input type="checkbox" id="onlyFailed" /> <span>Solo falladas</span></label>
+            <label class="toggle"><input type="checkbox" id="onlyMarked" /> <span>Solo marcadas</span></label>
+          </div>
+
+          <div class="grid two compact">
+            <div class="field">
+              <label for="difficulty">Dificultad</label>
+              <select id="difficulty">
+                <option value="all">Todas</option>
+                <option value="1">1 (muy fácil)</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5 (difícil)</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="tagFilter">Tag (contiene)</label>
+              <input id="tagFilter" type="text" placeholder="ej: css, ux, accesibilidad..." />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="sep" />
+
+      <div class="grid two">
+        <div class="field">
+          <label>Ajustes de preguntas</label>
+          <div class="toggles">
+            <label class="toggle"><input type="checkbox" id="shuffleOptions" /> <span>Barajar opciones (test)</span></label>
+            <label class="toggle"><input type="checkbox" id="tolerantMode" /> <span>Modo tolerante (completar)</span></label>
+            <label class="toggle"><input type="checkbox" id="allowSkip" checked /> <span>Permitir saltar</span></label>
+            <label class="toggle"><input type="checkbox" id="skipCountsWrong" /> <span>Si salto, cuenta como fallo</span></label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Examen</label>
+          <div class="grid two compact">
+            <div class="field">
+              <label class="inline" for="useTimer">Temporizador</label>
+              <select id="useTimer">
+                <option value="off">No</option>
+                <option value="on">Sí</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="timerMinutes">Minutos</label>
+              <input id="timerMinutes" type="number" min="1" step="1" value="20" />
+            </div>
+          </div>
+
+          <div class="grid two compact">
+            <div class="field">
+              <label for="profWeight">Peso profesor (%)</label>
+              <input id="profWeight" type="number" min="0" max="100" step="5" value="70" />
+              <small class="muted">Ej: 70 = 70% profesor / 30% resto (si hay suficientes).</small>
+            </div>
+            <div class="field">
+              <label for="seed">Semilla (opcional)</label>
+              <input id="seed" type="text" placeholder="ej: UAX-2026-01" />
+              <small class="muted">Misma semilla → mismo examen (con mismos filtros).</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row end gap">
+        <div class="muted" id="availableCount">—</div>
+        <button class="btn" id="btnStart" type="button">Empezar</button>
+      </div>
+    </section>
+
+    <!-- QUESTION -->
+    <section class="card screen hidden" id="screenQuestion" aria-labelledby="qTitle">
+      <div class="card-header">
+        <div class="row between wrap gap">
+          <div>
+            <h2 id="qTitle">Pregunta</h2>
+            <div class="meta" id="qMeta"></div>
+          </div>
+          <div class="row gap wrap end">
+            <div class="pill" id="timerPill" aria-live="polite" hidden>⏱️ 00:00</div>
+            <button class="btn btn-ghost" id="btnMark" type="button" title="Marcar / desmarcar">☆ Marcar</button>
+            <button class="btn btn-ghost" id="btnSkip" type="button" title="Saltar">Saltar</button>
+            <button class="btn btn-ghost danger" id="btnEnd" type="button" title="Terminar sesión">Terminar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="progressbar" aria-hidden="true">
+        <div class="progressbar-fill" id="progressFill"></div>
+      </div>
+
+      <article class="q">
+        <h3 class="q-prompt" id="qPrompt"></h3>
+
+        <div id="qBody"></div>
+
+        <div class="row end gap top">
+          <button class="btn" id="btnSubmit" type="button">Responder</button>
+          <button class="btn btn-ghost hidden" id="btnNext" type="button">Siguiente</button>
+        </div>
+
+        <div class="feedback hidden" id="feedback" role="status" aria-live="polite"></div>
+      </article>
+    </section>
+
+    <!-- RESULTS -->
+    <section class="card screen hidden" id="screenResults" aria-labelledby="rTitle">
+      <div class="card-header">
+        <h2 id="rTitle">Resultados</h2>
+        <p class="muted" id="rSubtitle">—</p>
+      </div>
+
+      <div class="grid three">
+        <div class="stat">
+          <div class="stat-label">Nota</div>
+          <div class="stat-value" id="statScore">—</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Aciertos</div>
+          <div class="stat-value" id="statCorrect">—</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Fallos</div>
+          <div class="stat-value" id="statWrong">—</div>
+        </div>
+      </div>
+
+      <hr class="sep" />
+
+      <div class="row between wrap gap">
+        <h3>Detalle</h3>
+        <div class="row gap wrap end">
+          <button class="btn btn-ghost" id="btnRetryWrong" type="button">Rehacer falladas</button>
+          <button class="btn" id="btnBackHome" type="button">Reiniciar sesión</button>
+        </div>
+      </div>
+
+      <div class="list" id="resultList" aria-label="Listado de resultados"></div>
+    </section>
+
+    <!-- MODAL: STATS -->
+    <dialog class="modal" id="dlgStats">
+      <form method="dialog" class="modal-card">
+        <div class="row between">
+          <h3>Estadísticas</h3>
+          <button class="btn btn-ghost" value="cancel" type="submit">Cerrar</button>
+        </div>
+        <p class="muted">Resumen global basado en tu progreso guardado.</p>
+        <div class="grid three">
+          <div class="stat">
+            <div class="stat-label">Preguntas registradas</div>
+            <div class="stat-value" id="stTotal">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Marcadas</div>
+            <div class="stat-value" id="stMarked">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Falladas (acumuladas)</div>
+            <div class="stat-value" id="stWrongTotal">—</div>
+          </div>
+        </div>
+
+        <hr class="sep" />
+
+        <div class="field">
+          <label for="statsSearch">Buscar por texto / tag / id</label>
+          <input id="statsSearch" type="text" placeholder="ej: UF2, box model, accesibilidad..." />
+        </div>
+
+        <div class="table" id="statsTable" role="table" aria-label="Tabla de estadísticas"></div>
+      </form>
+    </dialog>
+
+    <!-- MODAL: DATA -->
+    <dialog class="modal" id="dlgData">
+      <form method="dialog" class="modal-card">
+        <div class="row between">
+          <h3>Exportar / Importar</h3>
+          <button class="btn btn-ghost" value="cancel" type="submit">Cerrar</button>
+        </div>
+        <p class="muted">Exporta tu progreso a un JSON o impórtalo desde un archivo.</p>
+
+        <div class="row gap wrap">
+          <button class="btn" id="btnExport" type="button">Exportar progreso (JSON)</button>
+
+          <label class="btn btn-ghost file-btn">
+            Importar JSON
+            <input id="importFile" type="file" accept="application/json" hidden />
+          </label>
+        </div>
+
+        <div class="callout" id="importMsg" hidden></div>
+      </form>
+    </dialog>
+
+    <footer class="footer muted">
+      <p>
+        Consejo: edita <code>questions.js</code> para añadir preguntas. No necesitas tocar <code>app.js</code>.
+      </p>
+    </footer>
+  </main>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
