@@ -1,0 +1,91 @@
+/* Estilos generales del cuerpo de la página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor del formulario */
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo del título */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Estilos para las etiquetas de los campos */
+form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+/* Estilos para los campos de entrada */
+form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* Estilo del checkbox */
+form input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+    padding: 0;
+}
+
+/* Campo inválido (borde rojo) */
+.invalid {
+    border-color: red !important;
+}
+
+/* Estilo del botón de envío */
+form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* Efecto de hover en el botón */
+form button:hover {
+    background-color: #45a049;
+}
+
+/* Estilo de los mensajes de error */
+.error {
+    color: red;
+    font-size: 12px;
+    display: block;
+    min-height: 16px; /* reserva espacio */
+    margin-bottom: 10px;
+}
+
+/* Estilo del mensaje de éxito */
+.success {
+    background-color: #d4edda;
+    padding: 10px;
+    border-radius: 4px;
+    color: green;
+    text-align: center;
+    margin-top: 12px;
+}
