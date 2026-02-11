@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>FP DAW — Repaso por temas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido principal</a>
+
+  <header class="app-header" role="banner">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">DAW</div>
+      <div class="brand-text">
+        <h1>Repaso FP DAW</h1>
+        <p class="muted">Estudia por temas · Resumen estructurado · Tests con progreso</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button id="btnViewStudy" class="btn btn-ghost" type="button" aria-pressed="true">
+        Estudio
+      </button>
+      <button id="btnViewTest" class="btn btn-ghost" type="button" aria-pressed="false" disabled>
+        Test
+      </button>
+
+      <span class="divider" aria-hidden="true"></span>
+
+      <button id="btnResetProgress" class="btn btn-danger" type="button" title="Borra solo el progreso local">
+        Reiniciar progreso
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Temas">
+      <div class="sidebar-top">
+        <label class="sr-only" for="topicSearch">Buscar temas</label>
+        <input id="topicSearch" class="input" type="search" placeholder="Buscar tema…" autocomplete="off" />
+      </div>
+
+      <div class="sidebar-status" id="sidebarStatus" role="status" aria-live="polite"></div>
+
+      <nav class="topic-list" id="topicList" aria-label="Lista de temas">
+        <!-- dinámico -->
+      </nav>
+
+      <div class="sidebar-footer">
+        <details>
+          <summary>Ayuda rápida</summary>
+          <ul class="help">
+            <li><kbd>Tab</kbd> para moverte, <kbd>Enter</kbd> para seleccionar.</li>
+            <li>En test: <kbd>1</kbd>-<kbd>4</kbd> elige opción, <kbd>Enter</kbd> confirma.</li>
+            <li>El progreso se guarda en <code>localStorage</code>.</li>
+          </ul>
+        </details>
+      </div>
+    </aside>
+
+    <main id="main" class="main" tabindex="-1">
+      <!-- Mensajes globales -->
+      <section id="globalMessage" class="banner hidden" role="status" aria-live="polite"></section>
+
+      <!-- VISTA ESTUDIO -->
+      <section id="viewStudy" class="view">
+        <div class="panel-header">
+          <div>
+            <h2 id="topicTitle">Selecciona un tema</h2>
+            <p id="topicMeta" class="muted"></p>
+          </div>
+
+          <div class="panel-actions">
+            <button id="btnStartTest" class="btn btn-primary" type="button" disabled>
+              Iniciar test
+            </button>
+          </div>
+        </div>
+
+        <div class="grid">
+          <section class="card" aria-labelledby="hKeyPoints">
+            <h3 id="hKeyPoints">Puntos clave</h3>
+            <ul id="keyPoints" class="bullets"></ul>
+            <p id="keyPointsEmpty" class="muted hidden">Aún no se han podido extraer puntos clave.</p>
+          </section>
+
+          <section class="card" aria-labelledby="hTraps">
+            <h3 id="hTraps">Errores comunes / trampas</h3>
+            <ul id="traps" class="bullets"></ul>
+            <p id="trapsEmpty" class="muted hidden">No se han detectado trampas explícitas en el texto.</p>
+          </section>
+        </div>
+
+        <section class="card" aria-labelledby="hSections">
+          <h3 id="hSections">Secciones</h3>
+          <div id="sections" class="accordion" role="region" aria-label="Secciones desplegables"></div>
+          <p id="sectionsEmpty" class="muted hidden">No se han detectado secciones. Se mostrará el texto completo.</p>
+          <pre id="rawText" class="raw hidden"></pre>
+        </section>
+
+        <section class="card" aria-labelledby="hGlossary">
+          <div class="row">
+            <h3 id="hGlossary">Glosario</h3>
+            <div class="row-actions">
+              <label class="toggle">
+                <input id="toggleGlossaryCompact" type="checkbox" />
+                <span>Compacto</span>
+              </label>
+            </div>
+          </div>
+
+          <div id="glossary" class="glossary"></div>
+          <p id="glossaryEmpty" class="muted hidden">No se ha detectado glosario en este tema.</p>
+        </section>
+      </section>
+
+      <!-- VISTA TEST -->
+      <section id="viewTest" class="view hidden" aria-label="Test del tema">
+        <div class="panel-header">
+          <div>
+            <h2 id="testTitle">Test</h2>
+            <p id="testMeta" class="muted"></p>
+          </div>
+
+          <div class="panel-actions">
+            <label class="toggle" title="Si está activado, verás si aciertas al confirmar cada respuesta">
+              <input id="toggleInstant" type="checkbox" />
+              <span>Corrección al instante</span>
+            </label>
+            <button id="btnExitTest" class="btn btn-ghost" type="button">
+              Volver al estudio
+            </button>
+          </div>
+        </div>
+
+        <section class="card">
+          <div class="test-top">
+            <div class="progress" aria-label="Progreso del test">
+              <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+            </div>
+            <div class="progress-meta">
+              <span id="progressText">0/0</span>
+              <span id="progressKind" class="chip">—</span>
+            </div>
+          </div>
+
+          <div id="questionHost" class="question-host" role="group" aria-label="Pregunta">
+            <!-- dinámico -->
+          </div>
+
+          <div class="test-actions">
+            <button id="btnPrev" class="btn btn-ghost" type="button" disabled>Anterior</button>
+            <button id="btnConfirm" class="btn btn-primary" type="button" disabled>Confirmar</button>
+            <button id="btnNext" class="btn btn-ghost" type="button" disabled>Siguiente</button>
+          </div>
+
+          <div id="instantFeedback" class="feedback hidden" role="status" aria-live="polite"></div>
+        </section>
+
+        <section id="results" class="card hidden" aria-labelledby="hResults">
+          <div class="row">
+            <h3 id="hResults">Resultado</h3>
+            <span id="scoreChip" class="chip">0%</span>
+          </div>
+
+          <div class="results-grid">
+            <div class="results-box">
+              <h4>Resumen</h4>
+              <ul class="bullets">
+                <li><strong id="rCorrect">0</strong> correctas</li>
+                <li><strong id="rWrong">0</strong> falladas</li>
+                <li><strong id="rBlank">0</strong> en blanco</li>
+              </ul>
+            </div>
+
+            <div class="results-box">
+              <h4>Acciones</h4>
+              <div class="stack">
+                <button id="btnRetryWrong" class="btn btn-primary" type="button" disabled>
+                  Repetir solo falladas
+                </button>
+                <button id="btnRestartFull" class="btn btn-ghost" type="button">
+                  Repetir test completo
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <hr class="sep" />
+
+          <h4>Repaso de fallos</h4>
+          <div id="wrongReview" class="review"></div>
+          <p id="wrongReviewEmpty" class="muted hidden">No hay fallos que repasar. ✅</p>
+        </section>
+      </section>
+
+      <footer class="app-footer">
+        <p class="muted">
+          App estática (HTML/CSS/JS) · Sin frameworks · Render seguro (sin inyección de HTML).
+        </p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
