@@ -9,12 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const mensajeEn = document.getElementById("mensajeEn");
 
   //REGEX PARA COMPROBAR
-  const nombreRegex = /^[^\s\d][a-zA-Z\s]{3,}/;
+  const nombreRegex = /^[^\s\d][a-zA-Z\s]{2,}/;
   const emailRegex = /^[^\s@\.]+@[^\s@]+\.+[^\s@]+$/;
-  const telefonoRegex = /^\d{9}/;
+  const telefonoRegex = /^\d{9}$/;
   const contrasenaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}])[^\s]{8,20}$/;
 
-  let datosFomulario = {};
+  let datosFormulario = {};
   //Con esto comprobamos todos los input que esten vacios con su control 
   function comprobarVacios(input) {
     //Coge el padre de al lado del input
@@ -25,6 +25,18 @@ document.addEventListener("DOMContentLoaded", () => {
       input.focus();
       return false;
     }
+
+    /*function mostrarError(input, mensaje) {
+      const nota = input.parentElement.nextElementSibling;
+      input.classList.add("cajaError");
+      if (nota) nota.textContent = mensaje;
+    }
+    //Añadir luego
+    function limpiarError(input) {
+      const nota = input.parentElement.nextElementSibling;
+      input.classList.remove("cajaError");
+      if (nota) nota.textContent = "";
+    }*/
 
     if (nota) {
       nota.textContent = "";
@@ -97,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (nota) nota.textContent = "";
       return true;
     }
-    if (nota) nota.textContent = "Debe aceptar los terminso de uso";
+    if (nota) nota.textContent = "Debe aceptar los terminos de uso";
     return false;
 
   }
@@ -131,9 +143,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
-  function comporobarTele() {
+  function comprobarTele() {
     const nota = telefono.parentElement.nextElementSibling;
-    //si la caja esta bacia al ser un dato opcional debe poder continuar
+    //si la caja esta vacia al ser un dato opcional debe poder continuar
     if (telefono.value.trim() === "") {
       telefono.classList.remove("cajaError");
       if (nota) nota.textContent = "";
@@ -153,14 +165,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   //Aqui debemos crear el objeto donde se guardaran los datos
   function guardarMensaje() {
-    datosFomulario = {
+    datosFormulario = {
       nombre: nombre.value.trim(),
       email: correo.value.trim(),
       telefono: telefono.value.trim(),
       fNacimiento: fNacimiento.value.trim()
     }
     //Creamos el JSON donde se guardara
-    localStorage.setItem('formularioGuardado', JSON.stringify(datosFomulario));
+    localStorage.setItem('formularioGuardado', JSON.stringify(datosFormulario));
   }
 
   function mensaje(datos) {
@@ -194,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!comprobarVacios(fNacimiento) || !comprobarNacimiento()) control = false;
 
-    if (!comporobarTele()) control = false;
+    if (!comprobarTele()) control = false;
 
     if (!control) return;
 
