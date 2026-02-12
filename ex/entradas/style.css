@@ -1,0 +1,138 @@
+/* RESET BÁSICO */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BODY */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  padding: 20px;
+}
+
+/* MAIN */
+main {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 30px 40px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 700px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 2.2em;
+  color: #333;
+}
+
+/* FORM */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input, select {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+  transition: 0.3s;
+}
+
+input:focus, select:focus {
+  border-color: #4facfe;
+  outline: none;
+  box-shadow: 0 0 5px rgba(79, 172, 254, 0.5);
+}
+
+/* ERRORES */
+.texto {
+  font-size: 0.9em;
+  color: red;
+  min-height: 18px;
+}
+
+.error {
+  border: 2px solid red !important;
+  box-shadow: 0 0 5px red;
+}
+
+/* BOTONES */
+button {
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1em;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#btnReserva {
+  background-color: #4facfe;
+  color: white;
+}
+
+#btnReserva:hover {
+  background-color: #00f2fe;
+  color: #333;
+}
+
+/* TABLA */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+  text-align: center;
+  font-size: 0.95em;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+th {
+  background-color: #4facfe;
+  color: white;
+}
+
+td button {
+  background-color: #fe6a6a;
+  color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
+  border: none;
+}
+
+td button:hover {
+  background-color: #ff3b3b;
+}
+
+/* RESPONSIVE */
+@media(max-width: 500px) {
+  main {
+    padding: 20px;
+  }
+  input, select, button {
+    font-size: 0.9em;
+    padding: 8px;
+  }
+  th, td {
+    padding: 8px;
+    font-size: 0.85em;
+  }
+}

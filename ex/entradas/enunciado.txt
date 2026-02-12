@@ -1,0 +1,14 @@
+1ºFormulario Registro
+Campos:
+Nombre Completo(texto, mínimo 3 caracteres)
+Email(Email Validacion)
+Numero de entradas(number, minimo 1 a 10)
+selecion de tipo de entrada(General, VIP, premiun)
+Boton reservar
+
+2º Validaciones
+Mostrar mensaje debajo del Campos
+Resaltar los bordes
+3ºTablas de reservas
+Nombre,email, nº entradas, tipo de entrada
+boton eliminar

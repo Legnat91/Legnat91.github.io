@@ -38,6 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (nota) nota.textContent = "";
     }*/
 
+      /*if (!correoRegex.test(correo.value.trim())) {
+  mostrarError(correo, "Formato inválido");
+  return false;
+}
+
+limpiarError(correo);
+return true; */
     if (nota) {
       nota.textContent = "";
       nota.classList.remove("cajaError");

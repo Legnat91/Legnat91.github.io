@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Venta de Entradas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>Venta de Entradas</h1>
+    <form id="formulario">
+      <label for="nombre">Nombre Completo</label>
+      <input type="text" id="nombre" placeholder="Nombre Completo">
+      <span class="texto"></span>
+
+      <label for="email">Correo Electrónico</label>
+      <input type="email" id="email" placeholder="correo@correo.es">
+      <span class="texto"></span>
+
+      <label for="nEntrada">Número de entradas</label>
+      <input type="number" id="nEntrada" min="1" max="10">
+      <span class="texto"></span>
+
+      <label for="tEntrada">Tipo de entrada</label>
+      <select id="tEntrada">
+        <option value="" disabled selected>==Elija un tipo==</option>
+        <option value="General">General</option>
+        <option value="VIP">VIP</option>
+        <option value="Premium">Premium</option>
+      </select>
+      <span class="texto"></span>
+
+      <button id="btnReserva">Reservar</button>
+    </form>
+
+    <table id="tablaR">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Entradas</th>
+          <th>Tipo</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Reservas se generarán aquí -->
+      </tbody>
+    </table>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
