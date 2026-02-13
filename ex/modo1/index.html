@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Examen</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main>
+        <h1>Examen 2º Entorno de Cliente</h1>
+        <form action="/" method="post" id="form">
+            <label for="nombre">Nombre Completo</label>
+            <input type="text" name="nombre" id="nombre" placeholder="Nombre Completo" required>
+            <span class="text-error"></span>
+            <label for="email">E-Mail</label>
+            <input type="email" name="email" id="email">
+            <span class="text-error"></span>
+            <label for="edad">Introduzca Edad</label>
+            <input type="number" name="edad" id="edad" placeholder="Debes ser mayor de edad" required>
+            <span class="text-error"></span>
+            <label for="tUsuario">Tipo de Usuario</label>
+            <select name="tUsuario" id="tUsuario">
+                <option value="" selected disabled>==Elija una opcion==</option>
+                <option value="normal">Normal</option>
+                <option value="premium">Premium</option>
+            </select>
+            <span class="text-error"></span>
+            <button type="submit" id="btnRegistro">Registrar</button>
+        </form>
+        <table>
+            <thead>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Edad</th>
+                <th>Tipo</th>
+                <th>Acción</th>
+            </thead>
+            <tbody id="tablaUsuario">
+                <!--======AQUI VAN LOS USUARIOS======-->
+            </tbody>
+        </table>
+
+    </main>
+    <script src="app.js"></script>
+</body>
+
+</html>
