@@ -1,0 +1,262 @@
+{
+  "id": "uf1",
+  "titulo": "UF1 - Introducción al lado servidor de las aplicaciones web",
+  "modulo": "Desarrollo Web en Entorno Servidor - 2º DAW",
+  "descripcion": "Introducción histórica, arquitectónica y tecnológica al desarrollo web en entorno servidor.",
+  "mapa_conceptual": {
+    "tipos_web": ["Web 1.0", "Web 1.5", "Web 2.0", "Web3"],
+    "arquitecturas": ["Cliente-Servidor", "Tres Capas"],
+    "capas": ["Presentación", "Negocio/Lógica", "Persistencia/Datos"],
+    "entorno_desarrollo": ["Sistema Operativo", "Lenguaje Servidor", "IDE", "xAMP"],
+    "clasificaciones": ["FatClient", "ThinClient", "FatServer", "ThinServer"],
+    "etapas": ["Desarrollo", "Pruebas", "Preproducción", "Producción"]
+  },
+  "indice": [
+    "1. Tipos de aplicaciones web",
+    "2. Arquitecturas de las aplicaciones web",
+    "3. Lenguajes de programación del lado del servidor",
+    "4. Preparación del entorno de desarrollo"
+  ],
+  "contenidos": [
+    {
+      "id": "1",
+      "titulo": "1. Tipos de aplicaciones web",
+      "subtemas": [
+        {
+          "id": "1.1",
+          "titulo": "Web 1.0 - Páginas estáticas",
+          "periodo": "1989 - 1998",
+          "caracteristicas": [
+            "Páginas HTML estáticas",
+            "Comunicación mediante HTTP puerto 80",
+            "Uso de CGI",
+            "Interactividad mínima con JavaScript",
+            "Repositorio de archivos .html, .css, .js"
+          ],
+          "tecnologias": ["HTML", "CSS", "JavaScript básico", "CGI"],
+          "modelo_funcionamiento": "El servidor busca el archivo solicitado y lo envía al cliente sin procesamiento dinámico."
+        },
+        {
+          "id": "1.2",
+          "titulo": "Web 1.5 - Páginas dinámicas",
+          "periodo": "1997 - 2003",
+          "caracteristicas": [
+            "Generación dinámica de HTML",
+            "Conexión a bases de datos",
+            "Personalización por usuario",
+            "Uso de parámetros GET y POST"
+          ],
+          "lenguajes": ["PHP", "ASP", "JSP"],
+          "modos_peticion": {
+            "GET": "Parámetros visibles en URL",
+            "POST": "Datos enviados en el cuerpo de la petición"
+          }
+        },
+        {
+          "id": "1.3",
+          "titulo": "Web 2.0 - Aplicaciones interactivas (RIA)",
+          "periodo": "2003 - 2014",
+          "caracteristicas": [
+            "Interactividad avanzada",
+            "AJAX",
+            "JSON y XML",
+            "Redes sociales",
+            "HTML5"
+          ],
+          "tecnologias_clave": [
+            "AJAX",
+            "HTML5",
+            "CSS3",
+            "JSON",
+            "SOAP",
+            "RSS"
+          ],
+          "conceptos": ["UX/UI", "Social Media", "Aplicaciones híbridas"]
+        },
+        {
+          "id": "1.4",
+          "titulo": "Web3 - Aplicaciones distribuidas",
+          "periodo": "2014 - Actualidad",
+          "caracteristicas": [
+            "Blockchain",
+            "Metaverso",
+            "Descentralización",
+            "Tokens digitales",
+            "Control de identidad digital"
+          ],
+          "tecnologias": ["Blockchain", "Criptomonedas", "Smart Contracts"]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "titulo": "2. Arquitecturas de las aplicaciones web",
+      "subtemas": [
+        {
+          "id": "2.1",
+          "titulo": "Arquitectura Cliente-Servidor",
+          "descripcion": "Modelo de dos capas donde el cliente solicita recursos al servidor.",
+          "protocolos": ["HTTP", "HTTPS", "FTP", "SMTP", "TCP/IP", "DNS"],
+          "ventajas": [
+            "Escalabilidad vertical y horizontal",
+            "Control centralizado",
+            "Mantenimiento sencillo"
+          ],
+          "desventajas": [
+            "Dependencia de la red",
+            "Necesidad de tolerancia a fallos"
+          ]
+        },
+        {
+          "id": "2.2",
+          "titulo": "Arquitectura de Tres Capas",
+          "capas": [
+            {
+              "nombre": "Presentación",
+              "nivel": 1,
+              "descripcion": "Interfaz visible para el usuario (front-end)"
+            },
+            {
+              "nombre": "Negocio o Lógica",
+              "nivel": 2,
+              "descripcion": "Procesamiento de reglas y lógica de aplicación (back-end)"
+            },
+            {
+              "nombre": "Persistencia o Datos",
+              "nivel": 3,
+              "descripcion": "Gestión y almacenamiento de datos en SGBD"
+            }
+          ],
+          "ventajas": [
+            "Mayor modularidad",
+            "Mayor seguridad",
+            "Reutilización de lógica",
+            "Mejor rendimiento"
+          ],
+          "desventajas": [
+            "Mayor complejidad",
+            "Necesidad de balanceo de carga"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "titulo": "3. Lenguajes de programación del lado del servidor",
+      "subtemas": [
+        {
+          "id": "3.1",
+          "titulo": "Front-End",
+          "tecnologias": ["HTML5", "CSS3", "JavaScript"],
+          "frameworks": ["Angular", "React", "Vue"]
+        },
+        {
+          "id": "3.2",
+          "titulo": "Back-End",
+          "lenguajes": [
+            "PHP",
+            "Python",
+            "Java EE",
+            "C#",
+            "ASP.NET",
+            "Ruby"
+          ],
+          "tipos": {
+            "Scripting": ["PHP", "ASP", "JSP", "Python", "Perl"],
+            "Servelts": ["Java Servlets"],
+            "Hibridas": [".NET ASPX"]
+          }
+        },
+        {
+          "id": "3.3",
+          "titulo": "Clasificaciones",
+          "modelos": [
+            "FatClient",
+            "ThinClient",
+            "FatServer",
+            "ThinServer"
+          ]
+        },
+        {
+          "id": "3.4",
+          "titulo": "Etapas de desarrollo",
+          "etapas": [
+            "Desarrollo",
+            "Pruebas/Test",
+            "Preproducción",
+            "Producción"
+          ]
+        },
+        {
+          "id": "3.5",
+          "titulo": "Herramientas",
+          "categorias": [
+            "Navegadores",
+            "Editores de texto",
+            "IDE",
+            "Gestores de bases de datos",
+            "Control de versiones"
+          ],
+          "ide_recomendado": "Visual Studio Code"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "titulo": "4. Preparación del entorno de desarrollo",
+      "subtemas": [
+        {
+          "id": "4.1",
+          "titulo": "Sistema Operativo",
+          "opciones": ["Linux", "Windows", "macOS"]
+        },
+        {
+          "id": "4.2",
+          "titulo": "Lenguaje del lado servidor",
+          "principal": "PHP",
+          "version_referencia": "8.x"
+        },
+        {
+          "id": "4.3",
+          "titulo": "IDE",
+          "recomendado": "Visual Studio Code",
+          "alternativas": ["Eclipse", "NetBeans", "phpStorm"]
+        },
+        {
+          "id": "4.4",
+          "titulo": "xAMP",
+          "variantes": ["LAMP", "MAMP", "WAMP"],
+          "componentes": [
+            "Apache",
+            "MySQL/MariaDB",
+            "PHP"
+          ],
+          "archivos_importantes": ["php.ini"],
+          "puertos": {
+            "HTTP": 80,
+            "HTTPS": 443,
+            "Alternativo": 8080
+          }
+        }
+      ]
+    }
+  ],
+  "casos_practicos": [
+    {
+      "titulo": "Aplicaciones en AS400",
+      "descripcion": "Análisis de aplicaciones legacy en ILE RPG y COBOL.",
+      "ventajas": [
+        "Alta estabilidad",
+        "Infraestructura amortizada"
+      ],
+      "desventajas": [
+        "Tecnologías propietarias",
+        "Difícil migración",
+        "Dependencia del proveedor"
+      ]
+    }
+  ],
+  "version": "1.0",
+  "autor": "Temario DAW 2º Entorno Servidor",
+  "fecha_creacion": "2026-02-19"
+}
