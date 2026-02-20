@@ -1,0 +1,108 @@
+{
+"id": "tema02",
+"titulo": "Tema 2 - PHP Básico",
+"resumen": {
+"version": 1,
+"texto": "PHP es un lenguaje de programación del lado del servidor que se integra fácilmente con HTML mediante código embebido entre las etiquetas <?php y ?>. No requiere declarar el tipo de las variables, que se identifican con el símbolo $ y son sensibles a mayúsculas y minúsculas. Incluye operadores aritméticos, de comparación y lógicos, así como estructuras de control condicionales (if, switch) e iterativas (while, do...while, for y foreach). Dispone de tipos de datos escalares como boolean, integer, float y string. Las cadenas pueden declararse con comillas simples o dobles, heredoc y nowdoc, y existen múltiples funciones para su manipulación. Para fechas se utilizan funciones como date(), mktime(), date_create() y date_diff(). PHP permite definir constantes con define(), usar constantes predefinidas y mágicas, y crear variables dinámicas. Los arrays son estructuras clave-valor, pueden ser indexados o asociativos, dinámicos y multidimensionales, y cuentan con numerosas funciones de gestión. Las funciones en PHP pueden recibir parámetros, devolver valores, admitir tipos, parámetros por defecto, número variable de argumentos y paso por referencia. Para reutilizar código se emplean include, require e include_once/require_once.",
+"puntos_clave": [
+"PHP se integra con HTML mediante código embebido entre <?php y ?>.",
+"No es obligatorio declarar tipos; existen tipos escalares como boolean, integer, float y string.",
+"Estructuras de control: if, switch, while, do...while, for y foreach.",
+"Las cadenas admiten comillas simples, dobles, heredoc y nowdoc, y múltiples funciones específicas.",
+"Funciones para fechas: date(), mktime(), date_create() y date_diff().",
+"Arrays dinámicos, asociativos y multidimensionales con funciones específicas.",
+"Funciones con parámetros, retorno, valores por defecto, paso por referencia y número variable de argumentos.",
+"Reutilización de código mediante include, require e include_once/require_once."
+]
+},
+"test": {
+"version": 1,
+"preguntas": [
+{
+"id": "t2q1",
+"enunciado": "¿Qué extensión debe tener un documento que contiene código PHP embebido en HTML?",
+"opciones": [".html", ".php", ".js", ".css"],
+"correcta": 1,
+"explicacion": "El temario indica que, aunque el documento contenga principalmente HTML, si incluye código PHP debe tener obligatoriamente la extensión .php."
+},
+{
+"id": "t2q2",
+"enunciado": "¿Cuál de los siguientes tipos es un tipo de dato escalar en PHP?",
+"opciones": ["array", "object", "integer", "resource"],
+"correcta": 2,
+"explicacion": "Según el temario, los tipos escalares básicos en PHP son boolean, integer, float y string."
+},
+{
+"id": "t2q3",
+"enunciado": "¿Qué estructura es más adecuada cuando se evalúa una expresión y se agrupan varios valores que ejecutan el mismo bloque de código?",
+"opciones": ["if simple", "for", "switch", "while"],
+"correcta": 2,
+"explicacion": "El temario explica que switch resulta más sencillo para agrupar casos que se comportan de la misma manera, evitando múltiples evaluaciones como en if...elseif."
+},
+{
+"id": "t2q4",
+"enunciado": "¿Cuál es la diferencia principal entre while y do...while?",
+"opciones": [
+"while siempre se ejecuta al menos una vez",
+"do...while evalúa la condición antes de ejecutar el bloque",
+"do...while ejecuta el bloque al menos una vez",
+"No existe diferencia"
+],
+"correcta": 2,
+"explicacion": "En do...while la condición se evalúa al final, por lo que el bloque se ejecuta al menos una vez, tal como indica el temario."
+},
+{
+"id": "t2q5",
+"enunciado": "¿Qué función permite obtener la longitud de una cadena?",
+"opciones": ["count()", "strlen()", "size()", "strlength()"],
+"correcta": 1,
+"explicacion": "El temario recoge strlen() como la función que devuelve la longitud de una cadena."
+},
+{
+"id": "t2q6",
+"enunciado": "¿Qué función genera una fecha a partir de hora, minutos, segundos, mes, día y año específicos?",
+"opciones": ["date()", "strtotime()", "mktime()", "date_diff()"],
+"correcta": 2,
+"explicacion": "El temario indica que mktime() genera una fecha/hora determinada por el usuario a partir de esos parámetros."
+},
+{
+"id": "t2q7",
+"enunciado": "¿Qué función se utiliza para definir una constante en PHP?",
+"opciones": ["const()", "define()", "constant()", "setconst()"],
+"correcta": 1,
+"explicacion": "Las constantes se definen mediante la instrucción define, proporcionando nombre y valor, según el temario."
+},
+{
+"id": "t2q8",
+"enunciado": "¿Qué estructura es más adecuada para recorrer un array asociativo sin claves numéricas correlativas?",
+"opciones": ["for", "while", "foreach", "do...while"],
+"correcta": 2,
+"explicacion": "El temario explica que foreach permite recorrer arrays sin necesidad de posiciones correlativas ni índices numéricos."
+},
+{
+"id": "t2q9",
+"enunciado": "¿Qué ocurre si se utiliza require y el fichero indicado no existe?",
+"opciones": [
+"Se ignora y el programa continúa",
+"Se lanza un aviso pero continúa",
+"Se lanza un error y el programa se detiene",
+"Se crea automáticamente el fichero"
+],
+"correcta": 2,
+"explicacion": "A diferencia de include, require lanza un error si el fichero no existe y el programa se detiene, según el temario."
+},
+{
+"id": "t2q10",
+"enunciado": "¿Cómo se consigue que una función modifique el valor original de una variable pasada como parámetro?",
+"opciones": [
+"Declarando la variable como static",
+"Usando el operador ternario",
+"Pasando el parámetro por referencia con &",
+"Usando include_once"
+],
+"correcta": 2,
+"explicacion": "El temario indica que, para que los cambios persistan fuera de la función, el parámetro debe pasarse por referencia precedido por &."
+}
+]
+}
+}

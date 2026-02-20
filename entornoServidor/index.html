@@ -1,27 +1,277 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>App Oposiciones</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Temario & Tests (Vanilla)</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">📚</div>
+      <div class="brand-text">
+        <h1>Temario & Tests</h1>
+        <p class="muted">100% cliente · JSON en <code>/temario</code> · export/import</p>
+      </div>
+    </div>
 
-    <header>
-        <h1>📚 Plataforma de Estudio</h1>
-        <nav id="main-nav"></nav>
-    </header>
+    <div class="topbar-actions">
+      <button id="btnTheme" class="btn btn-ghost" type="button" title="Alternar modo oscuro">
+        <span class="btn-icon" aria-hidden="true">🌓</span>
+        <span>Modo</span>
+      </button>
+      <button id="btnHelp" class="btn btn-ghost" type="button" title="Ayuda rápida">
+        <span class="btn-icon" aria-hidden="true">❔</span>
+        <span>Ayuda</span>
+      </button>
+    </div>
+  </header>
 
-    <main id="app">
-        <!-- Contenido dinámico -->
+  <div class="app">
+    <aside class="sidebar" aria-label="Lista de temas">
+      <div class="sidebar-header">
+        <h2>Temas</h2>
+        <div class="sidebar-sub">
+          <span id="manifestStatus" class="pill">Cargando manifest…</span>
+        </div>
+      </div>
+
+      <div class="sidebar-body">
+        <div class="search">
+          <input id="topicSearch" type="search" placeholder="Buscar tema…" autocomplete="off" />
+        </div>
+        <nav id="topicList" class="topic-list" aria-label="Temas disponibles">
+          <!-- items -->
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="small muted">
+          Consejo: sirve con Live Server (fetch necesita servidor).
+        </div>
+      </div>
+    </aside>
+
+    <main class="main" aria-label="Panel principal">
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2 id="currentTitle">Selecciona un tema</h2>
+            <p id="currentMeta" class="muted">Carga un tema desde la lista para ver resumen y tests.</p>
+          </div>
+
+          <div class="panel-actions">
+            <button id="btnViewSummary" class="btn" type="button" disabled>Ver resumen</button>
+            <button id="btnTopicTest" class="btn" type="button" disabled>Test del tema</button>
+            <button id="btnExam" class="btn" type="button">Examen (varios temas)</button>
+
+            <div class="divider" aria-hidden="true"></div>
+
+            <button id="btnImport" class="btn btn-secondary" type="button">Importar JSON</button>
+            <button id="btnExport" class="btn btn-secondary" type="button" disabled>Exportar JSON</button>
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <div id="alerts" class="alerts" aria-live="polite"></div>
+
+          <!-- Home / empty state -->
+          <div id="homeView" class="view">
+            <div class="empty">
+              <div class="empty-emoji" aria-hidden="true">🧠</div>
+              <h3>Gestiona resúmenes y practica con tests</h3>
+              <p class="muted">
+                Abre un tema para editar su resumen o lanzar un test.
+                Usa <strong>Importar</strong> para cargar un JSON actualizado en memoria y luego
+                <strong>Exportar</strong> para descargarlo.
+              </p>
+              <ul class="checklist">
+                <li>Manifest: <code>/temario/manifest.json</code></li>
+                <li>Temas: <code>/temario/temaX.json</code></li>
+                <li>Sin backend: todo se guarda exportando/importando</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Summary View -->
+          <div id="summaryView" class="view hidden">
+            <div class="grid two">
+              <div class="card">
+                <div class="card-header">
+                  <h3>Resumen (vista)</h3>
+                  <p class="muted">Texto y puntos clave del tema cargado.</p>
+                </div>
+                <div class="card-body">
+                  <div class="field">
+                    <label class="label">Texto</label>
+                    <div id="summaryTextPreview" class="prose box"></div>
+                  </div>
+                  <div class="field">
+                    <label class="label">Puntos clave</label>
+                    <ul id="summaryKeyPointsPreview" class="bullets"></ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h3>Editor (en memoria)</h3>
+                  <p class="muted">Pega aquí cambios y aplica en memoria. Exporta para descargar el JSON.</p>
+                </div>
+                <div class="card-body">
+                  <div class="field">
+                    <label class="label" for="summaryTextInput">Resumen.texto</label>
+                    <textarea id="summaryTextInput" class="textarea" rows="10" placeholder="Escribe/pega el resumen..."></textarea>
+                  </div>
+
+                  <div class="field">
+                    <label class="label" for="summaryPointsInput">Resumen.puntos_clave (1 por línea)</label>
+                    <textarea id="summaryPointsInput" class="textarea" rows="6" placeholder="Punto 1&#10;Punto 2&#10;Punto 3"></textarea>
+                  </div>
+
+                  <div class="row actions">
+                    <button id="btnApplySummary" class="btn" type="button" disabled>Aplicar cambios (en memoria)</button>
+                    <button id="btnSaveLocal" class="btn btn-ghost" type="button" disabled title="Guarda una copia del tema en localStorage">
+                      Guardar en localStorage
+                    </button>
+                  </div>
+
+                  <div class="small muted">
+                    Nota: si importas un tema con un <code>id</code> existente, reemplaza el tema en memoria.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Test View (single engine for topic test and exam) -->
+          <div id="testView" class="view hidden">
+            <div class="card">
+              <div class="card-header">
+                <h3 id="testTitle">Test</h3>
+                <p id="testSubtitle" class="muted">Configura y comienza.</p>
+              </div>
+
+              <div class="card-body">
+                <!-- Config -->
+                <div id="testConfig" class="stack">
+                  <div class="grid three">
+                    <div class="field">
+                      <label class="label" for="numQuestions">Nº preguntas</label>
+                      <input id="numQuestions" type="number" min="1" step="1" class="input" />
+                      <div id="numQuestionsHint" class="hint muted"></div>
+                    </div>
+
+                    <div class="field">
+                      <label class="label" for="shuffleQuestions">Aleatorizar</label>
+                      <select id="shuffleQuestions" class="input">
+                        <option value="yes" selected>Sí</option>
+                        <option value="no">No</option>
+                      </select>
+                      <div class="hint muted">Mezcla el orden de preguntas.</div>
+                    </div>
+
+                    <div class="field">
+                      <label class="label">Acciones</label>
+                      <div class="row">
+                        <button id="btnStartTest" class="btn" type="button">Empezar</button>
+                        <button id="btnResetTest" class="btn btn-secondary" type="button">Reiniciar</button>
+                      </div>
+                      <div class="hint muted">Reiniciar vuelve a configuración.</div>
+                    </div>
+                  </div>
+
+                  <!-- Exam topic selector -->
+                  <div id="examTopicSelector" class="card subtle hidden">
+                    <div class="card-body">
+                      <div class="row between">
+                        <div>
+                          <strong>Selecciona temas para el examen</strong>
+                          <div class="muted small">Se repartirán preguntas lo más equitativo posible (proporcional a disponibilidad).</div>
+                        </div>
+                        <div class="row">
+                          <button id="btnSelectAllExam" class="btn btn-ghost" type="button">Marcar todos</button>
+                          <button id="btnSelectNoneExam" class="btn btn-ghost" type="button">Ninguno</button>
+                        </div>
+                      </div>
+
+                      <div id="examTopicsList" class="exam-topics"></div>
+
+                      <div class="muted small">
+                        Nota: si un tema no está cargado aún, la app intentará cargarlo al iniciar el examen.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Runtime -->
+                <div id="testRuntime" class="hidden">
+                  <div class="row between wrap">
+                    <div class="progress">
+                      <div class="pill" id="progressPill">0/0</div>
+                      <div class="pill" id="scorePill">Puntuación: 0</div>
+                    </div>
+                    <div class="row">
+                      <button id="btnPrevQ" class="btn btn-ghost" type="button" disabled>◀ Anterior</button>
+                      <button id="btnNextQ" class="btn btn-ghost" type="button" disabled>Siguiente ▶</button>
+                    </div>
+                  </div>
+
+                  <hr class="hr" />
+
+                  <div id="questionBox" class="question">
+                    <div class="question-meta muted small" id="questionMeta"></div>
+                    <h4 id="questionText" class="question-text">—</h4>
+
+                    <form id="optionsForm" class="options" aria-label="Opciones">
+                      <!-- radio options -->
+                    </form>
+
+                    <div class="row actions wrap">
+                      <button id="btnCheck" class="btn" type="button">Comprobar</button>
+                      <button id="btnReveal" class="btn btn-secondary" type="button">Mostrar explicación</button>
+                      <button id="btnFinish" class="btn btn-secondary" type="button">Finalizar</button>
+                    </div>
+
+                    <div id="feedback" class="feedback hidden" aria-live="polite"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Help modal -->
+          <dialog id="helpDialog" class="dialog">
+            <div class="dialog-header">
+              <h3>Ayuda rápida</h3>
+              <button id="btnCloseHelp" class="btn btn-ghost" type="button">Cerrar</button>
+            </div>
+            <div class="dialog-body">
+              <ul class="help-list">
+                <li><strong>Importar JSON</strong>: carga un tema desde archivo y lo sustituye en memoria (mismo <code>id</code>).</li>
+                <li><strong>Aplicar cambios</strong>: modifica el resumen del tema en memoria.</li>
+                <li><strong>Exportar JSON</strong>: descarga el tema actual como <code>temaX.json</code>.</li>
+                <li><strong>localStorage</strong> (opcional): guarda/recupera una copia local por <code>id</code> (no sustituye export/import).</li>
+              </ul>
+              <p class="muted small">
+                Si ves errores de <code>fetch</code>, asegúrate de usar un servidor estático (no <code>file://</code>).
+              </p>
+            </div>
+          </dialog>
+
+          <!-- Hidden file input -->
+          <input id="fileInput" type="file" accept="application/json" class="hidden" />
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span class="muted small">Hecho con HTML/CSS/JS vanilla · Sin backend</span>
+      </footer>
     </main>
+  </div>
 
-    <footer>
-        <p>Progreso guardado automáticamente</p>
-    </footer>
-
-    <script type="module" src="assets/js/app.js"></script>
-
+  <script src="app.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,216 @@
+{
+  "id": "tema1",
+  "titulo": "UF1 - Introducción al lado servidor de las aplicaciones web",
+  "resumen": {
+    "version": 1,
+    "texto": "Esta unidad introduce el desarrollo web en entorno servidor, repasando la evolución de las aplicaciones web (Web 1.0, 1.5, 2.0 y Web3), las arquitecturas más habituales (cliente-servidor y tres capas) y el reparto de responsabilidades entre front-end y back-end.\n\n1) Evolución de la Web:\n- Web 1.0 (aprox. 1989–1997): sitios con páginas estáticas servidas desde el repositorio del servidor web. El cliente solicita recursos (GET) y el servidor entrega HTML/CSS/JS. En servidor se usaba CGI/FastCGI para casos concretos (hoy en desuso).\n- Web 1.5 (aprox. 1997–2003): páginas dinámicas en servidor con lenguajes como PHP, ASP.NET o JSP. El servidor construye HTML en tiempo real, personalizando respuestas con parámetros (GET/POST) y consultas a base de datos.\n- Web 2.0 / RIA / híbridas (aprox. 2003–2014): auge de redes sociales, mayor ancho de banda y aplicaciones interactivas. Aparecen/crecen estándares y técnicas como AJAX y HTML5, reduciendo la dependencia de plugins (Flash/Flex/AIR, Silverlight, etc.).\n- Web3 (desde 2014–actualidad según el texto): tendencia a Internet distribuida, más autonomía y control del usuario sobre datos/contenidos, con conceptos como blockchain, tokenización y metaverso.\n\n2) Arquitecturas:\n- Cliente-servidor (dos capas): el cliente solicita recursos y el servidor responde, normalmente vía HTTP/HTTPS. Requiere entender protocolos TCP/IP relacionados (IP, TCP/UDP, DNS, etc.). Ventajas: escalabilidad y control centralizado. Inconveniente: tolerancia a fallos y aumento de tráfico.\n- Tres capas: separación en capa de presentación (front-end), capa de negocio/lógica (back-end) y capa de persistencia/datos (servidor de BD). Ventajas: flexibilidad, seguridad, rendimiento y mantenibilidad. Inconvenientes: complejidad, balanceo de carga y compatibilidades.\n\n3) Lenguajes y roles:\n- Front-end: capa de presentación (HTML/CSS/JS) y, a veces, frameworks (Angular/Vue/React). Participan perfiles de desarrollo y UI/UX.\n- Back-end: capa de negocio y acceso a datos. Lenguajes de servidor: PHP, Perl, Python, Ruby, Java EE, C#, ASP.NET, etc. Incluye modelos como scripting (generación dinámica), servlets (Java) y plataformas híbridas (ASP.NET con controles procesados en servidor).\n\n4) Clasificaciones y etapas:\n- Clasificación por reparto de carga: FatClient/ThinServer vs FatServer/ThinClient.\n- Etapas del desarrollo: desarrollo, pruebas/test, preproducción y producción.\n\n5) Preparación del entorno:\nSe elige sistema operativo, lenguaje, IDE y una plataforma xAMP (LAMP/MAMP/WAMP). Se destaca la necesidad de conocer rutas como htdocs para publicar .php y la configuración de PHP mediante php.ini. La función phpinfo() permite ver la ruta del archivo de configuración cargado.",
+    "puntos_clave": [
+      "Web 1.0: páginas estáticas; el servidor entrega recursos del sistema de archivos; CGI/FastCGI hoy en desuso",
+      "Web 1.5: páginas dinámicas en servidor (PHP/ASP.NET/JSP) generando HTML y consultando BD",
+      "GET añade parámetros en URL; POST envía datos sin modificar la URL y permite cargas más flexibles",
+      "Web 2.0/RIA: interactividad, redes sociales, estándares (AJAX/HTML5) y desaparición progresiva de plugins",
+      "Web3: tendencia hacia Internet distribuida, mayor control del usuario y tecnologías como blockchain",
+      "Arquitectura cliente-servidor: dos capas; HTTP/HTTPS; escalabilidad y control centralizado; exige tolerancia a fallos",
+      "Arquitectura de tres capas: presentación, lógica y datos; mejora flexibilidad, seguridad y mantenibilidad",
+      "Front-end: capa de presentación; Back-end: lógica de negocio y acceso a persistencia",
+      "Clasificación por peso: FatClient/ThinServer vs FatServer/ThinClient",
+      "Etapas: desarrollo, pruebas, preproducción, producción; entorno típico: IDE + xAMP + configuración PHP (php.ini/phpinfo)"
+    ]
+  },
+  "test": {
+    "version": 1,
+    "preguntas": [
+      {
+        "id": "t1q1",
+        "enunciado": "¿Qué caracteriza principalmente a la Web 1.0 según el temario?",
+        "opciones": [
+          "Aplicaciones distribuidas basadas en blockchain",
+          "Páginas estáticas servidas desde el repositorio del servidor web",
+          "Aplicaciones interactivas con AJAX y HTML5",
+          "Páginas dinámicas generadas por PHP con acceso a BD"
+        ],
+        "correcta": 1,
+        "explicacion": "La Web 1.0 se describe como etapa de páginas estáticas donde el servidor busca el recurso en el sistema de archivos y lo entrega al cliente.",
+        "tags": [
+          "web1",
+          "conceptos"
+        ]
+      },
+      {
+        "id": "t1q2",
+        "enunciado": "En la Web 1.0, ¿qué tecnología del lado servidor se menciona para ejecutar programas a petición del cliente y que está en desuso actualmente?",
+        "opciones": [
+          "AJAX",
+          "CGI/FastCGI",
+          "JSP",
+          "ASP.NET"
+        ],
+        "correcta": 1,
+        "explicacion": "El texto menciona CGI (y su actualización FastCGI) como interfaz común para ejecutar programas en servidor en la etapa 1.0, indicando que está en desuso.",
+        "tags": [
+          "web1",
+          "servidor"
+        ]
+      },
+      {
+        "id": "t1q3",
+        "enunciado": "¿Qué diferencia clave introduce la Web 1.5 respecto a la Web 1.0?",
+        "opciones": [
+          "El uso de páginas estáticas sin personalización",
+          "La generación dinámica de HTML en el servidor con lenguajes como PHP",
+          "La desaparición de HTTP y adopción exclusiva de FTP",
+          "El uso obligatorio de plugins como Flash en el navegador"
+        ],
+        "correcta": 1,
+        "explicacion": "En la Web 1.5 el servidor procesa código (PHP/ASP.NET/JSP) y construye la respuesta HTML de forma dinámica, frecuentemente consultando BD.",
+        "tags": [
+          "web15",
+          "dinamicas"
+        ]
+      },
+      {
+        "id": "t1q4",
+        "enunciado": "Según el temario, ¿qué afirmación describe mejor el método POST frente a GET?",
+        "opciones": [
+          "POST siempre modifica la URL para añadir parámetros en texto claro",
+          "GET permite enviar imágenes o vídeos sin limitaciones y sin modificar la URL",
+          "POST no necesita modificar la URL y aporta discreción al no guardar información en el cliente",
+          "GET es más discreto porque no muestra variables en la URL"
+        ],
+        "correcta": 2,
+        "explicacion": "El texto indica que POST no modifica la URL, aporta discreción y permite flexibilidad en el envío (incluyendo ficheros), mientras que GET añade pares variable=valor en la URL.",
+        "tags": [
+          "http",
+          "get-post"
+        ]
+      },
+      {
+        "id": "t1q5",
+        "enunciado": "¿Qué idea se asocia a la Web 2.0/RIA en el temario?",
+        "opciones": [
+          "Web sin interactividad y centrada en repositorios de HTML",
+          "Dependencia permanente de plugins no estándar como condición imprescindible",
+          "Mayor interactividad, estándares como AJAX/HTML5 y reducción de plugins de terceros",
+          "Ejecución exclusiva de CGI en el servidor"
+        ],
+        "correcta": 2,
+        "explicacion": "La unidad explica que, con AJAX y HTML5, se logró un diálogo más fluido cliente-servidor y se redujo la necesidad de plugins (Flash/Flex/AIR, etc.).",
+        "tags": [
+          "web2",
+          "ria"
+        ]
+      },
+      {
+        "id": "t1q6",
+        "enunciado": "¿Cuál es la definición correcta de la arquitectura cliente-servidor según el temario?",
+        "opciones": [
+          "Tres niveles: presentación, lógica y datos, cada uno en un servidor distinto",
+          "Dos capas: cliente solicita recursos y servidor responde a través de Internet",
+          "Un único nivel local sin comunicaciones de red",
+          "Solo funciona con protocolos propietarios no estándar"
+        ],
+        "correcta": 1,
+        "explicacion": "La arquitectura cliente-servidor se describe como dos niveles/capas donde el cliente pide recursos y el servidor contesta, típicamente por HTTP/HTTPS.",
+        "tags": [
+          "arquitectura",
+          "cliente-servidor"
+        ]
+      },
+      {
+        "id": "t1q7",
+        "enunciado": "En el modelo de tres capas, ¿qué capa se encarga de la lógica del negocio?",
+        "opciones": [
+          "Capa de presentación (nivel 1)",
+          "Capa de negocio o lógica (nivel 2)",
+          "Capa de persistencia o datos (nivel 3)",
+          "Capa de red (nivel 0)"
+        ],
+        "correcta": 1,
+        "explicacion": "El temario define el nivel 2 como la capa de negocio/lógica (back-end), donde reside la funcionalidad del sistema.",
+        "tags": [
+          "tres-capas",
+          "backend"
+        ]
+      },
+      {
+        "id": "t1q8",
+        "enunciado": "¿Qué ventaja se menciona para la arquitectura en tres niveles?",
+        "opciones": [
+          "Elimina totalmente la necesidad de balanceo de carga",
+          "Permite cambiar una capa con menor impacto en las demás",
+          "Garantiza compatibilidad total entre todos los navegadores",
+          "Impide la reutilización de la capa intermedia"
+        ],
+        "correcta": 1,
+        "explicacion": "Entre las ventajas indicadas: flexibilidad y facilidad para cambiar o modificar una parte de una capa sin afectar a las otras.",
+        "tags": [
+          "tres-capas",
+          "ventajas"
+        ]
+      },
+      {
+        "id": "t1q9",
+        "enunciado": "¿Cuál de estas opciones describe mejor el front-end según el temario?",
+        "opciones": [
+          "La capa de persistencia de datos y administración de SGBD",
+          "La capa de presentación basada en HTML5, CSS3 y JavaScript",
+          "El conjunto de microservicios serverless en la nube",
+          "Los procesos pasivos del servidor web que escuchan por puerto 53"
+        ],
+        "correcta": 1,
+        "explicacion": "El front-end se define como la capa de presentación, normalmente con HTML5/CSS3/JS (y opcionalmente frameworks).",
+        "tags": [
+          "frontend",
+          "presentacion"
+        ]
+      },
+      {
+        "id": "t1q10",
+        "enunciado": "Según el temario, ¿qué herramienta permite ver la ruta del php.ini cargado por PHP?",
+        "opciones": [
+          "Ejecutar un ping al servidor",
+          "La función phpinfo() en un archivo .php",
+          "Abrir el archivo index.html en el navegador",
+          "Consultar el puerto 53 en el servidor DNS"
+        ],
+        "correcta": 1,
+        "explicacion": "Se indica que ejecutando phpinfo() se puede ver la directiva \"Loaded Configuration File\", que muestra la ruta de php.ini.",
+        "tags": [
+          "php",
+          "entorno"
+        ]
+      },
+      {
+        "id": "t1q11",
+        "enunciado": "¿Cuál es el orden correcto de etapas del desarrollo web híbrido según la tabla del temario?",
+        "opciones": [
+          "Producción → Preproducción → Pruebas → Desarrollo",
+          "Desarrollo → Pruebas/test → Preproducción → Producción",
+          "Pruebas → Desarrollo → Producción → Preproducción",
+          "Desarrollo → Producción → Pruebas → Preproducción"
+        ],
+        "correcta": 1,
+        "explicacion": "La tabla de etapas muestra: Desarrollo, Pruebas/test, Preproducción y Producción.",
+        "tags": [
+          "ciclo-vida"
+        ]
+      },
+      {
+        "id": "t1q12",
+        "enunciado": "¿Qué describe mejor la clasificación FatClient (ThinServer) según el temario?",
+        "opciones": [
+          "El mayor peso de la aplicación se ejecuta en el cliente",
+          "El mayor peso de la aplicación se ejecuta en el servidor",
+          "Es una arquitectura exclusiva de tres capas",
+          "Implica que la aplicación solo funciona con plugins"
+        ],
+        "correcta": 0,
+        "explicacion": "El temario indica: FatClient (ThinServer) significa que el mayor peso de la aplicación se ejecuta en el cliente.",
+        "tags": [
+          "clasificacion",
+          "fatclient"
+        ]
+      }
+    ]
+  }
+}

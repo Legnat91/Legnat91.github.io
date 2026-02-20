@@ -1,0 +1,6 @@
+{
+  "temas": [
+    { "id": "tema01", "titulo": "UF1 - Introducción al lado servidor", "file": "tema01.json" },
+    { "id": "tema02", "titulo": "UF2: Sintaxis, tipos, cadenas/fechas, control, arrays, funciones e include/require", "file": "tema02.json" }
+  ]
+}
