@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>DAW Notes</title>
+  <meta name="theme-color" content="#0f172a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="brand" type="button" data-action="go-home" aria-label="Ir al inicio">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="brand-copy">
+          <span class="eyebrow">Plataforma de estudio</span>
+          <strong>DAW Notes</strong>
+        </span>
+      </button>
+
+      <div class="topbar-actions">
+        <button id="theme-toggle" class="btn btn-soft" type="button" aria-label="Cambiar tema">
+          <span class="theme-icon">🌙</span>
+          <span class="theme-label">Modo oscuro</span>
+        </button>
+        <button id="home-button" class="btn btn-ghost hidden" type="button">Inicio</button>
+      </div>
+    </header>
+
+    <main id="app" class="view-root" aria-live="polite">
+      <section class="card state-card loading-state">
+        <div class="spinner" aria-hidden="true"></div>
+        <div>
+          <h2>Cargando contenido…</h2>
+          <p>Preparando asignaturas, temas, conceptos clave y tests desde JSON.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
