@@ -5191,567 +5191,644 @@
           ]
         },
         {
-"id": "tema_transferencia_de_archivos",
-"titulo": "Transferencia de archivos",
-"resumen": "<p>La <strong>transferencia de archivos</strong> es uno de los usos más importantes de las redes de ordenadores, ya que permite almacenar, consultar, copiar, mover y gestionar información ubicada en sistemas remotos. En este contexto suele utilizarse el modelo <strong>cliente-servidor</strong>, donde un cliente solicita operaciones sobre archivos y un servidor las atiende a través de un protocolo específico y apoyándose en su sistema de archivos. Esta idea es clave: no basta con que haya red, sino que deben intervenir un <strong>programa cliente</strong>, un <strong>servidor</strong>, un <strong>protocolo de transferencia</strong> y un <strong>sistema de archivos remoto</strong>. Entre los protocolos más importantes del tema aparecen FTP, FTPS, SFTP, TFTP, NFS, WebDAV, Samba, rsync o SMB/CIFS, cada uno orientado a necesidades concretas.</p><p>El protocolo <strong>FTP</strong> nació con el objetivo de transferir datos entre ordenadores de forma eficiente y fiable. Aunque históricamente fue muy importante y aún se usa en algunos entornos, hay que entender bien su filosofía y sus limitaciones. FTP utiliza dos conexiones diferenciadas: una <strong>conexión de control</strong>, por la que viajan órdenes y respuestas, y una <strong>conexión de datos</strong>, por la que circulan los archivos. Esta separación lo distingue claramente de otros protocolos y explica muchos de sus problemas prácticos cuando aparecen cortafuegos, routers o NAT. Por defecto, la conexión de control se asocia al <strong>puerto 21/TCP</strong> y la de datos al <strong>puerto 20/TCP</strong>.</p><p>Las <strong>órdenes FTP</strong> indican cómo debe comportarse la comunicación: pueden referirse al modo de transferencia, al puerto usado, a la lectura o escritura de archivos, al borrado de información o al acceso a directorios. Para que el cliente conozca en todo momento el estado del servidor, FTP emplea <strong>códigos de respuesta</strong> de tres cifras. La primera cifra marca la clase de respuesta: <strong>1xx</strong> para respuestas preliminares positivas, <strong>2xx</strong> para respuestas de finalización positiva, <strong>3xx</strong> para respuestas intermedias positivas que requieren más datos, <strong>4xx</strong> para errores transitorios y <strong>5xx</strong> para errores permanentes. Conviene memorizar ejemplos representativos como <strong>220</strong> para servidor preparado, <strong>230</strong> para inicio de sesión correcto, <strong>331</strong> para solicitud de contraseña, <strong>421</strong> para servicio no disponible, <strong>425</strong> para imposibilidad de abrir la conexión de datos, <strong>530</strong> para autenticación fallida y <strong>550</strong> para archivo inaccesible o sin permisos.</p><p>Uno de los apartados más importantes del tema son los <strong>modos de conexión FTP</strong>. En <strong>modo activo</strong>, el cliente abre la conexión de control hacia el puerto 21 del servidor, pero la conexión de datos la inicia el servidor desde su puerto 20 hacia un puerto alto del cliente. Esto puede ocasionar problemas con cortafuegos del lado cliente, ya que este debe aceptar conexiones entrantes. En <strong>modo pasivo</strong>, el cliente inicia tanto la conexión de control como la de datos; primero conecta al puerto 21 del servidor y después abre la conexión de datos hacia el puerto que el servidor le indique. Este modo suele ser más cómodo en entornos con cortafuegos y NAT, porque evita que el cliente reciba conexiones entrantes inesperadas. Entender esta diferencia no es solo teoría: explica por qué muchas veces una conexión FTP funciona en pasivo pero falla en activo.</p><p>En cuanto a la <strong>transferencia de información</strong>, FTP permite elegir entre <strong>tipo ASCII</strong> y <strong>tipo binario</strong>. El modo ASCII se usa para ficheros de texto, ya que puede realizar conversiones entre representaciones internas y la representación estándar NVT-ASCII de 8 bits. El modo binario debe emplearse para cualquier archivo que no sea texto, como imágenes, ejecutables, PDFs, comprimidos o vídeos. Este punto es muy preguntable porque usar ASCII sobre ficheros binarios puede corromperlos, mientras que usar binario en ficheros de texto evita conversiones, pero no aprovecha la adaptación entre sistemas.</p><p>El <strong>tipo de acceso</strong> a un servidor FTP puede ser <strong>anónimo</strong> o <strong>autorizado</strong>. En el acceso anónimo el cliente no necesita autenticarse con usuario y contraseña específicos, lo que facilita la distribución pública de archivos, aunque exige extremar los permisos sobre directorios y ficheros para evitar escrituras maliciosas o subidas de software no deseado. Lo habitual es permitir solo lectura. En el acceso autorizado sí se requiere usuario y contraseña, y el administrador puede controlar con precisión qué directorios ve cada usuario y qué permisos posee. Esta diferencia es esencial desde el punto de vista de seguridad y administración.</p><p>Respecto a los <strong>clientes FTP</strong>, el tema distingue varias modalidades. Existen clientes en <strong>modo comando</strong>, usados desde terminal y basados en órdenes como <strong>cd</strong>, <strong>lcd</strong>, <strong>get</strong>, <strong>put</strong>, <strong>quit</strong>, <strong>exit</strong> o <strong>bye</strong>. También hay clientes con <strong>interfaz gráfica</strong>, como FileZilla, que facilitan la navegación entre sistema local y remoto, suelen detectar automáticamente si la transferencia debe ser ASCII o binaria y ofrecen más comodidad al usuario. Por último, algunos gestores de archivos permiten conectarse a servidores FTP mediante rutas como <strong>ftp://IP_servidor</strong> o <strong>ftp://nombre_servidor</strong>, aunque los navegadores modernos ya no suelen ofrecer soporte FTP como antes. Esta clasificación muestra que el protocolo puede usarse desde herramientas muy diferentes, pero siempre con la misma lógica subyacente.</p><p>Un aspecto crítico del tema es la <strong>seguridad</strong>. FTP <strong>no es un protocolo seguro</strong>, porque tanto las credenciales como los archivos viajan <strong>sin cifrar</strong>. Este es uno de sus mayores defectos históricos: se diseñó priorizando rapidez y eficiencia antes que confidencialidad. Para paliarlo apareció <strong>FTPS</strong>, que no es un protocolo completamente distinto, sino FTP funcionando sobre <strong>TLS/SSL</strong>. FTPS introduce una capa de cifrado entre cliente y servidor y protege la autenticación y la información en tránsito. Sin embargo, no debe confundirse con <strong>SFTP</strong>, porque SFTP no es FTP con cifrado, sino un protocolo distinto.</p><p><strong>SFTP</strong>, conocido como <strong>SSH File Transfer Protocol</strong>, permite tanto la <strong>transferencia segura de archivos</strong> como la <strong>gestión remota de sistemas de archivos</strong>. Aunque por el nombre pueda parecer una extensión de FTP o de SSH, en realidad se trata de un protocolo independiente que normalmente trabaja sobre un <strong>canal seguro</strong>, casi siempre <strong>SSH versión 2</strong>. La autenticación, el cifrado y parte del control de acceso no los implementa SFTP por sí mismo, sino que los delega en el canal seguro sobre el que viaja. Por eso se dice que SFTP asume que trabaja sobre SSH, TLS o incluso una VPN. La idea importante es que SFTP ofrece seguridad porque se apoya en una infraestructura segura externa.</p><p>La comparación entre <strong>FTP y SFTP</strong> es fundamental. En FTP las <strong>credenciales</strong> y los <strong>archivos</strong> viajan sin cifrar, mientras que en SFTP quedan protegidos por el canal seguro. FTP emplea <strong>dos canales</strong>, uno de control y otro de datos; SFTP usa <strong>un único canal</strong> para ambos fines. FTP trabaja por defecto con los puertos <strong>20 y 21</strong>; SFTP se apoya normalmente en el <strong>puerto 22/TCP</strong>, el propio de SSH. Esta comparativa resume gran parte del tema y suele ser base de preguntas de examen.</p><p>El <strong>funcionamiento de SFTP</strong> también sigue el modelo cliente-servidor basado en peticiones y respuestas. El cliente puede abrir, crear y cerrar archivos; leer y escribir; borrar y renombrar; listar, crear y eliminar directorios; gestionar atributos, rutas y enlaces. El servidor responde aportando identificadores de archivo, datos, nombres y atributos, y además incluye información de estado para indicar si la operación fue correcta o si se produjo un error, como archivo no encontrado, fin de archivo, ausencia de permisos o pérdida de conexión. Un detalle importante es que el servidor puede atender muchas peticiones, por lo que las respuestas incorporan el mismo identificador de la petición para que el cliente pueda relacionarlas incluso si llegan desordenadas.</p><p>Dentro del ecosistema real, destaca <strong>OpenSSH</strong>, una de las implementaciones más usadas de SSH. Además de permitir control remoto con <strong>ssh</strong>, ofrece transferencia segura mediante <strong>scp</strong> y <strong>sftp</strong>. OpenSSH es de código abierto, soporta autenticación por contraseña y por claves públicas/privadas, permite compresión de datos y reenvío de puertos. La herramienta <strong>scp</strong> sirve para copiar archivos entre cliente y servidor o incluso entre dos servidores remotos, usando la misma seguridad y autenticación de SSH, aunque requiere ejecución de shell. La herramienta <strong>sftp</strong> proporciona una consola interactiva para transferencia de archivos con comandos similares a FTP, como <strong>cd</strong>, <strong>lcd</strong>, <strong>ls</strong>, <strong>mkdir</strong>, <strong>get</strong>, <strong>put</strong>, <strong>rename</strong>, <strong>rm</strong> o <strong>quit</strong>.</p><p>En la parte de administración, el tema aborda la <strong>configuración avanzada de SFTP con OpenSSH</strong>. Una configuración por defecto puede permitir que un usuario autorizado para transferir archivos también obtenga un shell remoto, lo que no siempre es deseable. Para evitarlo, puede configurarse el servidor mediante <strong>internal-sftp</strong>, usar bloques <strong>Match</strong> y aplicar opciones como <strong>ChrootDirectory</strong> para enjaular al usuario en su directorio, <strong>X11Forwarding no</strong>, <strong>AllowTcpForwarding no</strong>, <strong>PermitTTY no</strong> y <strong>ForceCommand internal-sftp</strong>. Esto permite diseñar usuarios destinados solo a SFTP, sin acceso a shell y restringidos a determinadas rutas. Es una configuración muy importante porque muestra cómo convertir OpenSSH en una plataforma segura de intercambio de archivos sin conceder más privilegios de los necesarios.</p><p>Por último, el tema presenta <strong>SSHFS</strong>, un sistema de archivos cliente basado en <strong>SFTP</strong> y <strong>FUSE</strong>. Su interés es enorme porque permite <strong>montar un directorio remoto</strong> de un servidor SSH como si fuera parte del sistema de archivos local. Así, aplicaciones que no fueron diseñadas para trabajar con recursos remotos pueden manipularlos como si fueran locales. Además, al apoyarse en FUSE, incluso usuarios sin permisos de administración pueden gestionar puntos de montaje. La sintaxis básica consiste en indicar el servidor, el directorio remoto y el punto de montaje local, y para desmontar se usa <strong>fusermount -u</strong>. Desde el punto de vista conceptual, SSHFS representa la integración máxima entre transferencia segura y comodidad de uso.</p><p>En conjunto, este tema no solo enseña a diferenciar <strong>FTP, FTPS y SFTP</strong>, sino a comprender su arquitectura, sus ventajas e inconvenientes, su comportamiento ante cortafuegos, sus problemas de seguridad y sus usos reales en administración de sistemas y despliegue. Para sacar nota no basta con memorizar puertos y definiciones: hay que saber justificar por qué FTP usa dos conexiones, por qué el modo pasivo suele ser preferible, por qué FTP no es seguro, por qué SFTP depende de SSH, cómo restringir usuarios con internal-sftp y qué aporta SSHFS frente a una simple transferencia puntual de archivos.</p>",
-"claves": [
-"FTP usa dos conexiones: control y datos",
-"Modo activo: datos iniciados por el servidor",
-"Modo pasivo: datos iniciados por el cliente",
-"FTP no cifra credenciales ni archivos",
-"SFTP usa un solo canal seguro sobre SSH",
-"FTP: puertos 20 y 21; SFTP: puerto 22",
-"SSHFS monta directorios remotos como locales"
-],
-"preguntas": [
-{
-"pregunta": "¿Qué elemento de FTP se utiliza para enviar órdenes y recibir respuestas del servidor?",
-"opciones": [
-"La conexión de control",
-"La conexión de datos",
-"El sistema de archivos local",
-"El directorio raíz remoto"
-],
-"respuesta_correcta": 0,
-"explicacion": "La conexión de control transporta órdenes FTP y respuestas del servidor. La conexión de datos se reserva para la transferencia de archivos."
-},
-{
-"pregunta": "¿Qué puertos usa FTP por defecto en su funcionamiento clásico?",
-"opciones": [
-"21 para datos y 22 para control",
-"20 para datos y 21 para control",
-"22 para control y 23 para datos",
-"80 para control y 443 para datos"
-],
-"respuesta_correcta": 1,
-"explicacion": "FTP usa por defecto el puerto 21/TCP para control y el 20/TCP para datos. Los otros pares de puertos pertenecen a otros servicios."
-},
-{
-"pregunta": "¿Qué caracteriza al modo pasivo de FTP?",
-"opciones": [
-"El servidor inicia la conexión de datos hacia el cliente",
-"El cliente inicia tanto la conexión de control como la de datos",
-"No existe conexión de datos separada",
-"Solo puede usarse con acceso anónimo"
-],
-"respuesta_correcta": 1,
-"explicacion": "En modo pasivo el cliente abre ambas conexiones, lo que facilita el paso por cortafuegos y NAT. No elimina la conexión de datos ni depende del acceso anónimo."
-},
-{
-"pregunta": "¿Qué tipo de transferencia debe utilizarse para imágenes, ejecutables o archivos comprimidos en FTP?",
-"opciones": [
-"ASCII",
-"Texto extendido",
-"Binario"
-],
-"respuesta_correcta": 2,
-"explicacion": "El modo binario es el adecuado para cualquier archivo que no sea texto. ASCII se usa para archivos de texto con posible conversión de representación."
-},
-{
-"pregunta": "¿Cuál es una desventaja fundamental de FTP frente a SFTP?",
-"opciones": [
-"FTP no permite listar directorios",
-"FTP transmite credenciales y archivos sin cifrar",
-"FTP no admite clientes gráficos",
-"FTP no usa modelo cliente-servidor"
-],
-"respuesta_correcta": 1,
-"explicacion": "La principal debilidad de FTP es que no cifra ni las credenciales ni los archivos. Sí permite listar directorios, sí tiene clientes gráficos y sí usa arquitectura cliente-servidor."
-},
-{
-"pregunta": "¿Sobre qué puerto trabaja normalmente SFTP al apoyarse en SSH?",
-"opciones": [
-"20",
-"21",
-"22",
-"25"
-],
-"respuesta_correcta": 2,
-"explicacion": "SFTP suele funcionar sobre SSH, cuyo puerto por defecto es el 22/TCP. Los puertos 20 y 21 se asocian a FTP y el 25 a SMTP."
-},
-{
-"pregunta": "¿Qué herramienta de OpenSSH permite copiar archivos usando el canal seguro de SSH, pero requiere shell remoto?",
-"opciones": [
-"scp",
-"sshfs",
-"vsftpd",
-"ufw"
-],
-"respuesta_correcta": 0,
-"explicacion": "scp permite copiar archivos entre equipos a través de SSH. sshfs monta sistemas remotos, vsftpd es un servidor FTP y ufw es un cortafuegos."
-},
-{
-"pregunta": "¿Qué directiva de OpenSSH permite enjaular a un usuario dentro de una ruta concreta en SFTP?",
-"opciones": [
-"ForceShell",
-"ChrootDirectory",
-"AllowBinary",
-"DataChannel"
-],
-"respuesta_correcta": 1,
-"explicacion": "ChrootDirectory limita el acceso del usuario a un directorio concreto del sistema de archivos. Las demás opciones no cumplen esa función en OpenSSH."
-},
-{
-"pregunta": "¿Qué comando de un cliente FTP en modo texto sirve para transferir un archivo remoto al sistema local?",
-"opciones": [
-"put",
-"lcd",
-"get",
-"bye"
-],
-"respuesta_correcta": 2,
-"explicacion": "get descarga un archivo remoto al sistema local. put hace la operación inversa, lcd cambia el directorio local y bye sale del cliente."
-},
-{
-"pregunta": "¿Qué aporta SSHFS frente a una simple conexión SFTP interactiva?",
-"opciones": [
-"Permite cifrar FTP clásico",
-"Monta un directorio remoto como si fuera local",
-"Sustituye al servidor SSH",
-"Abre automáticamente el puerto 21"
-],
-"respuesta_correcta": 1,
-"explicacion": "SSHFS permite montar parte del sistema de archivos remoto y trabajar con él como si fuera local. No cifra FTP clásico, no sustituye SSH y no usa el puerto 21."
-}
-],
-"preguntas_profesor": [
-{
-"pregunta": "¿Qué tipo de estructura de control se utiliza para capturar y manejar excepciones en PHP?",
-"opciones": [
-"catch",
-"finally",
-"try"
-],
-"respuesta_correcta": 2,
-"explicacion": "La estructura de control de excepciones se inicia con try y se completa habitualmente con catch. finally es opcional y se ejecuta al final del bloque."
-},
-{
-"pregunta": "Tenemos un ficheroML con el formato … ……. Una vez cargado en la variable $xml con la función simplexml_load_file, ¿cómo sería el bucle correcto para ir leyendo cada uno de los libros?",
-"opciones": [
-"foreach($xml->[libro] as $libro).",
-"foreach($xml->libro as $libro).",
-"foreach($xml->libros as $libro)."
-],
-"respuesta_correcta": 1,
-"explicacion": "Con SimpleXML se accede a los nodos hijos como propiedades del objeto XML, por eso la forma correcta es $xml->libro."
-},
-{
-"pregunta": "Si tenemos una sentencia SQL 'SHOW TABLES' en una variable $sql y queremos ejecutarla, ¿cuál de las siguientes formas es la correcta, sabiendo que la conexión es correcta y la maneja $pdo?",
-"opciones": [
-"$pdo->query($sql).",
-"$pdo->select($sql).",
-"$pdo->exec($sql)."
-],
-"respuesta_correcta": 0,
-"explicacion": "query() se utiliza para consultas que devuelven resultados. SHOW TABLES genera un conjunto de resultados y por eso encaja con query()."
-},
-{
-"pregunta": "",
-"opciones": [
-"Preparar una modificación que afectará al primer elemento que cumpla una colección.",
-"Preparar una modificación que afectará al primer elemento que cumpla una condición.",
-"Modificar todos los elementos de una colección que cumplan una condición."
-],
-"respuesta_correcta": 2,
-"explicacion": "La explicación proporcionada indica que ['multi'=>true] hace que la operación afecte a múltiples documentos y no solo al primero."
-},
-{
-"pregunta": "",
-"opciones": [
-"El tipo de dato.",
-"El tiempo de expiración.",
-"El nombre."
-],
-"respuesta_correcta": 0,
-"explicacion": "setcookie() permite establecer nombre, valor, expiración y otros parámetros, pero no define un tipo de dato como tal."
-},
-{
-"pregunta": "",
-"opciones": [
-"Un objeto con una lista de objetos.",
-"Un array asociativo.",
-"Un array de objetos."
-],
-"respuesta_correcta": 0,
-"explicacion": "Según la explicación aportada, json_decode() devuelve por defecto un objeto stdClass y no un array asociativo salvo que se indique expresamente."
-},
-{
-"pregunta": "",
-"opciones": [
-"Para finalizar una transacción.",
-"Para deshacer una transacción.",
-"Para empezar una transacción."
-],
-"respuesta_correcta": 1,
-"explicacion": "rollback() revierte o deshace los cambios de una transacción en caso de error o cancelación."
-},
-{
-"pregunta": "",
-"opciones": [
-"validate_dni()",
-"preg_match()",
-"check_dni()"
-],
-"respuesta_correcta": 1,
-"explicacion": "preg_match() es la función estándar de PHP para trabajar con expresiones regulares y validar patrones."
-},
-{
-"pregunta": "",
-"opciones": [
-"Para ejecutar una sentencia preparada.",
-"Para ejecutar una instrucción.",
-"Para crear una sentencia preparada."
-],
-"respuesta_correcta": 2,
-"explicacion": "prepare() crea la sentencia preparada; después normalmente se lanza con execute()."
-},
-{
-"pregunta": "",
-"opciones": [
-"Como un array.",
-"Como un número.",
-"Como un objeto."
-],
-"respuesta_correcta": 0,
-"explicacion": "Un select multiple envía varios valores y en PHP se reciben habitualmente como un array."
-},
-{
-"pregunta": "",
-"opciones": [
-"set_error()",
-"error_reporting()",
-"error_exception()"
-],
-"respuesta_correcta": 1,
-"explicacion": "error_reporting() controla qué niveles de error se muestran o notifican durante la ejecución."
-},
-{
-"pregunta": "",
-"opciones": [
-"gigabytes",
-"kilobytes",
-"bytes"
-],
-"respuesta_correcta": 2,
-"explicacion": "filesize() devuelve el tamaño del fichero expresado en bytes."
-},
-{
-"pregunta": "",
-"opciones": [
-"insertOne",
-"insertMany",
-"insert"
-],
-"respuesta_correcta": 2,
-"explicacion": "Dentro de BulkWrite, el método correcto indicado en la explicación es insert()."
-},
-{
-"pregunta": "",
-"opciones": [
-"Para leer los datos de un fichero.",
-"Para cerrar el acceso a un fichero.",
-"Para volcar al fichero lo que quede en el buffer."
-],
-"respuesta_correcta": 2,
-"explicacion": "fflush() fuerza la escritura del contenido pendiente en el buffer asociado al fichero."
-},
-{
-"pregunta": "",
-"opciones": [
-"filetime",
-"filemtime",
-"flieatime"
-],
-"respuesta_correcta": 2,
-"explicacion": "La explicación proporcionada indica que fileatime() devuelve la fecha del último acceso al fichero, aunque en las opciones aparece escrita como flieatime."
-}
-]
-},
-{
-"id": "tema_documentacion_y_control_de_versiones",
-"titulo": "Documentación y control de versiones",
-"resumen": "<p>La <strong>documentación</strong> y el <strong>control de versiones</strong> son dos pilares del ciclo de vida del software. Desde que una aplicación se concibe hasta que deja de utilizarse, atraviesa una serie de fases comunes: <strong>recogida y análisis de requerimientos</strong>, <strong>especificación</strong>, <strong>implementación</strong>, <strong>comprobación</strong>, <strong>despliegue y explotación</strong> y <strong>mantenimiento</strong>. Cada una de estas etapas genera información relevante que debe quedar reflejada en documentos adecuados: especificaciones, manuales de instalación, manuales de usuario, documentación técnica interna o registros de mantenimiento. La idea central del tema es que un software bien desarrollado no solo necesita código correcto, sino también una base documental clara y un sistema riguroso para registrar sus cambios.</p><p>La <strong>documentación del software</strong> es necesaria porque los proyectos reales crecen en tamaño y complejidad. Aunque el desarrollo lo lleve una sola persona o un equipo multidisciplinar, todos los procesos deberían documentarse siguiendo una <strong>estructura homogénea</strong> y unas <strong>normas previas</strong>. Esta documentación evita malentendidos con el cliente, facilita modificaciones futuras, ayuda en la sustitución de miembros del equipo y mejora la autonomía de usuarios y administradores. Un buen documento consensuado de requisitos permite verificar si el producto final cumple realmente lo pactado; una documentación interna sólida hace posible adaptar el sistema a cambios de normativa, negocio o tecnología; y unos buenos manuales reducen consultas repetitivas y elevan la satisfacción de quien usa la aplicación.</p><p>Aun así, es habitual encontrar software <strong>poco documentado o nada documentado</strong>, sobre todo en desarrollos a medida. El tema explica tres causas muy frecuentes:</p><ul><li><strong>Falta de tiempo</strong> por plazos de entrega demasiado ajustados.</li><li><strong>Ausencia de cultura empresarial</strong> que valore la documentación como parte real del producto.</li><li><strong>Desinterés o rechazo</strong> por parte de desarrolladores que la consideran una tarea tediosa.</li></ul><p>Este punto es muy importante de cara al examen, porque no basta con decir que “no se documenta por falta de ganas”: el material subraya que la documentación pierde prioridad frente a la programación, aunque a medio y largo plazo esa decisión genere problemas de mantenimiento, calidad y comunicación.</p><p>Para redactar una documentación de calidad, el tema establece varias <strong>recomendaciones metodológicas</strong>. Debe ser <strong>entendible</strong> y adaptarse al público objetivo: no se escribe igual para un usuario final que para un programador que va a modificar el código. Debe incluir una <strong>estructura clara</strong> con índice que permita localizar rápidamente la información; conviene usar <strong>plantillas y estándares</strong> para lograr uniformidad; la introducción debe explicar qué encontrará el lector; la documentación técnica ha de incorporar <strong>ejemplos contextualizados</strong>; y, especialmente en manuales dirigidos al usuario, es recomendable acompañar el texto de <strong>capturas de pantalla y esquemas</strong>. También se insiste en usar formatos estándar y mantenibles, indicar <strong>fecha de edición</strong> y <strong>versión del programa</strong>, documentar solo lo realmente necesario y revisar la vigencia de los documentos para actualizarlos o retirarlos si han quedado obsoletos.</p><p>Otro principio clave es que la documentación debe ser <strong>accesible</strong> para quienes la necesiten y, si es posible, permitir la <strong>participación de los usuarios en su actualización</strong>. Esta idea conecta directamente con herramientas colaborativas como las wikis. El tema no trata la documentación como un simple archivo estático, sino como un recurso vivo que debe acompañar la evolución del software.</p><p>Dentro de las herramientas de documentación, una de las más clásicas es <strong>Man</strong>. Se trata de la utilidad de línea de comandos que da acceso a los manuales de referencia del sistema en entornos tipo BSD, Unix, macOS y GNU/Linux. Los manuales se organizan en <strong>secciones numeradas del 1 al 8</strong>, y este detalle es muy preguntable. La <strong>sección 1</strong> corresponde a <strong>programas ejecutables y órdenes del shell</strong>; la <strong>2</strong>, a llamadas al sistema; la <strong>3</strong>, a funciones de bibliotecas; la <strong>4</strong>, a archivos especiales; la <strong>5</strong>, a formatos de archivo y convenios; la <strong>6</strong>, a juegos; la <strong>7</strong>, a miscelánea; y la <strong>8</strong>, a órdenes de administración del sistema. El comando <strong>man</strong> busca la página solicitada por orden en las secciones, por lo que a veces es necesario indicar manualmente la sección exacta, como en <strong>man 5 passwd</strong>. También aparecen opciones como <strong>man -a</strong>, <strong>man -f</strong> y <strong>man -k</strong>, que permiten explorar varias coincidencias o buscar descripciones cortas.</p><p>El tema explica además cómo interpretar la <strong>SINOPSIS</strong> de una página man. Los elementos en <strong>negrita</strong> deben teclearse tal cual; los <strong>corchetes</strong> indican contenido opcional; la barra vertical <strong>|</strong> separa opciones excluyentes; los tres puntos indican repetición; y las palabras en cursiva o subrayadas deben sustituirse por argumentos concretos. Dominar esta lectura es útil no solo para el examen, sino para trabajar con soltura en administración de sistemas.</p><p>La segunda gran herramienta de documentación estudiada es <strong>MediaWiki</strong>, una aplicación web orientada a la creación colaborativa y centralizada de documentación. Su gran ventaja es que proporciona una plataforma <strong>multilenguaje</strong>, <strong>actualizable</strong>, <strong>fiable</strong> y accesible desde cualquier equipo con acceso al servidor web. Se basa en una filosofía wiki: la documentación puede ser mantenida por todos los usuarios o solo por los autorizados, y cada modificación queda registrada gracias a un <strong>sistema de control de versiones</strong> interno. El texto se guarda en base de datos, mientras que el contenido multimedia suele almacenarse en el sistema de archivos. Las páginas se organizan por <strong>espacios de nombres</strong>, identificándose en muchos casos con la sintaxis <strong>Prefijo:NombreDePágina</strong>, como por ejemplo <strong>Ayuda:Plantillas</strong>.</p><p>MediaWiki utiliza el lenguaje de marcado llamado <strong>wikitexto</strong>, con una sintaxis propia, no estandarizada de forma universal. Entre sus elementos más importantes están los encabezados con signos igual, la cursiva con dos comillas simples, la <strong>negrita con tres comillas simples</strong>, los enlaces internos y externos, las listas numeradas y no numeradas, la sangría, la línea horizontal, las firmas y la inserción de imágenes o plantillas. Esto también es muy típico en preguntas tipo test: por ejemplo, <strong>'''Texto'''</strong> representa texto en <strong>negrita</strong>. Además, MediaWiki dispone de un <strong>Editor Visual</strong> de tipo WYSIWYG, pensado para quienes no desean trabajar directamente con wikitexto.</p><p>Un punto especialmente importante en MediaWiki son las <strong>plantillas</strong>. Son páginas especiales que se insertan en otras páginas y pueden incluirse <strong>por sustitución</strong> o <strong>por referencia</strong>. Si se hace por sustitución, se copia el contenido actual de la plantilla y se desvincula de ella; si se hace por referencia, el contenido se inserta dinámicamente y se actualiza si cambia la plantilla original. Las plantillas pueden parametrizarse con pares <strong>nombre=valor</strong>, lo que las convierte en una herramienta potentísima para generar documentación uniforme, reutilizable y fácil de mantener. Como contrapartida, el tema advierte que MediaWiki puede no ser la mejor opción si hay pocos recursos de memoria o disco, y que puede presentar dificultades al restringir el acceso de lectura a unos contenidos sí y a otros no.</p><p>La tercera herramienta documental tratada es <strong>Javadoc</strong>, orientada a generar documentación técnica automáticamente a partir de comentarios incluidos en código Java. Aquí hay que dominar tanto el <strong>formato del comentario</strong> como las <strong>etiquetas</strong> más importantes. Un comentario Javadoc comienza con <strong>/**</strong> y termina con <strong>/</strong>; las líneas intermedias empiezan con <strong></strong>. Debe incluir un <strong>primer bloque descriptivo</strong> y un <strong>segundo bloque</strong> con etiquetas precedidas por arroba, como <strong>@author</strong>, <strong>@version</strong>, <strong>@param</strong>, <strong>@return</strong>, <strong>@throws</strong>, <strong>@see</strong> o <strong>@deprecated</strong>. El tema insiste en que los comentarios deben situarse justo antes de la declaración de clases, campos, constructores o métodos, y que cada línea no debería superar los 80 caracteres. En examen suele preguntarse por la estructura: descripción primero, etiquetas después.</p><p>La segunda gran mitad del tema se centra en el <strong>control de versiones</strong>. Su objetivo es registrar de forma rigurosa los cambios realizados en un programa a lo largo de su vida útil. Esto permite saber en qué versión se está trabajando, quién realizó cada modificación y cómo volver a estados anteriores si una nueva versión falla. El control de versiones no es simplemente hacer copias de seguridad; es una disciplina organizada que aporta <strong>trazabilidad</strong>, <strong>seguridad en el trabajo colaborativo</strong> y <strong>eficiencia</strong>. Entre sus ventajas destacan la posibilidad de restaurar estados anteriores con rapidez, la mejora de la productividad de los equipos y la capacidad de consultar la evolución histórica de fragmentos de código para comprender decisiones pasadas.</p><p>El tema define varios conceptos básicos. Un <strong>repositorio</strong> es el espacio donde se almacenan los archivos del proyecto y sus metadatos, y debe representar siempre la <strong>última versión válida</strong> del programa. Un <strong>cambio</strong> es una modificación sobre archivos del repositorio. Un <strong>conflicto</strong> aparece cuando varios desarrolladores modifican el mismo archivo de forma incompatible. Una <strong>revisión</strong> es una versión identificada. Y una <strong>rama</strong> permite trabajar en paralelo sobre distintas líneas de desarrollo: por ejemplo, una para producción, otra para pruebas o una para nuevas funcionalidades. Saber explicar bien qué es una rama es clave: no es un repositorio distinto, sino un flujo de trabajo paralelo dentro del mismo historial.</p><p>Entre las herramientas de control de versiones mencionadas aparecen <strong>SVN</strong>, <strong>CVS</strong> y <strong>Git</strong>, siendo Git el protagonista principal del tema. Git es un sistema distribuido, publicado bajo licencia GPLv2, rápido porque está escrito en C y diseñado desde el principio para manejar grandes repositorios como el del kernel de Linux. Su modelo de ramificación es muy flexible y permite crear, fusionar o eliminar ramas según las necesidades del proyecto.</p><p>Una de las ideas más importantes de Git es que cada desarrollador dispone de una <strong>copia local completa del proyecto</strong>. Esto significa que no depende en todo momento del servidor para consultar el historial o trabajar, lo que mejora velocidad y autonomía. Git puede configurarse a nivel de sistema, usuario o repositorio, dependiendo del alcance que se quiera dar a los parámetros definidos, como nombre o correo electrónico.</p><p>Git trabaja con <strong>tres áreas</strong>: <strong>directorio de trabajo</strong> (working directory), donde se editan los archivos; <strong>área de preparación</strong> (staging area o índice), donde se colocan los cambios que se incluirán en la próxima confirmación; y <strong>repositorio</strong>, donde se guardan definitivamente junto a sus metadatos e historial. A partir de estas áreas surgen los estados de los archivos: <strong>no modificado</strong>, <strong>modificado</strong>, <strong>preparado</strong> y <strong>confirmado</strong>. Esta estructura es absolutamente central en Git y muy frecuente en test, porque marca el flujo real de trabajo.</p><p>Entre los comandos más relevantes se encuentran <strong>git init</strong> para crear un repositorio vacío, <strong>git clone</strong> para clonar uno existente, <strong>git add</strong> para mover cambios al área de preparación, <strong>git status</strong> para inspeccionar el estado del proyecto, <strong>git diff</strong> para comparar cambios, <strong>git commit</strong> para confirmar una nueva versión, <strong>git restore</strong> y <strong>git reset</strong> para revertir estados, <strong>git rm</strong> para eliminar archivos del directorio de trabajo y del staging, <strong>git mv</strong> para mover o renombrar, y en ramificación <strong>git branch</strong>, <strong>git checkout</strong>, <strong>git switch</strong>, <strong>git merge</strong>, <strong>git mergetool</strong>, <strong>git stash</strong> y <strong>git tag</strong>. Para sincronizar con otros repositorios aparecen <strong>git fetch</strong>, <strong>git pull</strong> y <strong>git push</strong>. Conviene dominar no solo qué hace cada comando, sino en qué parte del flujo actúa.</p><p>La integración de Git con <strong>GitHub</strong> añade la dimensión colaborativa en la nube. GitHub actúa como plataforma de alojamiento de repositorios y de desarrollo colaborativo. Permite publicar proyectos, compartirlos, clonarlos, revisarlos y trabajar en equipo. El proceso básico explicado en el tema consiste en: crear una cuenta en GitHub, crear un repositorio remoto, generar un <strong>token de acceso personal</strong>, enlazar el repositorio local con el remoto mediante <strong>git remote add origin</strong>, renombrar la rama con <strong>git branch -M main</strong> y sincronizar con <strong>git push -u origin main</strong>. Después, otro usuario puede clonar el repositorio con <strong>git clone</strong> y trabajar localmente sobre él.</p><p>Además, GitHub se vincula con la <strong>integración continua y entrega continua (CI/CD)</strong>. La <strong>CI</strong> consiste en probar e integrar automáticamente cambios en un repositorio compartido cada vez que se introducen, para evitar detectar conflictos solo al final del desarrollo. La <strong>CD</strong> busca publicar nuevas versiones en cuanto estén listas, sin esperar a grandes acumulaciones de cambios. En GitHub, esto puede automatizarse con <strong>GitHub Actions</strong>, que ejecuta pruebas o tareas automáticas al detectarse cambios en el repositorio.</p><p>Por último, el tema presenta distintos <strong>tipos de cuentas de GitHub</strong>: la <strong>gratuita</strong>, ideal para repositorios públicos y aprendizaje; la <strong>Pro</strong>, enfocada a desarrolladores individuales o pequeños equipos que necesitan más control y repositorios privados; y la <strong>cuenta de equipo</strong>, orientada a organizaciones con necesidades avanzadas de seguridad, control de acceso y colaboración a gran escala. Este apartado amplía la perspectiva profesional del tema, mostrando que GitHub no es solo una herramienta técnica, sino también una plataforma de trabajo real para estudiantes, desarrolladores, empresas, mantenedores de open source y entusiastas.</p><p>En resumen, para sacar nota en este tema hay que relacionar tres planos: <strong>la documentación como soporte de calidad</strong>, <strong>las herramientas específicas para producirla</strong> y <strong>el control de versiones como mecanismo de evolución ordenada del software</strong>. No basta con memorizar definiciones aisladas: hay que entender por qué documentar reduce problemas, por qué Git necesita working directory, staging y repositorio, por qué las ramas permiten trabajar en paralelo y por qué GitHub encaja tan bien en entornos colaborativos modernos con CI/CD.</p>",
-"claves": [
-"El ciclo de vida incluye requisitos, desarrollo, pruebas, despliegue y mantenimiento",
-"Documentar evita malentendidos, facilita cambios y mejora soporte",
-"Man sección 1: programas ejecutables y órdenes del shell",
-"MediaWiki permite documentación colaborativa y versionada",
-"Javadoc usa descripción y etiquetas con arroba",
-"Git trabaja con working directory, staging y repositorio",
-"Las ramas permiten desarrollo paralelo y posterior fusión"
-],
-"preguntas": [
-{
-"pregunta": "¿Qué ventaja clave aporta una documentación técnica bien mantenida en un proyecto grande?",
-"opciones": [
-"Reduce la necesidad de probar el software",
-"Facilita mantenimiento, sustitución de personal y comprensión del sistema",
-"Evita por completo los errores de programación",
-"Sustituye al control de versiones"
-],
-"respuesta_correcta": 1,
-"explicacion": "La documentación no elimina pruebas ni errores por sí sola, pero sí facilita que el sistema pueda mantenerse, entenderse y continuarse aunque cambie el equipo."
-},
-{
-"pregunta": "¿Qué sección de Man corresponde a formatos de archivo y convenios?",
-"opciones": [
-"1",
-"3",
-"5",
-"8"
-],
-"respuesta_correcta": 2,
-"explicacion": "La sección 5 de Man está reservada a formatos de archivo y convenios. La 1 es para comandos ejecutables y la 8 para administración del sistema."
-},
-{
-"pregunta": "¿Qué característica diferencia a MediaWiki de un simple documento estático?",
-"opciones": [
-"Solo puede editarla una persona",
-"Permite edición colaborativa, control de versiones y acceso web",
-"No admite contenido multimedia",
-"Obliga a escribir exclusivamente en HTML puro"
-],
-"respuesta_correcta": 1,
-"explicacion": "MediaWiki destaca por ser colaborativa, accesible vía web y conservar el historial de cambios. Además admite texto y multimedia."
-},
-{
-"pregunta": "¿Qué ocurre cuando una plantilla de MediaWiki se inserta por referencia?",
-"opciones": [
-"Se copia una sola vez y deja de actualizarse",
-"Se elimina tras guardar la página",
-"Se incorpora dinámicamente y refleja cambios futuros de la plantilla",
-"Solo puede usarse en el espacio principal"
-],
-"respuesta_correcta": 2,
-"explicacion": "La inclusión por referencia vincula el contenido a la plantilla original, así que si esta cambia, la página también refleja ese cambio."
-},
-{
-"pregunta": "¿Qué elemento debe aparecer en el segundo bloque de un comentario Javadoc?",
-"opciones": [
-"Etiquetas como @param o @return",
-"Solo código Java ejecutable",
-"Únicamente capturas de pantalla",
-"Nombres de ramas Git"
-],
-"respuesta_correcta": 0,
-"explicacion": "El segundo bloque de Javadoc contiene etiquetas precedidas por arroba, como @author, @version, @param, @return o @throws."
-},
-{
-"pregunta": "¿Qué describe mejor el repositorio en un sistema de control de versiones?",
-"opciones": [
-"Solo una carpeta temporal local",
-"Un espacio que guarda archivos del proyecto y metadatos de sus versiones",
-"Un documento PDF con cambios anotados",
-"Un directorio de trabajo sin historial"
-],
-"respuesta_correcta": 1,
-"explicacion": "El repositorio almacena el proyecto y toda la información asociada a su historial, revisiones y metadatos, no solo archivos actuales."
-},
-{
-"pregunta": "¿Cuál es la secuencia correcta de trabajo básica en Git para registrar un cambio?",
-"opciones": [
-"commit, add, edit",
-"edit, add, commit",
-"push, edit, commit",
-"clone, merge, status"
-],
-"respuesta_correcta": 1,
-"explicacion": "Primero se modifica en el directorio de trabajo, luego se pasa al área de preparación con add y por último se confirma con commit."
-},
-{
-"pregunta": "¿Qué comando de Git elimina archivos del directorio de trabajo y del área de preparación?",
-"opciones": [
-"git restore",
-"git reset",
-"git rm",
-"git fetch"
-],
-"respuesta_correcta": 2,
-"explicacion": "git rm elimina el archivo tanto del directorio de trabajo como del staging. restore y reset tienen otros fines."
-},
-{
-"pregunta": "¿Para qué sirven principalmente las ramas en Git?",
-"opciones": [
-"Para desactivar el historial del proyecto",
-"Para trabajar en paralelo en distintas líneas de desarrollo",
-"Para impedir cualquier conflicto",
-"Para sustituir al repositorio remoto"
-],
-"respuesta_correcta": 1,
-"explicacion": "Las ramas permiten desarrollar funcionalidades o pruebas en paralelo sin afectar directamente a la línea principal hasta que se fusionen."
-},
-{
-"pregunta": "¿Qué define mejor la integración continua (CI) en GitHub?",
-"opciones": [
-"Publicar siempre versiones manualmente al final del proyecto",
-"Probar e integrar automáticamente cambios frecuentes en un repositorio compartido",
-"Crear únicamente repositorios privados",
-"Evitar el uso de ramas"
-],
-"respuesta_correcta": 1,
-"explicacion": "La CI consiste en validar e integrar cambios de forma continua para detectar errores antes y no acumular problemas al final del desarrollo."
-}
-],
-"preguntas_profesor": [
-{
-"pregunta": "¿Cuáles son las fases comunes del ciclo de vida del software?",
-"opciones": [
-"Recogida y análisis de los requerimientos de usuario; especificación del programa; implementación o desarrollo del programa; comprobación del buen funcionamiento; despliegue del programa y explotación en un entorno real; mantenimiento.",
-"Recogida de requisitos, diseño, implementación, prueba, despliegue y mantenimiento.",
-"Análisis, diseño, programación, pruebas, despliegue y mantenimiento."
-],
-"respuesta_correcta": 0,
-"explicacion": "Es correcta porque reproduce exactamente la enumeración completa que aparece en el material del tema sobre el ciclo de vida del software."
-},
-{
-"pregunta": "¿Por qué es tan habitual encontrar software sin documentar, sobre todo si se ha hecho a medida?",
-"opciones": [
-"Porque hay que pagar importes altos para utilizar las herramientas adecuadas, ya que las gratuitas existentes están limitadas y no resultan útiles.",
-"Porque, al ser un software a medida, sus usuarios ya lo conocen y no necesitan ningún tipo de manual. Además, los desarrolladores ya saben cómo instalarlo.",
-"Porque falta tiempo. A la documentación no se le da la importancia que se merece y documentar tiene fama de ser un trabajo aburrido entre los desarrolladores.",
-"Porque requiere personal externo a la empresa y mucho tiempo, lo que resulta muy costoso económicamente para las empresas de desarrollo."
-],
-"respuesta_correcta": 2,
-"explicacion": "El tema destaca precisamente la falta de tiempo, la escasa valoración de la documentación y la percepción de que documentar es un trabajo tedioso."
-},
-{
-"pregunta": "El control de versiones...",
-"opciones": [
-"Se usa en la fase de pruebas para anotar los fallos y poder corregirlos en función de su prioridad.",
-"Sirve solamente para indicarle al usuario la versión que tiene instalada en el ordenador.",
-"Se usa para tener un registro de los cambios realizados a lo largo de la vida útil de un programa.",
-"Se emplea solamente en la fase de diseño para saber cuántas propuestas se hicieron."
-],
-"respuesta_correcta": 2,
-"explicacion": "La finalidad del control de versiones es registrar y gestionar cambios durante toda la vida del software, no solo en pruebas o diseño."
-},
-{
-"pregunta": "Pregunta 6: ¿Qué sección de los manuales de Man está reservada para los programas ejecutables y órdenes del shell?",
-"opciones": [
-"4.",
-"1.",
-"5.",
-"2."
-],
-"respuesta_correcta": 1,
-"explicacion": "La sección 1 de Man corresponde a programas ejecutables y órdenes del shell, tal y como se indica en el tema."
-},
-{
-"pregunta": "",
-"opciones": [
-"Facilita la creación colaborativa y centralizada de documentación multilenguaje, actualizable y fiable.",
-"Proporciona una interfaz gráfica para acceder a los manuales de referencia del sistema.",
-"Permite generar documentación técnica en formato HTML a partir de archivos Java."
-],
-"respuesta_correcta": 0,
-"explicacion": "La opción correcta describe las características propias de MediaWiki: colaboración, centralización, multilenguaje y actualización continua."
-},
-{
-"pregunta": "",
-"opciones": [
-"Almacena solamente los archivos de código fuente.",
-"Debe contener siempre la última versión válida del programa.",
-"Permite que cada desarrollador tenga una copia local del proyecto."
-],
-"respuesta_correcta": 2,
-"explicacion": "En Git y en los sistemas distribuidos cada desarrollador trabaja con una copia local del proyecto, lo que facilita autonomía y velocidad de trabajo."
-},
-{
-"pregunta": "",
-"opciones": [
-"Proporcionar una interfaz gráfica para acceder a los manuales de referencia.",
-"Facilitar el desarrollo colaborativo de documentación técnica.",
-"Ofrecer una interfaz de línea de comandos para acceder a los manuales de referencia del sistema."
-],
-"respuesta_correcta": 2,
-"explicacion": "Man es una herramienta de línea de comandos para consultar los manuales de referencia del sistema."
-},
-{
-"pregunta": "",
-"opciones": [
-"Utiliza el directorio de trabajo, el área de preparación y el repositorio.",
-"Únicamente utiliza el directorio de trabajo y el repositorio.",
-"Únicamente utiliza el área de preparación y el repositorio.",
-"Únicamente utiliza el repositorio."
-],
-"respuesta_correcta": 0,
-"explicacion": "Git se organiza en tres áreas fundamentales: working directory, staging area y repositorio."
-},
-{
-"pregunta": "",
-"opciones": [
-"Realizar pruebas e integrar automáticamente los cambios de programación en un repositorio compartido.",
-"Publicar nuevas versiones del producto inmediatamente después de su desarrollo.",
-"Detectar conflictos y realizar pruebas de funcionamiento manualmente en cada cambio realizado en el repositorio."
-],
-"respuesta_correcta": 0,
-"explicacion": "Esa definición corresponde a la integración continua, donde los cambios se prueban e integran automáticamente de forma frecuente."
-},
-{
-"pregunta": "",
-"opciones": [
-"Deben contener un primer bloque con la descripción del elemento, seguido de un segundo bloque con etiquetas precedidas por una arroba «@».",
-"Deben comenzar con el delimitador '/' y terminar con '/'.",
-"Deben tener un máximo de 100 caracteres por línea."
-],
-"respuesta_correcta": 0,
-"explicacion": "Los comentarios Javadoc incluyen primero un bloque descriptivo y luego uno de etiquetas con @. Esa es la estructura básica explicada en el tema."
-},
-{
-"pregunta": "",
-"opciones": [
-"''Texto''.",
-"== Texto ==",
-"=== Texto ===",
-"'''Texto'''."
-],
-"respuesta_correcta": 3,
-"explicacion": "En wikitexto, tres comillas simples a cada lado del texto indican negrita."
-},
-{
-"pregunta": "",
-"opciones": [
-"Plazos de entrega ajustados, falta de una cultura empresarial que valore la documentación y desinterés de los desarrolladores.",
-"Exceso de documentación, falta de conocimientos técnicos y limitaciones de recursos.",
-"Complejidad del proyecto, falta de herramientas adecuadas y problemas de comunicación."
-],
-"respuesta_correcta": 0,
-"explicacion": "La opción correcta coincide con las tres causas destacadas en el material: falta de tiempo, escasa cultura documental y desinterés."
-},
-{
-"pregunta": "",
-"opciones": [
-"Para que sea entendible y útil para el público objetivo, para localizar rápidamente la información necesaria y para conseguir una documentación homogénea.",
-"Para hacerla más atractiva visualmente, para facilitar su comprensión y para reducir el tiempo de redacción.",
-"Para evitar errores en el código, para mejorar la seguridad del software y para asegurar la compatibilidad con múltiples plataformas."
-],
-"respuesta_correcta": 0,
-"explicacion": "La documentación debe adaptarse al público, estar bien estructurada y seguir un estándar homogéneo; esa es la idea principal del tema."
-},
-{
-"pregunta": "",
-"opciones": [
-"rm.",
-"action_delete.",
-"action_remove.",
-"reset."
-],
-"respuesta_correcta": 0,
-"explicacion": "git rm es el comando que elimina archivos del directorio de trabajo y del área de preparación."
-},
-{
-"pregunta": "",
-"opciones": [
-"Permite trabajar en paralelo en diferentes funcionalidades del proyecto.",
-"Permite eliminar los conflictos entre programadores.",
-"Facilita la creación de repositorios distribuidos."
-],
-"respuesta_correcta": 0,
-"explicacion": "Las ramas sirven para desarrollar líneas de trabajo paralelas, por ejemplo nuevas funcionalidades o pruebas, sin interferir directamente con la rama principal."
-}
-]
-}
-]
-}
-]
+          "id": "tema_transferencia_de_archivos",
+          "titulo": "Transferencia de archivos",
+          "resumen": "<p>La <strong>transferencia de archivos</strong> es uno de los usos más importantes de las redes de ordenadores, ya que permite almacenar, consultar, copiar, mover y gestionar información ubicada en sistemas remotos. En este contexto suele utilizarse el modelo <strong>cliente-servidor</strong>, donde un cliente solicita operaciones sobre archivos y un servidor las atiende a través de un protocolo específico y apoyándose en su sistema de archivos. Esta idea es clave: no basta con que haya red, sino que deben intervenir un <strong>programa cliente</strong>, un <strong>servidor</strong>, un <strong>protocolo de transferencia</strong> y un <strong>sistema de archivos remoto</strong>. Entre los protocolos más importantes del tema aparecen FTP, FTPS, SFTP, TFTP, NFS, WebDAV, Samba, rsync o SMB/CIFS, cada uno orientado a necesidades concretas.</p><p>El protocolo <strong>FTP</strong> nació con el objetivo de transferir datos entre ordenadores de forma eficiente y fiable. Aunque históricamente fue muy importante y aún se usa en algunos entornos, hay que entender bien su filosofía y sus limitaciones. FTP utiliza dos conexiones diferenciadas: una <strong>conexión de control</strong>, por la que viajan órdenes y respuestas, y una <strong>conexión de datos</strong>, por la que circulan los archivos. Esta separación lo distingue claramente de otros protocolos y explica muchos de sus problemas prácticos cuando aparecen cortafuegos, routers o NAT. Por defecto, la conexión de control se asocia al <strong>puerto 21/TCP</strong> y la de datos al <strong>puerto 20/TCP</strong>.</p><p>Las <strong>órdenes FTP</strong> indican cómo debe comportarse la comunicación: pueden referirse al modo de transferencia, al puerto usado, a la lectura o escritura de archivos, al borrado de información o al acceso a directorios. Para que el cliente conozca en todo momento el estado del servidor, FTP emplea <strong>códigos de respuesta</strong> de tres cifras. La primera cifra marca la clase de respuesta: <strong>1xx</strong> para respuestas preliminares positivas, <strong>2xx</strong> para respuestas de finalización positiva, <strong>3xx</strong> para respuestas intermedias positivas que requieren más datos, <strong>4xx</strong> para errores transitorios y <strong>5xx</strong> para errores permanentes. Conviene memorizar ejemplos representativos como <strong>220</strong> para servidor preparado, <strong>230</strong> para inicio de sesión correcto, <strong>331</strong> para solicitud de contraseña, <strong>421</strong> para servicio no disponible, <strong>425</strong> para imposibilidad de abrir la conexión de datos, <strong>530</strong> para autenticación fallida y <strong>550</strong> para archivo inaccesible o sin permisos.</p><p>Uno de los apartados más importantes del tema son los <strong>modos de conexión FTP</strong>. En <strong>modo activo</strong>, el cliente abre la conexión de control hacia el puerto 21 del servidor, pero la conexión de datos la inicia el servidor desde su puerto 20 hacia un puerto alto del cliente. Esto puede ocasionar problemas con cortafuegos del lado cliente, ya que este debe aceptar conexiones entrantes. En <strong>modo pasivo</strong>, el cliente inicia tanto la conexión de control como la de datos; primero conecta al puerto 21 del servidor y después abre la conexión de datos hacia el puerto que el servidor le indique. Este modo suele ser más cómodo en entornos con cortafuegos y NAT, porque evita que el cliente reciba conexiones entrantes inesperadas. Entender esta diferencia no es solo teoría: explica por qué muchas veces una conexión FTP funciona en pasivo pero falla en activo.</p><p>En cuanto a la <strong>transferencia de información</strong>, FTP permite elegir entre <strong>tipo ASCII</strong> y <strong>tipo binario</strong>. El modo ASCII se usa para ficheros de texto, ya que puede realizar conversiones entre representaciones internas y la representación estándar NVT-ASCII de 8 bits. El modo binario debe emplearse para cualquier archivo que no sea texto, como imágenes, ejecutables, PDFs, comprimidos o vídeos. Este punto es muy preguntable porque usar ASCII sobre ficheros binarios puede corromperlos, mientras que usar binario en ficheros de texto evita conversiones, pero no aprovecha la adaptación entre sistemas.</p><p>El <strong>tipo de acceso</strong> a un servidor FTP puede ser <strong>anónimo</strong> o <strong>autorizado</strong>. En el acceso anónimo el cliente no necesita autenticarse con usuario y contraseña específicos, lo que facilita la distribución pública de archivos, aunque exige extremar los permisos sobre directorios y ficheros para evitar escrituras maliciosas o subidas de software no deseado. Lo habitual es permitir solo lectura. En el acceso autorizado sí se requiere usuario y contraseña, y el administrador puede controlar con precisión qué directorios ve cada usuario y qué permisos posee. Esta diferencia es esencial desde el punto de vista de seguridad y administración.</p><p>Respecto a los <strong>clientes FTP</strong>, el tema distingue varias modalidades. Existen clientes en <strong>modo comando</strong>, usados desde terminal y basados en órdenes como <strong>cd</strong>, <strong>lcd</strong>, <strong>get</strong>, <strong>put</strong>, <strong>quit</strong>, <strong>exit</strong> o <strong>bye</strong>. También hay clientes con <strong>interfaz gráfica</strong>, como FileZilla, que facilitan la navegación entre sistema local y remoto, suelen detectar automáticamente si la transferencia debe ser ASCII o binaria y ofrecen más comodidad al usuario. Por último, algunos gestores de archivos permiten conectarse a servidores FTP mediante rutas como <strong>ftp://IP_servidor</strong> o <strong>ftp://nombre_servidor</strong>, aunque los navegadores modernos ya no suelen ofrecer soporte FTP como antes. Esta clasificación muestra que el protocolo puede usarse desde herramientas muy diferentes, pero siempre con la misma lógica subyacente.</p><p>Un aspecto crítico del tema es la <strong>seguridad</strong>. FTP <strong>no es un protocolo seguro</strong>, porque tanto las credenciales como los archivos viajan <strong>sin cifrar</strong>. Este es uno de sus mayores defectos históricos: se diseñó priorizando rapidez y eficiencia antes que confidencialidad. Para paliarlo apareció <strong>FTPS</strong>, que no es un protocolo completamente distinto, sino FTP funcionando sobre <strong>TLS/SSL</strong>. FTPS introduce una capa de cifrado entre cliente y servidor y protege la autenticación y la información en tránsito. Sin embargo, no debe confundirse con <strong>SFTP</strong>, porque SFTP no es FTP con cifrado, sino un protocolo distinto.</p><p><strong>SFTP</strong>, conocido como <strong>SSH File Transfer Protocol</strong>, permite tanto la <strong>transferencia segura de archivos</strong> como la <strong>gestión remota de sistemas de archivos</strong>. Aunque por el nombre pueda parecer una extensión de FTP o de SSH, en realidad se trata de un protocolo independiente que normalmente trabaja sobre un <strong>canal seguro</strong>, casi siempre <strong>SSH versión 2</strong>. La autenticación, el cifrado y parte del control de acceso no los implementa SFTP por sí mismo, sino que los delega en el canal seguro sobre el que viaja. Por eso se dice que SFTP asume que trabaja sobre SSH, TLS o incluso una VPN. La idea importante es que SFTP ofrece seguridad porque se apoya en una infraestructura segura externa.</p><p>La comparación entre <strong>FTP y SFTP</strong> es fundamental. En FTP las <strong>credenciales</strong> y los <strong>archivos</strong> viajan sin cifrar, mientras que en SFTP quedan protegidos por el canal seguro. FTP emplea <strong>dos canales</strong>, uno de control y otro de datos; SFTP usa <strong>un único canal</strong> para ambos fines. FTP trabaja por defecto con los puertos <strong>20 y 21</strong>; SFTP se apoya normalmente en el <strong>puerto 22/TCP</strong>, el propio de SSH. Esta comparativa resume gran parte del tema y suele ser base de preguntas de examen.</p><p>El <strong>funcionamiento de SFTP</strong> también sigue el modelo cliente-servidor basado en peticiones y respuestas. El cliente puede abrir, crear y cerrar archivos; leer y escribir; borrar y renombrar; listar, crear y eliminar directorios; gestionar atributos, rutas y enlaces. El servidor responde aportando identificadores de archivo, datos, nombres y atributos, y además incluye información de estado para indicar si la operación fue correcta o si se produjo un error, como archivo no encontrado, fin de archivo, ausencia de permisos o pérdida de conexión. Un detalle importante es que el servidor puede atender muchas peticiones, por lo que las respuestas incorporan el mismo identificador de la petición para que el cliente pueda relacionarlas incluso si llegan desordenadas.</p><p>Dentro del ecosistema real, destaca <strong>OpenSSH</strong>, una de las implementaciones más usadas de SSH. Además de permitir control remoto con <strong>ssh</strong>, ofrece transferencia segura mediante <strong>scp</strong> y <strong>sftp</strong>. OpenSSH es de código abierto, soporta autenticación por contraseña y por claves públicas/privadas, permite compresión de datos y reenvío de puertos. La herramienta <strong>scp</strong> sirve para copiar archivos entre cliente y servidor o incluso entre dos servidores remotos, usando la misma seguridad y autenticación de SSH, aunque requiere ejecución de shell. La herramienta <strong>sftp</strong> proporciona una consola interactiva para transferencia de archivos con comandos similares a FTP, como <strong>cd</strong>, <strong>lcd</strong>, <strong>ls</strong>, <strong>mkdir</strong>, <strong>get</strong>, <strong>put</strong>, <strong>rename</strong>, <strong>rm</strong> o <strong>quit</strong>.</p><p>En la parte de administración, el tema aborda la <strong>configuración avanzada de SFTP con OpenSSH</strong>. Una configuración por defecto puede permitir que un usuario autorizado para transferir archivos también obtenga un shell remoto, lo que no siempre es deseable. Para evitarlo, puede configurarse el servidor mediante <strong>internal-sftp</strong>, usar bloques <strong>Match</strong> y aplicar opciones como <strong>ChrootDirectory</strong> para enjaular al usuario en su directorio, <strong>X11Forwarding no</strong>, <strong>AllowTcpForwarding no</strong>, <strong>PermitTTY no</strong> y <strong>ForceCommand internal-sftp</strong>. Esto permite diseñar usuarios destinados solo a SFTP, sin acceso a shell y restringidos a determinadas rutas. Es una configuración muy importante porque muestra cómo convertir OpenSSH en una plataforma segura de intercambio de archivos sin conceder más privilegios de los necesarios.</p><p>Por último, el tema presenta <strong>SSHFS</strong>, un sistema de archivos cliente basado en <strong>SFTP</strong> y <strong>FUSE</strong>. Su interés es enorme porque permite <strong>montar un directorio remoto</strong> de un servidor SSH como si fuera parte del sistema de archivos local. Así, aplicaciones que no fueron diseñadas para trabajar con recursos remotos pueden manipularlos como si fueran locales. Además, al apoyarse en FUSE, incluso usuarios sin permisos de administración pueden gestionar puntos de montaje. La sintaxis básica consiste en indicar el servidor, el directorio remoto y el punto de montaje local, y para desmontar se usa <strong>fusermount -u</strong>. Desde el punto de vista conceptual, SSHFS representa la integración máxima entre transferencia segura y comodidad de uso.</p><p>En conjunto, este tema no solo enseña a diferenciar <strong>FTP, FTPS y SFTP</strong>, sino a comprender su arquitectura, sus ventajas e inconvenientes, su comportamiento ante cortafuegos, sus problemas de seguridad y sus usos reales en administración de sistemas y despliegue. Para sacar nota no basta con memorizar puertos y definiciones: hay que saber justificar por qué FTP usa dos conexiones, por qué el modo pasivo suele ser preferible, por qué FTP no es seguro, por qué SFTP depende de SSH, cómo restringir usuarios con internal-sftp y qué aporta SSHFS frente a una simple transferencia puntual de archivos.</p>",
+          "claves": [
+            "FTP usa dos conexiones: control y datos",
+            "Modo activo: datos iniciados por el servidor",
+            "Modo pasivo: datos iniciados por el cliente",
+            "FTP no cifra credenciales ni archivos",
+            "SFTP usa un solo canal seguro sobre SSH",
+            "FTP: puertos 20 y 21; SFTP: puerto 22",
+            "SSHFS monta directorios remotos como locales"
+          ],
+          "preguntas": [
+            {
+              "pregunta": "¿Qué elemento de FTP se utiliza para enviar órdenes y recibir respuestas del servidor?",
+              "opciones": [
+                "La conexión de control",
+                "La conexión de datos",
+                "El sistema de archivos local",
+                "El directorio raíz remoto"
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "La conexión de control transporta órdenes FTP y respuestas del servidor. La conexión de datos se reserva para la transferencia de archivos."
+            },
+            {
+              "pregunta": "¿Qué puertos usa FTP por defecto en su funcionamiento clásico?",
+              "opciones": [
+                "21 para datos y 22 para control",
+                "20 para datos y 21 para control",
+                "22 para control y 23 para datos",
+                "80 para control y 443 para datos"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "FTP usa por defecto el puerto 21/TCP para control y el 20/TCP para datos. Los otros pares de puertos pertenecen a otros servicios."
+            },
+            {
+              "pregunta": "¿Qué caracteriza al modo pasivo de FTP?",
+              "opciones": [
+                "El servidor inicia la conexión de datos hacia el cliente",
+                "El cliente inicia tanto la conexión de control como la de datos",
+                "No existe conexión de datos separada",
+                "Solo puede usarse con acceso anónimo"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "En modo pasivo el cliente abre ambas conexiones, lo que facilita el paso por cortafuegos y NAT. No elimina la conexión de datos ni depende del acceso anónimo."
+            },
+            {
+              "pregunta": "¿Qué tipo de transferencia debe utilizarse para imágenes, ejecutables o archivos comprimidos en FTP?",
+              "opciones": [
+                "ASCII",
+                "Texto extendido",
+                "Binario"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "El modo binario es el adecuado para cualquier archivo que no sea texto. ASCII se usa para archivos de texto con posible conversión de representación."
+            },
+            {
+              "pregunta": "¿Cuál es una desventaja fundamental de FTP frente a SFTP?",
+              "opciones": [
+                "FTP no permite listar directorios",
+                "FTP transmite credenciales y archivos sin cifrar",
+                "FTP no admite clientes gráficos",
+                "FTP no usa modelo cliente-servidor"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "La principal debilidad de FTP es que no cifra ni las credenciales ni los archivos. Sí permite listar directorios, sí tiene clientes gráficos y sí usa arquitectura cliente-servidor."
+            },
+            {
+              "pregunta": "¿Sobre qué puerto trabaja normalmente SFTP al apoyarse en SSH?",
+              "opciones": [
+                "20",
+                "21",
+                "22",
+                "25"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "SFTP suele funcionar sobre SSH, cuyo puerto por defecto es el 22/TCP. Los puertos 20 y 21 se asocian a FTP y el 25 a SMTP."
+            },
+            {
+              "pregunta": "¿Qué herramienta de OpenSSH permite copiar archivos usando el canal seguro de SSH, pero requiere shell remoto?",
+              "opciones": [
+                "scp",
+                "sshfs",
+                "vsftpd",
+                "ufw"
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "scp permite copiar archivos entre equipos a través de SSH. sshfs monta sistemas remotos, vsftpd es un servidor FTP y ufw es un cortafuegos."
+            },
+            {
+              "pregunta": "¿Qué directiva de OpenSSH permite enjaular a un usuario dentro de una ruta concreta en SFTP?",
+              "opciones": [
+                "ForceShell",
+                "ChrootDirectory",
+                "AllowBinary",
+                "DataChannel"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "ChrootDirectory limita el acceso del usuario a un directorio concreto del sistema de archivos. Las demás opciones no cumplen esa función en OpenSSH."
+            },
+            {
+              "pregunta": "¿Qué comando de un cliente FTP en modo texto sirve para transferir un archivo remoto al sistema local?",
+              "opciones": [
+                "put",
+                "lcd",
+                "get",
+                "bye"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "get descarga un archivo remoto al sistema local. put hace la operación inversa, lcd cambia el directorio local y bye sale del cliente."
+            },
+            {
+              "pregunta": "¿Qué aporta SSHFS frente a una simple conexión SFTP interactiva?",
+              "opciones": [
+                "Permite cifrar FTP clásico",
+                "Monta un directorio remoto como si fuera local",
+                "Sustituye al servidor SSH",
+                "Abre automáticamente el puerto 21"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "SSHFS permite montar parte del sistema de archivos remoto y trabajar con él como si fuera local. No cifra FTP clásico, no sustituye SSH y no usa el puerto 21."
+            }
+          ],
+          "preguntas_profesor": [
+            {
+              "pregunta": "¿Qué tipo de estructura de control se utiliza para capturar y manejar excepciones en PHP?",
+              "opciones": [
+                "catch",
+                "finally",
+                "try"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "La estructura de control de excepciones se inicia con try y se completa habitualmente con catch. finally es opcional y se ejecuta al final del bloque."
+            },
+            {
+              "pregunta": "Tenemos un ficheroML con el formato … ……. Una vez cargado en la variable $xml con la función simplexml_load_file, ¿cómo sería el bucle correcto para ir leyendo cada uno de los libros?",
+              "opciones": [
+                "foreach($xml->[libro] as $libro).",
+                "foreach($xml->libro as $libro).",
+                "foreach($xml->libros as $libro)."
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "Con SimpleXML se accede a los nodos hijos como propiedades del objeto XML, por eso la forma correcta es $xml->libro."
+            },
+            {
+              "pregunta": "Si tenemos una sentencia SQL 'SHOW TABLES' en una variable $sql y queremos ejecutarla, ¿cuál de las siguientes formas es la correcta, sabiendo que la conexión es correcta y la maneja $pdo?",
+              "opciones": [
+                "$pdo->query($sql).",
+                "$pdo->select($sql).",
+                "$pdo->exec($sql)."
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "query() se utiliza para consultas que devuelven resultados. SHOW TABLES genera un conjunto de resultados y por eso encaja con query()."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Preparar una modificación que afectará al primer elemento que cumpla una colección.",
+                "Preparar una modificación que afectará al primer elemento que cumpla una condición.",
+                "Modificar todos los elementos de una colección que cumplan una condición."
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "La explicación proporcionada indica que ['multi'=>true] hace que la operación afecte a múltiples documentos y no solo al primero."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "El tipo de dato.",
+                "El tiempo de expiración.",
+                "El nombre."
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "setcookie() permite establecer nombre, valor, expiración y otros parámetros, pero no define un tipo de dato como tal."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Un objeto con una lista de objetos.",
+                "Un array asociativo.",
+                "Un array de objetos."
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "Según la explicación aportada, json_decode() devuelve por defecto un objeto stdClass y no un array asociativo salvo que se indique expresamente."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Para finalizar una transacción.",
+                "Para deshacer una transacción.",
+                "Para empezar una transacción."
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "rollback() revierte o deshace los cambios de una transacción en caso de error o cancelación."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "validate_dni()",
+                "preg_match()",
+                "check_dni()"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "preg_match() es la función estándar de PHP para trabajar con expresiones regulares y validar patrones."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Para ejecutar una sentencia preparada.",
+                "Para ejecutar una instrucción.",
+                "Para crear una sentencia preparada."
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "prepare() crea la sentencia preparada; después normalmente se lanza con execute()."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Como un array.",
+                "Como un número.",
+                "Como un objeto."
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "Un select multiple envía varios valores y en PHP se reciben habitualmente como un array."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "set_error()",
+                "error_reporting()",
+                "error_exception()"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "error_reporting() controla qué niveles de error se muestran o notifican durante la ejecución."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "gigabytes",
+                "kilobytes",
+                "bytes"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "filesize() devuelve el tamaño del fichero expresado en bytes."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "insertOne",
+                "insertMany",
+                "insert"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "Dentro de BulkWrite, el método correcto indicado en la explicación es insert()."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Para leer los datos de un fichero.",
+                "Para cerrar el acceso a un fichero.",
+                "Para volcar al fichero lo que quede en el buffer."
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "fflush() fuerza la escritura del contenido pendiente en el buffer asociado al fichero."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "filetime",
+                "filemtime",
+                "flieatime"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "La explicación proporcionada indica que fileatime() devuelve la fecha del último acceso al fichero, aunque en las opciones aparece escrita como flieatime."
+            }
+          ]
+        },
+        {
+          "id": "tema_documentacion_y_control_de_versiones",
+          "titulo": "Documentación y control de versiones",
+          "resumen": "<p>La <strong>documentación</strong> y el <strong>control de versiones</strong> son dos pilares del ciclo de vida del software. Desde que una aplicación se concibe hasta que deja de utilizarse, atraviesa una serie de fases comunes: <strong>recogida y análisis de requerimientos</strong>, <strong>especificación</strong>, <strong>implementación</strong>, <strong>comprobación</strong>, <strong>despliegue y explotación</strong> y <strong>mantenimiento</strong>. Cada una de estas etapas genera información relevante que debe quedar reflejada en documentos adecuados: especificaciones, manuales de instalación, manuales de usuario, documentación técnica interna o registros de mantenimiento. La idea central del tema es que un software bien desarrollado no solo necesita código correcto, sino también una base documental clara y un sistema riguroso para registrar sus cambios.</p><p>La <strong>documentación del software</strong> es necesaria porque los proyectos reales crecen en tamaño y complejidad. Aunque el desarrollo lo lleve una sola persona o un equipo multidisciplinar, todos los procesos deberían documentarse siguiendo una <strong>estructura homogénea</strong> y unas <strong>normas previas</strong>. Esta documentación evita malentendidos con el cliente, facilita modificaciones futuras, ayuda en la sustitución de miembros del equipo y mejora la autonomía de usuarios y administradores. Un buen documento consensuado de requisitos permite verificar si el producto final cumple realmente lo pactado; una documentación interna sólida hace posible adaptar el sistema a cambios de normativa, negocio o tecnología; y unos buenos manuales reducen consultas repetitivas y elevan la satisfacción de quien usa la aplicación.</p><p>Aun así, es habitual encontrar software <strong>poco documentado o nada documentado</strong>, sobre todo en desarrollos a medida. El tema explica tres causas muy frecuentes:</p><ul><li><strong>Falta de tiempo</strong> por plazos de entrega demasiado ajustados.</li><li><strong>Ausencia de cultura empresarial</strong> que valore la documentación como parte real del producto.</li><li><strong>Desinterés o rechazo</strong> por parte de desarrolladores que la consideran una tarea tediosa.</li></ul><p>Este punto es muy importante de cara al examen, porque no basta con decir que “no se documenta por falta de ganas”: el material subraya que la documentación pierde prioridad frente a la programación, aunque a medio y largo plazo esa decisión genere problemas de mantenimiento, calidad y comunicación.</p><p>Para redactar una documentación de calidad, el tema establece varias <strong>recomendaciones metodológicas</strong>. Debe ser <strong>entendible</strong> y adaptarse al público objetivo: no se escribe igual para un usuario final que para un programador que va a modificar el código. Debe incluir una <strong>estructura clara</strong> con índice que permita localizar rápidamente la información; conviene usar <strong>plantillas y estándares</strong> para lograr uniformidad; la introducción debe explicar qué encontrará el lector; la documentación técnica ha de incorporar <strong>ejemplos contextualizados</strong>; y, especialmente en manuales dirigidos al usuario, es recomendable acompañar el texto de <strong>capturas de pantalla y esquemas</strong>. También se insiste en usar formatos estándar y mantenibles, indicar <strong>fecha de edición</strong> y <strong>versión del programa</strong>, documentar solo lo realmente necesario y revisar la vigencia de los documentos para actualizarlos o retirarlos si han quedado obsoletos.</p><p>Otro principio clave es que la documentación debe ser <strong>accesible</strong> para quienes la necesiten y, si es posible, permitir la <strong>participación de los usuarios en su actualización</strong>. Esta idea conecta directamente con herramientas colaborativas como las wikis. El tema no trata la documentación como un simple archivo estático, sino como un recurso vivo que debe acompañar la evolución del software.</p><p>Dentro de las herramientas de documentación, una de las más clásicas es <strong>Man</strong>. Se trata de la utilidad de línea de comandos que da acceso a los manuales de referencia del sistema en entornos tipo BSD, Unix, macOS y GNU/Linux. Los manuales se organizan en <strong>secciones numeradas del 1 al 8</strong>, y este detalle es muy preguntable. La <strong>sección 1</strong> corresponde a <strong>programas ejecutables y órdenes del shell</strong>; la <strong>2</strong>, a llamadas al sistema; la <strong>3</strong>, a funciones de bibliotecas; la <strong>4</strong>, a archivos especiales; la <strong>5</strong>, a formatos de archivo y convenios; la <strong>6</strong>, a juegos; la <strong>7</strong>, a miscelánea; y la <strong>8</strong>, a órdenes de administración del sistema. El comando <strong>man</strong> busca la página solicitada por orden en las secciones, por lo que a veces es necesario indicar manualmente la sección exacta, como en <strong>man 5 passwd</strong>. También aparecen opciones como <strong>man -a</strong>, <strong>man -f</strong> y <strong>man -k</strong>, que permiten explorar varias coincidencias o buscar descripciones cortas.</p><p>El tema explica además cómo interpretar la <strong>SINOPSIS</strong> de una página man. Los elementos en <strong>negrita</strong> deben teclearse tal cual; los <strong>corchetes</strong> indican contenido opcional; la barra vertical <strong>|</strong> separa opciones excluyentes; los tres puntos indican repetición; y las palabras en cursiva o subrayadas deben sustituirse por argumentos concretos. Dominar esta lectura es útil no solo para el examen, sino para trabajar con soltura en administración de sistemas.</p><p>La segunda gran herramienta de documentación estudiada es <strong>MediaWiki</strong>, una aplicación web orientada a la creación colaborativa y centralizada de documentación. Su gran ventaja es que proporciona una plataforma <strong>multilenguaje</strong>, <strong>actualizable</strong>, <strong>fiable</strong> y accesible desde cualquier equipo con acceso al servidor web. Se basa en una filosofía wiki: la documentación puede ser mantenida por todos los usuarios o solo por los autorizados, y cada modificación queda registrada gracias a un <strong>sistema de control de versiones</strong> interno. El texto se guarda en base de datos, mientras que el contenido multimedia suele almacenarse en el sistema de archivos. Las páginas se organizan por <strong>espacios de nombres</strong>, identificándose en muchos casos con la sintaxis <strong>Prefijo:NombreDePágina</strong>, como por ejemplo <strong>Ayuda:Plantillas</strong>.</p><p>MediaWiki utiliza el lenguaje de marcado llamado <strong>wikitexto</strong>, con una sintaxis propia, no estandarizada de forma universal. Entre sus elementos más importantes están los encabezados con signos igual, la cursiva con dos comillas simples, la <strong>negrita con tres comillas simples</strong>, los enlaces internos y externos, las listas numeradas y no numeradas, la sangría, la línea horizontal, las firmas y la inserción de imágenes o plantillas. Esto también es muy típico en preguntas tipo test: por ejemplo, <strong>'''Texto'''</strong> representa texto en <strong>negrita</strong>. Además, MediaWiki dispone de un <strong>Editor Visual</strong> de tipo WYSIWYG, pensado para quienes no desean trabajar directamente con wikitexto.</p><p>Un punto especialmente importante en MediaWiki son las <strong>plantillas</strong>. Son páginas especiales que se insertan en otras páginas y pueden incluirse <strong>por sustitución</strong> o <strong>por referencia</strong>. Si se hace por sustitución, se copia el contenido actual de la plantilla y se desvincula de ella; si se hace por referencia, el contenido se inserta dinámicamente y se actualiza si cambia la plantilla original. Las plantillas pueden parametrizarse con pares <strong>nombre=valor</strong>, lo que las convierte en una herramienta potentísima para generar documentación uniforme, reutilizable y fácil de mantener. Como contrapartida, el tema advierte que MediaWiki puede no ser la mejor opción si hay pocos recursos de memoria o disco, y que puede presentar dificultades al restringir el acceso de lectura a unos contenidos sí y a otros no.</p><p>La tercera herramienta documental tratada es <strong>Javadoc</strong>, orientada a generar documentación técnica automáticamente a partir de comentarios incluidos en código Java. Aquí hay que dominar tanto el <strong>formato del comentario</strong> como las <strong>etiquetas</strong> más importantes. Un comentario Javadoc comienza con <strong>/**</strong> y termina con <strong>/</strong>; las líneas intermedias empiezan con <strong></strong>. Debe incluir un <strong>primer bloque descriptivo</strong> y un <strong>segundo bloque</strong> con etiquetas precedidas por arroba, como <strong>@author</strong>, <strong>@version</strong>, <strong>@param</strong>, <strong>@return</strong>, <strong>@throws</strong>, <strong>@see</strong> o <strong>@deprecated</strong>. El tema insiste en que los comentarios deben situarse justo antes de la declaración de clases, campos, constructores o métodos, y que cada línea no debería superar los 80 caracteres. En examen suele preguntarse por la estructura: descripción primero, etiquetas después.</p><p>La segunda gran mitad del tema se centra en el <strong>control de versiones</strong>. Su objetivo es registrar de forma rigurosa los cambios realizados en un programa a lo largo de su vida útil. Esto permite saber en qué versión se está trabajando, quién realizó cada modificación y cómo volver a estados anteriores si una nueva versión falla. El control de versiones no es simplemente hacer copias de seguridad; es una disciplina organizada que aporta <strong>trazabilidad</strong>, <strong>seguridad en el trabajo colaborativo</strong> y <strong>eficiencia</strong>. Entre sus ventajas destacan la posibilidad de restaurar estados anteriores con rapidez, la mejora de la productividad de los equipos y la capacidad de consultar la evolución histórica de fragmentos de código para comprender decisiones pasadas.</p><p>El tema define varios conceptos básicos. Un <strong>repositorio</strong> es el espacio donde se almacenan los archivos del proyecto y sus metadatos, y debe representar siempre la <strong>última versión válida</strong> del programa. Un <strong>cambio</strong> es una modificación sobre archivos del repositorio. Un <strong>conflicto</strong> aparece cuando varios desarrolladores modifican el mismo archivo de forma incompatible. Una <strong>revisión</strong> es una versión identificada. Y una <strong>rama</strong> permite trabajar en paralelo sobre distintas líneas de desarrollo: por ejemplo, una para producción, otra para pruebas o una para nuevas funcionalidades. Saber explicar bien qué es una rama es clave: no es un repositorio distinto, sino un flujo de trabajo paralelo dentro del mismo historial.</p><p>Entre las herramientas de control de versiones mencionadas aparecen <strong>SVN</strong>, <strong>CVS</strong> y <strong>Git</strong>, siendo Git el protagonista principal del tema. Git es un sistema distribuido, publicado bajo licencia GPLv2, rápido porque está escrito en C y diseñado desde el principio para manejar grandes repositorios como el del kernel de Linux. Su modelo de ramificación es muy flexible y permite crear, fusionar o eliminar ramas según las necesidades del proyecto.</p><p>Una de las ideas más importantes de Git es que cada desarrollador dispone de una <strong>copia local completa del proyecto</strong>. Esto significa que no depende en todo momento del servidor para consultar el historial o trabajar, lo que mejora velocidad y autonomía. Git puede configurarse a nivel de sistema, usuario o repositorio, dependiendo del alcance que se quiera dar a los parámetros definidos, como nombre o correo electrónico.</p><p>Git trabaja con <strong>tres áreas</strong>: <strong>directorio de trabajo</strong> (working directory), donde se editan los archivos; <strong>área de preparación</strong> (staging area o índice), donde se colocan los cambios que se incluirán en la próxima confirmación; y <strong>repositorio</strong>, donde se guardan definitivamente junto a sus metadatos e historial. A partir de estas áreas surgen los estados de los archivos: <strong>no modificado</strong>, <strong>modificado</strong>, <strong>preparado</strong> y <strong>confirmado</strong>. Esta estructura es absolutamente central en Git y muy frecuente en test, porque marca el flujo real de trabajo.</p><p>Entre los comandos más relevantes se encuentran <strong>git init</strong> para crear un repositorio vacío, <strong>git clone</strong> para clonar uno existente, <strong>git add</strong> para mover cambios al área de preparación, <strong>git status</strong> para inspeccionar el estado del proyecto, <strong>git diff</strong> para comparar cambios, <strong>git commit</strong> para confirmar una nueva versión, <strong>git restore</strong> y <strong>git reset</strong> para revertir estados, <strong>git rm</strong> para eliminar archivos del directorio de trabajo y del staging, <strong>git mv</strong> para mover o renombrar, y en ramificación <strong>git branch</strong>, <strong>git checkout</strong>, <strong>git switch</strong>, <strong>git merge</strong>, <strong>git mergetool</strong>, <strong>git stash</strong> y <strong>git tag</strong>. Para sincronizar con otros repositorios aparecen <strong>git fetch</strong>, <strong>git pull</strong> y <strong>git push</strong>. Conviene dominar no solo qué hace cada comando, sino en qué parte del flujo actúa.</p><p>La integración de Git con <strong>GitHub</strong> añade la dimensión colaborativa en la nube. GitHub actúa como plataforma de alojamiento de repositorios y de desarrollo colaborativo. Permite publicar proyectos, compartirlos, clonarlos, revisarlos y trabajar en equipo. El proceso básico explicado en el tema consiste en: crear una cuenta en GitHub, crear un repositorio remoto, generar un <strong>token de acceso personal</strong>, enlazar el repositorio local con el remoto mediante <strong>git remote add origin</strong>, renombrar la rama con <strong>git branch -M main</strong> y sincronizar con <strong>git push -u origin main</strong>. Después, otro usuario puede clonar el repositorio con <strong>git clone</strong> y trabajar localmente sobre él.</p><p>Además, GitHub se vincula con la <strong>integración continua y entrega continua (CI/CD)</strong>. La <strong>CI</strong> consiste en probar e integrar automáticamente cambios en un repositorio compartido cada vez que se introducen, para evitar detectar conflictos solo al final del desarrollo. La <strong>CD</strong> busca publicar nuevas versiones en cuanto estén listas, sin esperar a grandes acumulaciones de cambios. En GitHub, esto puede automatizarse con <strong>GitHub Actions</strong>, que ejecuta pruebas o tareas automáticas al detectarse cambios en el repositorio.</p><p>Por último, el tema presenta distintos <strong>tipos de cuentas de GitHub</strong>: la <strong>gratuita</strong>, ideal para repositorios públicos y aprendizaje; la <strong>Pro</strong>, enfocada a desarrolladores individuales o pequeños equipos que necesitan más control y repositorios privados; y la <strong>cuenta de equipo</strong>, orientada a organizaciones con necesidades avanzadas de seguridad, control de acceso y colaboración a gran escala. Este apartado amplía la perspectiva profesional del tema, mostrando que GitHub no es solo una herramienta técnica, sino también una plataforma de trabajo real para estudiantes, desarrolladores, empresas, mantenedores de open source y entusiastas.</p><p>En resumen, para sacar nota en este tema hay que relacionar tres planos: <strong>la documentación como soporte de calidad</strong>, <strong>las herramientas específicas para producirla</strong> y <strong>el control de versiones como mecanismo de evolución ordenada del software</strong>. No basta con memorizar definiciones aisladas: hay que entender por qué documentar reduce problemas, por qué Git necesita working directory, staging y repositorio, por qué las ramas permiten trabajar en paralelo y por qué GitHub encaja tan bien en entornos colaborativos modernos con CI/CD.</p>",
+          "claves": [
+            "El ciclo de vida incluye requisitos, desarrollo, pruebas, despliegue y mantenimiento",
+            "Documentar evita malentendidos, facilita cambios y mejora soporte",
+            "Man sección 1: programas ejecutables y órdenes del shell",
+            "MediaWiki permite documentación colaborativa y versionada",
+            "Javadoc usa descripción y etiquetas con arroba",
+            "Git trabaja con working directory, staging y repositorio",
+            "Las ramas permiten desarrollo paralelo y posterior fusión"
+          ],
+          "preguntas": [
+            {
+              "pregunta": "¿Qué ventaja clave aporta una documentación técnica bien mantenida en un proyecto grande?",
+              "opciones": [
+                "Reduce la necesidad de probar el software",
+                "Facilita mantenimiento, sustitución de personal y comprensión del sistema",
+                "Evita por completo los errores de programación",
+                "Sustituye al control de versiones"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "La documentación no elimina pruebas ni errores por sí sola, pero sí facilita que el sistema pueda mantenerse, entenderse y continuarse aunque cambie el equipo."
+            },
+            {
+              "pregunta": "¿Qué sección de Man corresponde a formatos de archivo y convenios?",
+              "opciones": [
+                "1",
+                "3",
+                "5",
+                "8"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "La sección 5 de Man está reservada a formatos de archivo y convenios. La 1 es para comandos ejecutables y la 8 para administración del sistema."
+            },
+            {
+              "pregunta": "¿Qué característica diferencia a MediaWiki de un simple documento estático?",
+              "opciones": [
+                "Solo puede editarla una persona",
+                "Permite edición colaborativa, control de versiones y acceso web",
+                "No admite contenido multimedia",
+                "Obliga a escribir exclusivamente en HTML puro"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "MediaWiki destaca por ser colaborativa, accesible vía web y conservar el historial de cambios. Además admite texto y multimedia."
+            },
+            {
+              "pregunta": "¿Qué ocurre cuando una plantilla de MediaWiki se inserta por referencia?",
+              "opciones": [
+                "Se copia una sola vez y deja de actualizarse",
+                "Se elimina tras guardar la página",
+                "Se incorpora dinámicamente y refleja cambios futuros de la plantilla",
+                "Solo puede usarse en el espacio principal"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "La inclusión por referencia vincula el contenido a la plantilla original, así que si esta cambia, la página también refleja ese cambio."
+            },
+            {
+              "pregunta": "¿Qué elemento debe aparecer en el segundo bloque de un comentario Javadoc?",
+              "opciones": [
+                "Etiquetas como @param o @return",
+                "Solo código Java ejecutable",
+                "Únicamente capturas de pantalla",
+                "Nombres de ramas Git"
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "El segundo bloque de Javadoc contiene etiquetas precedidas por arroba, como @author, @version, @param, @return o @throws."
+            },
+            {
+              "pregunta": "¿Qué describe mejor el repositorio en un sistema de control de versiones?",
+              "opciones": [
+                "Solo una carpeta temporal local",
+                "Un espacio que guarda archivos del proyecto y metadatos de sus versiones",
+                "Un documento PDF con cambios anotados",
+                "Un directorio de trabajo sin historial"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "El repositorio almacena el proyecto y toda la información asociada a su historial, revisiones y metadatos, no solo archivos actuales."
+            },
+            {
+              "pregunta": "¿Cuál es la secuencia correcta de trabajo básica en Git para registrar un cambio?",
+              "opciones": [
+                "commit, add, edit",
+                "edit, add, commit",
+                "push, edit, commit",
+                "clone, merge, status"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "Primero se modifica en el directorio de trabajo, luego se pasa al área de preparación con add y por último se confirma con commit."
+            },
+            {
+              "pregunta": "¿Qué comando de Git elimina archivos del directorio de trabajo y del área de preparación?",
+              "opciones": [
+                "git restore",
+                "git reset",
+                "git rm",
+                "git fetch"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "git rm elimina el archivo tanto del directorio de trabajo como del staging. restore y reset tienen otros fines."
+            },
+            {
+              "pregunta": "¿Para qué sirven principalmente las ramas en Git?",
+              "opciones": [
+                "Para desactivar el historial del proyecto",
+                "Para trabajar en paralelo en distintas líneas de desarrollo",
+                "Para impedir cualquier conflicto",
+                "Para sustituir al repositorio remoto"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "Las ramas permiten desarrollar funcionalidades o pruebas en paralelo sin afectar directamente a la línea principal hasta que se fusionen."
+            },
+            {
+              "pregunta": "¿Qué define mejor la integración continua (CI) en GitHub?",
+              "opciones": [
+                "Publicar siempre versiones manualmente al final del proyecto",
+                "Probar e integrar automáticamente cambios frecuentes en un repositorio compartido",
+                "Crear únicamente repositorios privados",
+                "Evitar el uso de ramas"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "La CI consiste en validar e integrar cambios de forma continua para detectar errores antes y no acumular problemas al final del desarrollo."
+            }
+          ],
+          "preguntas_profesor": [
+            {
+              "pregunta": "¿Cuáles son las fases comunes del ciclo de vida del software?",
+              "opciones": [
+                "Recogida y análisis de los requerimientos de usuario; especificación del programa; implementación o desarrollo del programa; comprobación del buen funcionamiento; despliegue del programa y explotación en un entorno real; mantenimiento.",
+                "Recogida de requisitos, diseño, implementación, prueba, despliegue y mantenimiento.",
+                "Análisis, diseño, programación, pruebas, despliegue y mantenimiento."
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "Es correcta porque reproduce exactamente la enumeración completa que aparece en el material del tema sobre el ciclo de vida del software."
+            },
+            {
+              "pregunta": "¿Por qué es tan habitual encontrar software sin documentar, sobre todo si se ha hecho a medida?",
+              "opciones": [
+                "Porque hay que pagar importes altos para utilizar las herramientas adecuadas, ya que las gratuitas existentes están limitadas y no resultan útiles.",
+                "Porque, al ser un software a medida, sus usuarios ya lo conocen y no necesitan ningún tipo de manual. Además, los desarrolladores ya saben cómo instalarlo.",
+                "Porque falta tiempo. A la documentación no se le da la importancia que se merece y documentar tiene fama de ser un trabajo aburrido entre los desarrolladores.",
+                "Porque requiere personal externo a la empresa y mucho tiempo, lo que resulta muy costoso económicamente para las empresas de desarrollo."
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "El tema destaca precisamente la falta de tiempo, la escasa valoración de la documentación y la percepción de que documentar es un trabajo tedioso."
+            },
+            {
+              "pregunta": "El control de versiones...",
+              "opciones": [
+                "Se usa en la fase de pruebas para anotar los fallos y poder corregirlos en función de su prioridad.",
+                "Sirve solamente para indicarle al usuario la versión que tiene instalada en el ordenador.",
+                "Se usa para tener un registro de los cambios realizados a lo largo de la vida útil de un programa.",
+                "Se emplea solamente en la fase de diseño para saber cuántas propuestas se hicieron."
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "La finalidad del control de versiones es registrar y gestionar cambios durante toda la vida del software, no solo en pruebas o diseño."
+            },
+            {
+              "pregunta": "Pregunta 6: ¿Qué sección de los manuales de Man está reservada para los programas ejecutables y órdenes del shell?",
+              "opciones": [
+                "4.",
+                "1.",
+                "5.",
+                "2."
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "La sección 1 de Man corresponde a programas ejecutables y órdenes del shell, tal y como se indica en el tema."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Facilita la creación colaborativa y centralizada de documentación multilenguaje, actualizable y fiable.",
+                "Proporciona una interfaz gráfica para acceder a los manuales de referencia del sistema.",
+                "Permite generar documentación técnica en formato HTML a partir de archivos Java."
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "La opción correcta describe las características propias de MediaWiki: colaboración, centralización, multilenguaje y actualización continua."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Almacena solamente los archivos de código fuente.",
+                "Debe contener siempre la última versión válida del programa.",
+                "Permite que cada desarrollador tenga una copia local del proyecto."
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "En Git y en los sistemas distribuidos cada desarrollador trabaja con una copia local del proyecto, lo que facilita autonomía y velocidad de trabajo."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Proporcionar una interfaz gráfica para acceder a los manuales de referencia.",
+                "Facilitar el desarrollo colaborativo de documentación técnica.",
+                "Ofrecer una interfaz de línea de comandos para acceder a los manuales de referencia del sistema."
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "Man es una herramienta de línea de comandos para consultar los manuales de referencia del sistema."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Utiliza el directorio de trabajo, el área de preparación y el repositorio.",
+                "Únicamente utiliza el directorio de trabajo y el repositorio.",
+                "Únicamente utiliza el área de preparación y el repositorio.",
+                "Únicamente utiliza el repositorio."
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "Git se organiza en tres áreas fundamentales: working directory, staging area y repositorio."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Realizar pruebas e integrar automáticamente los cambios de programación en un repositorio compartido.",
+                "Publicar nuevas versiones del producto inmediatamente después de su desarrollo.",
+                "Detectar conflictos y realizar pruebas de funcionamiento manualmente en cada cambio realizado en el repositorio."
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "Esa definición corresponde a la integración continua, donde los cambios se prueban e integran automáticamente de forma frecuente."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Deben contener un primer bloque con la descripción del elemento, seguido de un segundo bloque con etiquetas precedidas por una arroba «@».",
+                "Deben comenzar con el delimitador '/' y terminar con '/'.",
+                "Deben tener un máximo de 100 caracteres por línea."
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "Los comentarios Javadoc incluyen primero un bloque descriptivo y luego uno de etiquetas con @. Esa es la estructura básica explicada en el tema."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "''Texto''.",
+                "== Texto ==",
+                "=== Texto ===",
+                "'''Texto'''."
+              ],
+              "respuesta_correcta": 3,
+              "explicacion": "En wikitexto, tres comillas simples a cada lado del texto indican negrita."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Plazos de entrega ajustados, falta de una cultura empresarial que valore la documentación y desinterés de los desarrolladores.",
+                "Exceso de documentación, falta de conocimientos técnicos y limitaciones de recursos.",
+                "Complejidad del proyecto, falta de herramientas adecuadas y problemas de comunicación."
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "La opción correcta coincide con las tres causas destacadas en el material: falta de tiempo, escasa cultura documental y desinterés."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Para que sea entendible y útil para el público objetivo, para localizar rápidamente la información necesaria y para conseguir una documentación homogénea.",
+                "Para hacerla más atractiva visualmente, para facilitar su comprensión y para reducir el tiempo de redacción.",
+                "Para evitar errores en el código, para mejorar la seguridad del software y para asegurar la compatibilidad con múltiples plataformas."
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "La documentación debe adaptarse al público, estar bien estructurada y seguir un estándar homogéneo; esa es la idea principal del tema."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "rm.",
+                "action_delete.",
+                "action_remove.",
+                "reset."
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "git rm es el comando que elimina archivos del directorio de trabajo y del área de preparación."
+            },
+            {
+              "pregunta": "",
+              "opciones": [
+                "Permite trabajar en paralelo en diferentes funcionalidades del proyecto.",
+                "Permite eliminar los conflictos entre programadores.",
+                "Facilita la creación de repositorios distribuidos."
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "Las ramas sirven para desarrollar líneas de trabajo paralelas, por ejemplo nuevas funcionalidades o pruebas, sin interferir directamente con la rama principal."
+            }
+          ]
+        },
+          {
+          "id": "tema_extra_codigos_http_ftp",
+          "titulo": "Tema extra: Códigos HTTP y FTP",
+          "resumen": "<p>En el desarrollo y despliegue de aplicaciones web, los <strong>códigos de estado</strong> de los protocolos <strong>HTTP</strong> y <strong>FTP</strong> son esenciales para interpretar la comunicación entre cliente y servidor. Estos códigos permiten identificar rápidamente si una petición se ha realizado correctamente, si requiere redirección o si ha ocurrido un error.</p><p>En <strong>HTTP</strong>, los códigos se organizan en cinco grupos principales:</p><ul><li><strong>1xx (Informativos)</strong>: indican que la petición ha sido recibida y el proceso continúa.<ul><li><strong>100 Continue</strong>: el cliente puede continuar con la petición.</li><li><strong>101 Switching Protocols</strong>: el servidor cambia de protocolo según lo solicitado.</li></ul></li><li><strong>2xx (Éxito)</strong>: la petición se ha procesado correctamente.<ul><li><strong>200 OK</strong>: la petición se ha completado con éxito.</li><li><strong>201 Created</strong>: se ha creado un nuevo recurso.</li><li><strong>202 Accepted</strong>: la petición ha sido aceptada pero no completada aún.</li><li><strong>204 No Content</strong>: la petición se ha completado sin contenido de respuesta.</li></ul></li><li><strong>3xx (Redirección)</strong>: se necesita una acción adicional para completar la petición.<ul><li><strong>301 Moved Permanently</strong>: el recurso se ha movido permanentemente.</li><li><strong>302 Found</strong>: redirección temporal a otra URL.</li><li><strong>304 Not Modified</strong>: el recurso no ha cambiado desde la última petición.</li></ul></li><li><strong>4xx (Error del cliente)</strong>: el error está en la petición del cliente.<ul><li><strong>400 Bad Request</strong>: la petición es incorrecta o mal formada.</li><li><strong>401 Unauthorized</strong>: se requiere autenticación.</li><li><strong>403 Forbidden</strong>: el acceso está prohibido.</li><li><strong>404 Not Found</strong>: el recurso no existe.</li><li><strong>405 Method Not Allowed</strong>: método HTTP no permitido.</li></ul></li><li><strong>5xx (Error del servidor)</strong>: el servidor falla al procesar la petición.<ul><li><strong>500 Internal Server Error</strong>: error interno del servidor.</li><li><strong>501 Not Implemented</strong>: funcionalidad no implementada.</li><li><strong>502 Bad Gateway</strong>: error en la comunicación entre servidores.</li><li><strong>503 Service Unavailable</strong>: servicio no disponible temporalmente.</li></ul></li></ul><p>En <strong>FTP</strong>, los códigos siguen una estructura similar:</p><ul><li><strong>1xx</strong>: respuesta preliminar.<ul><li><strong>125</strong>: conexión de datos abierta.</li><li><strong>150</strong>: estado de archivo correcto, se inicia transferencia.</li></ul></li><li><strong>2xx</strong>: operación completada con éxito.<ul><li><strong>200</strong>: comando ejecutado correctamente.</li><li><strong>220</strong>: servicio listo.</li><li><strong>221</strong>: servicio cerrando conexión.</li><li><strong>226</strong>: transferencia completada.</li><li><strong>230</strong>: usuario autenticado correctamente.</li></ul></li><li><strong>3xx</strong>: se necesita más información.<ul><li><strong>331</strong>: usuario correcto, falta contraseña.</li><li><strong>332</strong>: se necesita cuenta adicional.</li></ul></li><li><strong>4xx</strong>: error temporal.<ul><li><strong>421</strong>: servicio no disponible.</li><li><strong>425</strong>: no se puede abrir la conexión de datos.</li><li><strong>450</strong>: archivo no disponible temporalmente.</li></ul></li><li><strong>5xx</strong>: error permanente.<ul><li><strong>500</strong>: error de sintaxis.</li><li><strong>530</strong>: no autenticado.</li><li><strong>550</strong>: archivo no disponible o sin permisos.</li></ul></li></ul><p>Dominar estos códigos permite interpretar errores reales, depurar aplicaciones y comprender el comportamiento de servidores. En examen, es muy habitual identificar códigos como <strong>200, 301, 404, 500 en HTTP</strong> y <strong>220, 230, 331, 530 en FTP</strong>.</p>",
+          "claves": [
+            "HTTP usa códigos 1xx a 5xx",
+            "200 OK indica éxito",
+            "404 indica recurso no encontrado",
+            "500 indica error del servidor",
+            "FTP tiene códigos similares",
+            "230 FTP indica login correcto",
+            "530 FTP indica error de autenticación"
+          ],
+          "preguntas": [
+            {
+              "pregunta": "¿Qué significa el código HTTP 200?",
+              "opciones": ["Error", "Éxito", "Redirección"],
+              "respuesta_correcta": 1,
+              "explicacion": "200 OK indica que la petición se ha completado correctamente."
+            },
+            {
+              "pregunta": "¿Qué indica el código HTTP 404?",
+              "opciones": ["Servidor caído", "Recurso no encontrado", "Redirección"],
+              "respuesta_correcta": 1,
+              "explicacion": "404 indica que el recurso solicitado no existe."
+            },
+            {
+              "pregunta": "¿Qué grupo representa errores del servidor?",
+              "opciones": ["3xx", "4xx", "5xx"],
+              "respuesta_correcta": 2,
+              "explicacion": "Los códigos 5xx indican errores del servidor."
+            },
+            {
+              "pregunta": "¿Qué código HTTP indica redirección permanente?",
+              "opciones": ["200", "301", "404"],
+              "respuesta_correcta": 1,
+              "explicacion": "301 indica que el recurso se ha movido permanentemente."
+            },
+            {
+              "pregunta": "¿Qué significa el código FTP 230?",
+              "opciones": ["Error", "Login correcto", "Archivo eliminado"],
+              "respuesta_correcta": 1,
+              "explicacion": "230 indica autenticación correcta."
+            },
+            {
+              "pregunta": "¿Qué código FTP indica error de autenticación?",
+              "opciones": ["200", "230", "530"],
+              "respuesta_correcta": 2,
+              "explicacion": "530 indica que el usuario no está autenticado."
+            },
+            {
+              "pregunta": "¿Qué indica el código HTTP 500?",
+              "opciones": ["Error cliente", "Error servidor", "Éxito"],
+              "respuesta_correcta": 1,
+              "explicacion": "500 es un error interno del servidor."
+            },
+            {
+              "pregunta": "¿Qué código indica que el recurso no ha cambiado?",
+              "opciones": ["200", "304", "500"],
+              "respuesta_correcta": 1,
+              "explicacion": "304 Not Modified indica que no hay cambios."
+            },
+            {
+              "pregunta": "¿Qué tipo de código es el 400?",
+              "opciones": ["Error cliente", "Éxito", "Servidor"],
+              "respuesta_correcta": 0,
+              "explicacion": "400 es un error de petición del cliente."
+            },
+            {
+              "pregunta": "¿Qué código FTP indica transferencia completada?",
+              "opciones": ["220", "226", "331"],
+              "respuesta_correcta": 1,
+              "explicacion": "226 indica que la transferencia se ha completado correctamente."
+            }
+          ],
+          "preguntas_profesor": []
+        }
+      ]
+    }
+  ]
 }
