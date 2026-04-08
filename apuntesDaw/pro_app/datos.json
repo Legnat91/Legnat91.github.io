@@ -5316,154 +5316,154 @@
           ],
           "preguntas_profesor": [
             {
-              "pregunta": "¿Qué tipo de estructura de control se utiliza para capturar y manejar excepciones en PHP?",
+              "pregunta": "¿Qué protocolo de transferencia de archivos se diseñó originalmente para transferir datos de forma eficiente y fiable entre ordenadores?",
               "opciones": [
-                "catch",
-                "finally",
-                "try"
-              ],
-              "respuesta_correcta": 2,
-              "explicacion": "La estructura de control de excepciones se inicia con try y se completa habitualmente con catch. finally es opcional y se ejecuta al final del bloque."
-            },
-            {
-              "pregunta": "Tenemos un ficheroML con el formato … ……. Una vez cargado en la variable $xml con la función simplexml_load_file, ¿cómo sería el bucle correcto para ir leyendo cada uno de los libros?",
-              "opciones": [
-                "foreach($xml->[libro] as $libro).",
-                "foreach($xml->libro as $libro).",
-                "foreach($xml->libros as $libro)."
-              ],
-              "respuesta_correcta": 1,
-              "explicacion": "Con SimpleXML se accede a los nodos hijos como propiedades del objeto XML, por eso la forma correcta es $xml->libro."
-            },
-            {
-              "pregunta": "Si tenemos una sentencia SQL 'SHOW TABLES' en una variable $sql y queremos ejecutarla, ¿cuál de las siguientes formas es la correcta, sabiendo que la conexión es correcta y la maneja $pdo?",
-              "opciones": [
-                "$pdo->query($sql).",
-                "$pdo->select($sql).",
-                "$pdo->exec($sql)."
+                "FTP",
+                "SSH",
+                "HTTP"
               ],
               "respuesta_correcta": 0,
-              "explicacion": "query() se utiliza para consultas que devuelven resultados. SHOW TABLES genera un conjunto de resultados y por eso encaja con query()."
+              "explicacion": "FTP nació con el propósito de transferir datos entre ordenadores de forma eficiente y fiable."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Qué significa la sigla SFTP?",
               "opciones": [
-                "Preparar una modificación que afectará al primer elemento que cumpla una colección.",
-                "Preparar una modificación que afectará al primer elemento que cumpla una condición.",
-                "Modificar todos los elementos de una colección que cumplan una condición."
-              ],
-              "respuesta_correcta": 2,
-              "explicacion": "La explicación proporcionada indica que ['multi'=>true] hace que la operación afecte a múltiples documentos y no solo al primero."
-            },
-            {
-              "pregunta": "",
-              "opciones": [
-                "El tipo de dato.",
-                "El tiempo de expiración.",
-                "El nombre."
-              ],
-              "respuesta_correcta": 0,
-              "explicacion": "setcookie() permite establecer nombre, valor, expiración y otros parámetros, pero no define un tipo de dato como tal."
-            },
-            {
-              "pregunta": "",
-              "opciones": [
-                "Un objeto con una lista de objetos.",
-                "Un array asociativo.",
-                "Un array de objetos."
-              ],
-              "respuesta_correcta": 0,
-              "explicacion": "Según la explicación aportada, json_decode() devuelve por defecto un objeto stdClass y no un array asociativo salvo que se indique expresamente."
-            },
-            {
-              "pregunta": "",
-              "opciones": [
-                "Para finalizar una transacción.",
-                "Para deshacer una transacción.",
-                "Para empezar una transacción."
+                "Secure File Transfer Process",
+                "SSH File Transfer Protocol",
+                "Server File Transfer Protocol"
               ],
               "respuesta_correcta": 1,
-              "explicacion": "rollback() revierte o deshace los cambios de una transacción en caso de error o cancelación."
+              "explicacion": "SFTP significa SSH File Transfer Protocol."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Qué programa mencionado en el temario implementa tanto cliente como servidor y puede usar FTP, FTPS y SFTP?",
               "opciones": [
-                "validate_dni()",
-                "preg_match()",
-                "check_dni()"
-              ],
-              "respuesta_correcta": 1,
-              "explicacion": "preg_match() es la función estándar de PHP para trabajar con expresiones regulares y validar patrones."
-            },
-            {
-              "pregunta": "",
-              "opciones": [
-                "Para ejecutar una sentencia preparada.",
-                "Para ejecutar una instrucción.",
-                "Para crear una sentencia preparada."
-              ],
-              "respuesta_correcta": 2,
-              "explicacion": "prepare() crea la sentencia preparada; después normalmente se lanza con execute()."
-            },
-            {
-              "pregunta": "",
-              "opciones": [
-                "Como un array.",
-                "Como un número.",
-                "Como un objeto."
+                "FileZilla",
+                "MediaWiki",
+                "Javadoc"
               ],
               "respuesta_correcta": 0,
-              "explicacion": "Un select multiple envía varios valores y en PHP se reciben habitualmente como un array."
+              "explicacion": "El material indica que FileZilla implementa cliente y servidor y soporta FTP, FTPS y SFTP."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Qué conexión de FTP se utiliza por defecto a través del puerto 21?",
               "opciones": [
-                "set_error()",
-                "error_reporting()",
-                "error_exception()"
+                "La conexión de control",
+                "La conexión de datos",
+                "La conexión cifrada"
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "La conexión de control es por la que viajan las órdenes y, por defecto, utiliza el puerto 21."
+            },
+            {
+              "pregunta": "¿Qué conexión de FTP se establece por defecto a través del puerto 20?",
+              "opciones": [
+                "La conexión de control",
+                "La conexión de datos",
+                "La conexión anónima"
               ],
               "respuesta_correcta": 1,
-              "explicacion": "error_reporting() controla qué niveles de error se muestran o notifican durante la ejecución."
+              "explicacion": "La conexión de datos transmite los archivos y, por defecto, utiliza el puerto 20."
             },
             {
-              "pregunta": "",
+              "pregunta": "En el modo activo de FTP, ¿quién establece la conexión de datos?",
               "opciones": [
-                "gigabytes",
-                "kilobytes",
-                "bytes"
+                "El servidor",
+                "El cliente",
+                "El cortafuegos"
               ],
-              "respuesta_correcta": 2,
-              "explicacion": "filesize() devuelve el tamaño del fichero expresado en bytes."
+              "respuesta_correcta": 0,
+              "explicacion": "En modo activo, el servidor usa su puerto 20 para conectar con el cliente."
             },
             {
-              "pregunta": "",
+              "pregunta": "En el modo pasivo de FTP, ¿quién inicia tanto la conexión de control como la de datos?",
               "opciones": [
-                "insertOne",
-                "insertMany",
-                "insert"
+                "El servidor",
+                "El cliente",
+                "El router"
               ],
-              "respuesta_correcta": 2,
-              "explicacion": "Dentro de BulkWrite, el método correcto indicado en la explicación es insert()."
+              "respuesta_correcta": 1,
+              "explicacion": "En modo pasivo, el cliente inicia ambas conexiones."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Qué tipo de transferencia debe utilizarse en FTP cuando se envían archivos de texto?",
               "opciones": [
-                "Para leer los datos de un fichero.",
-                "Para cerrar el acceso a un fichero.",
-                "Para volcar al fichero lo que quede en el buffer."
+                "ASCII",
+                "Binario",
+                "UTF-32"
               ],
-              "respuesta_correcta": 2,
-              "explicacion": "fflush() fuerza la escritura del contenido pendiente en el buffer asociado al fichero."
+              "respuesta_correcta": 0,
+              "explicacion": "El tipo ASCII es el tipo por defecto y se utiliza para archivos de texto."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Qué tipo de transferencia debe utilizarse para enviar archivos que no sean de texto?",
               "opciones": [
-                "filetime",
-                "filemtime",
-                "flieatime"
+                "ASCII",
+                "Binario",
+                "Anónimo"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "El tipo binario es el que debe utilizarse para cualquier archivo que no sea texto."
+            },
+            {
+              "pregunta": "¿Qué tipo de acceso FTP permite conectarse al servidor sin necesidad de autenticación?",
+              "opciones": [
+                "Acceso anónimo",
+                "Acceso autorizado",
+                "Acceso root"
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "El acceso anónimo no requiere usuario ni contraseña para establecer la conexión."
+            },
+            {
+              "pregunta": "¿Qué comando interactivo de un cliente FTP permite transferir un archivo remoto al sistema local?",
+              "opciones": [
+                "put",
+                "lcd",
+                "get"
               ],
               "respuesta_correcta": 2,
-              "explicacion": "La explicación proporcionada indica que fileatime() devuelve la fecha del último acceso al fichero, aunque en las opciones aparece escrita como flieatime."
+              "explicacion": "El comando get transfiere un archivo remoto al sistema local."
+            },
+            {
+              "pregunta": "¿Qué comando interactivo de un cliente FTP permite transferir un archivo local al sistema remoto?",
+              "opciones": [
+                "put",
+                "cd",
+                "bye"
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "El comando put transfiere un archivo local al sistema remoto."
+            },
+            {
+              "pregunta": "¿Qué código de respuesta FTP indica que el inicio de sesión ha sido correcto?",
+              "opciones": [
+                "220",
+                "230",
+                "530"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "El código 230 indica que la autenticación o el inicio de sesión han sido correctos."
+            },
+            {
+              "pregunta": "¿Qué código de respuesta FTP indica que la autenticación del usuario no ha sido satisfactoria?",
+              "opciones": [
+                "331",
+                "425",
+                "530"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "El código 530 indica que la autenticación del usuario no ha sido satisfactoria."
+            },
+            {
+              "pregunta": "¿Cuál es el principal problema de seguridad del protocolo FTP?",
+              "opciones": [
+                "No permite transferir archivos binarios",
+                "Envía sin cifrar la autenticación y los archivos",
+                "No admite clientes gráficos"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "FTP no es seguro porque tanto el usuario y la contraseña como los archivos viajan sin cifrar."
             }
           ]
         },
@@ -5626,7 +5626,7 @@
               "explicacion": "La finalidad del control de versiones es registrar y gestionar cambios durante toda la vida del software, no solo en pruebas o diseño."
             },
             {
-              "pregunta": "Pregunta 6: ¿Qué sección de los manuales de Man está reservada para los programas ejecutables y órdenes del shell?",
+              "pregunta": "¿Qué sección de los manuales de Man está reservada para los programas ejecutables y órdenes del shell?",
               "opciones": [
                 "4.",
                 "1.",
@@ -5637,27 +5637,27 @@
               "explicacion": "La sección 1 de Man corresponde a programas ejecutables y órdenes del shell, tal y como se indica en el tema."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Qué herramienta ofrece una wiki colaborativa y centralizada para documentar proyectos de software?",
               "opciones": [
-                "Facilita la creación colaborativa y centralizada de documentación multilenguaje, actualizable y fiable.",
-                "Proporciona una interfaz gráfica para acceder a los manuales de referencia del sistema.",
-                "Permite generar documentación técnica en formato HTML a partir de archivos Java."
+                "MediaWiki",
+                "Man",
+                "Javadoc"
               ],
               "respuesta_correcta": 0,
-              "explicacion": "La opción correcta describe las características propias de MediaWiki: colaboración, centralización, multilenguaje y actualización continua."
+              "explicacion": "MediaWiki facilita la creación colaborativa y centralizada de documentación multilenguaje, actualizable y fiable."
             },
             {
-              "pregunta": "",
+              "pregunta": "En un sistema de control de versiones distribuido como Git, el repositorio...",
               "opciones": [
                 "Almacena solamente los archivos de código fuente.",
                 "Debe contener siempre la última versión válida del programa.",
                 "Permite que cada desarrollador tenga una copia local del proyecto."
               ],
               "respuesta_correcta": 2,
-              "explicacion": "En Git y en los sistemas distribuidos cada desarrollador trabaja con una copia local del proyecto, lo que facilita autonomía y velocidad de trabajo."
+              "explicacion": "En Git y en los sistemas distribuidos cada desarrollador trabaja con una copia local del proyecto, lo que facilita autonomía y trabajo en paralelo."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Para qué se utiliza la herramienta Man en sistemas Unix, GNU/Linux o similares?",
               "opciones": [
                 "Proporcionar una interfaz gráfica para acceder a los manuales de referencia.",
                 "Facilitar el desarrollo colaborativo de documentación técnica.",
@@ -5667,7 +5667,7 @@
               "explicacion": "Man es una herramienta de línea de comandos para consultar los manuales de referencia del sistema."
             },
             {
-              "pregunta": "",
+              "pregunta": "Git organiza el trabajo sobre el proyecto en tres áreas principales. ¿Cuál de las siguientes opciones las recoge correctamente?",
               "opciones": [
                 "Utiliza el directorio de trabajo, el área de preparación y el repositorio.",
                 "Únicamente utiliza el directorio de trabajo y el repositorio.",
@@ -5678,27 +5678,27 @@
               "explicacion": "Git se organiza en tres áreas fundamentales: working directory, staging area y repositorio."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Qué es la integración continua en el contexto del desarrollo y control de versiones?",
               "opciones": [
                 "Realizar pruebas e integrar automáticamente los cambios de programación en un repositorio compartido.",
                 "Publicar nuevas versiones del producto inmediatamente después de su desarrollo.",
                 "Detectar conflictos y realizar pruebas de funcionamiento manualmente en cada cambio realizado en el repositorio."
               ],
               "respuesta_correcta": 0,
-              "explicacion": "Esa definición corresponde a la integración continua, donde los cambios se prueban e integran automáticamente de forma frecuente."
+              "explicacion": "La integración continua consiste en probar e integrar automáticamente los cambios en un repositorio compartido."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Cómo deben estructurarse, de forma general, los comentarios compatibles con Javadoc?",
               "opciones": [
                 "Deben contener un primer bloque con la descripción del elemento, seguido de un segundo bloque con etiquetas precedidas por una arroba «@».",
                 "Deben comenzar con el delimitador '/' y terminar con '/'.",
                 "Deben tener un máximo de 100 caracteres por línea."
               ],
               "respuesta_correcta": 0,
-              "explicacion": "Los comentarios Javadoc incluyen primero un bloque descriptivo y luego uno de etiquetas con @. Esa es la estructura básica explicada en el tema."
+              "explicacion": "Los comentarios Javadoc incluyen primero un bloque descriptivo y luego uno de etiquetas con @."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Qué sintaxis de wikitexto se utiliza en MediaWiki para mostrar texto en negrita?",
               "opciones": [
                 "''Texto''.",
                 "== Texto ==",
@@ -5709,27 +5709,27 @@
               "explicacion": "En wikitexto, tres comillas simples a cada lado del texto indican negrita."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Cuáles son las principales causas destacadas en el temario por las que muchas veces no se documenta un software?",
               "opciones": [
                 "Plazos de entrega ajustados, falta de una cultura empresarial que valore la documentación y desinterés de los desarrolladores.",
                 "Exceso de documentación, falta de conocimientos técnicos y limitaciones de recursos.",
                 "Complejidad del proyecto, falta de herramientas adecuadas y problemas de comunicación."
               ],
               "respuesta_correcta": 0,
-              "explicacion": "La opción correcta coincide con las tres causas destacadas en el material: falta de tiempo, escasa cultura documental y desinterés."
+              "explicacion": "La opción correcta coincide con las tres causas destacadas en el material: falta de tiempo, escasa cultura documental y percepción de que documentar es tedioso."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Qué debe tener en cuenta una buena documentación técnica para resultar útil y mantenible?",
               "opciones": [
                 "Para que sea entendible y útil para el público objetivo, para localizar rápidamente la información necesaria y para conseguir una documentación homogénea.",
                 "Para hacerla más atractiva visualmente, para facilitar su comprensión y para reducir el tiempo de redacción.",
                 "Para evitar errores en el código, para mejorar la seguridad del software y para asegurar la compatibilidad con múltiples plataformas."
               ],
               "respuesta_correcta": 0,
-              "explicacion": "La documentación debe adaptarse al público, estar bien estructurada y seguir un estándar homogéneo; esa es la idea principal del tema."
+              "explicacion": "La documentación debe adaptarse al público, estar bien estructurada y seguir un estándar homogéneo."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Qué comando de Git se utiliza para eliminar archivos del directorio de trabajo y del área de preparación?",
               "opciones": [
                 "rm.",
                 "action_delete.",
@@ -5740,18 +5740,18 @@
               "explicacion": "git rm es el comando que elimina archivos del directorio de trabajo y del área de preparación."
             },
             {
-              "pregunta": "",
+              "pregunta": "¿Para qué sirve trabajar con ramas en Git?",
               "opciones": [
                 "Permite trabajar en paralelo en diferentes funcionalidades del proyecto.",
                 "Permite eliminar los conflictos entre programadores.",
                 "Facilita la creación de repositorios distribuidos."
               ],
               "respuesta_correcta": 0,
-              "explicacion": "Las ramas sirven para desarrollar líneas de trabajo paralelas, por ejemplo nuevas funcionalidades o pruebas, sin interferir directamente con la rama principal."
+              "explicacion": "Las ramas sirven para desarrollar líneas de trabajo paralelas, por ejemplo nuevas funcionalidades o pruebas, sin interferir con la rama principal."
             }
           ]
         },
-          {
+        {
           "id": "tema_extra_codigos_http_ftp",
           "titulo": "Tema extra: Códigos HTTP y FTP",
           "resumen": "<p>En el desarrollo y despliegue de aplicaciones web, los <strong>códigos de estado</strong> de los protocolos <strong>HTTP</strong> y <strong>FTP</strong> son esenciales para interpretar la comunicación entre cliente y servidor. Estos códigos permiten identificar rápidamente si una petición se ha realizado correctamente, si requiere redirección o si ha ocurrido un error.</p><p>En <strong>HTTP</strong>, los códigos se organizan en cinco grupos principales:</p><ul><li><strong>1xx (Informativos)</strong>: indican que la petición ha sido recibida y el proceso continúa.<ul><li><strong>100 Continue</strong>: el cliente puede continuar con la petición.</li><li><strong>101 Switching Protocols</strong>: el servidor cambia de protocolo según lo solicitado.</li></ul></li><li><strong>2xx (Éxito)</strong>: la petición se ha procesado correctamente.<ul><li><strong>200 OK</strong>: la petición se ha completado con éxito.</li><li><strong>201 Created</strong>: se ha creado un nuevo recurso.</li><li><strong>202 Accepted</strong>: la petición ha sido aceptada pero no completada aún.</li><li><strong>204 No Content</strong>: la petición se ha completado sin contenido de respuesta.</li></ul></li><li><strong>3xx (Redirección)</strong>: se necesita una acción adicional para completar la petición.<ul><li><strong>301 Moved Permanently</strong>: el recurso se ha movido permanentemente.</li><li><strong>302 Found</strong>: redirección temporal a otra URL.</li><li><strong>304 Not Modified</strong>: el recurso no ha cambiado desde la última petición.</li></ul></li><li><strong>4xx (Error del cliente)</strong>: el error está en la petición del cliente.<ul><li><strong>400 Bad Request</strong>: la petición es incorrecta o mal formada.</li><li><strong>401 Unauthorized</strong>: se requiere autenticación.</li><li><strong>403 Forbidden</strong>: el acceso está prohibido.</li><li><strong>404 Not Found</strong>: el recurso no existe.</li><li><strong>405 Method Not Allowed</strong>: método HTTP no permitido.</li></ul></li><li><strong>5xx (Error del servidor)</strong>: el servidor falla al procesar la petición.<ul><li><strong>500 Internal Server Error</strong>: error interno del servidor.</li><li><strong>501 Not Implemented</strong>: funcionalidad no implementada.</li><li><strong>502 Bad Gateway</strong>: error en la comunicación entre servidores.</li><li><strong>503 Service Unavailable</strong>: servicio no disponible temporalmente.</li></ul></li></ul><p>En <strong>FTP</strong>, los códigos siguen una estructura similar:</p><ul><li><strong>1xx</strong>: respuesta preliminar.<ul><li><strong>125</strong>: conexión de datos abierta.</li><li><strong>150</strong>: estado de archivo correcto, se inicia transferencia.</li></ul></li><li><strong>2xx</strong>: operación completada con éxito.<ul><li><strong>200</strong>: comando ejecutado correctamente.</li><li><strong>220</strong>: servicio listo.</li><li><strong>221</strong>: servicio cerrando conexión.</li><li><strong>226</strong>: transferencia completada.</li><li><strong>230</strong>: usuario autenticado correctamente.</li></ul></li><li><strong>3xx</strong>: se necesita más información.<ul><li><strong>331</strong>: usuario correcto, falta contraseña.</li><li><strong>332</strong>: se necesita cuenta adicional.</li></ul></li><li><strong>4xx</strong>: error temporal.<ul><li><strong>421</strong>: servicio no disponible.</li><li><strong>425</strong>: no se puede abrir la conexión de datos.</li><li><strong>450</strong>: archivo no disponible temporalmente.</li></ul></li><li><strong>5xx</strong>: error permanente.<ul><li><strong>500</strong>: error de sintaxis.</li><li><strong>530</strong>: no autenticado.</li><li><strong>550</strong>: archivo no disponible o sin permisos.</li></ul></li></ul><p>Dominar estos códigos permite interpretar errores reales, depurar aplicaciones y comprender el comportamiento de servidores. En examen, es muy habitual identificar códigos como <strong>200, 301, 404, 500 en HTTP</strong> y <strong>220, 230, 331, 530 en FTP</strong>.</p>",
@@ -5767,61 +5767,101 @@
           "preguntas": [
             {
               "pregunta": "¿Qué significa el código HTTP 200?",
-              "opciones": ["Error", "Éxito", "Redirección"],
+              "opciones": [
+                "Error",
+                "Éxito",
+                "Redirección"
+              ],
               "respuesta_correcta": 1,
               "explicacion": "200 OK indica que la petición se ha completado correctamente."
             },
             {
               "pregunta": "¿Qué indica el código HTTP 404?",
-              "opciones": ["Servidor caído", "Recurso no encontrado", "Redirección"],
+              "opciones": [
+                "Servidor caído",
+                "Recurso no encontrado",
+                "Redirección"
+              ],
               "respuesta_correcta": 1,
               "explicacion": "404 indica que el recurso solicitado no existe."
             },
             {
               "pregunta": "¿Qué grupo representa errores del servidor?",
-              "opciones": ["3xx", "4xx", "5xx"],
+              "opciones": [
+                "3xx",
+                "4xx",
+                "5xx"
+              ],
               "respuesta_correcta": 2,
               "explicacion": "Los códigos 5xx indican errores del servidor."
             },
             {
               "pregunta": "¿Qué código HTTP indica redirección permanente?",
-              "opciones": ["200", "301", "404"],
+              "opciones": [
+                "200",
+                "301",
+                "404"
+              ],
               "respuesta_correcta": 1,
               "explicacion": "301 indica que el recurso se ha movido permanentemente."
             },
             {
               "pregunta": "¿Qué significa el código FTP 230?",
-              "opciones": ["Error", "Login correcto", "Archivo eliminado"],
+              "opciones": [
+                "Error",
+                "Login correcto",
+                "Archivo eliminado"
+              ],
               "respuesta_correcta": 1,
               "explicacion": "230 indica autenticación correcta."
             },
             {
               "pregunta": "¿Qué código FTP indica error de autenticación?",
-              "opciones": ["200", "230", "530"],
+              "opciones": [
+                "200",
+                "230",
+                "530"
+              ],
               "respuesta_correcta": 2,
               "explicacion": "530 indica que el usuario no está autenticado."
             },
             {
               "pregunta": "¿Qué indica el código HTTP 500?",
-              "opciones": ["Error cliente", "Error servidor", "Éxito"],
+              "opciones": [
+                "Error cliente",
+                "Error servidor",
+                "Éxito"
+              ],
               "respuesta_correcta": 1,
               "explicacion": "500 es un error interno del servidor."
             },
             {
               "pregunta": "¿Qué código indica que el recurso no ha cambiado?",
-              "opciones": ["200", "304", "500"],
+              "opciones": [
+                "200",
+                "304",
+                "500"
+              ],
               "respuesta_correcta": 1,
               "explicacion": "304 Not Modified indica que no hay cambios."
             },
             {
               "pregunta": "¿Qué tipo de código es el 400?",
-              "opciones": ["Error cliente", "Éxito", "Servidor"],
+              "opciones": [
+                "Error cliente",
+                "Éxito",
+                "Servidor"
+              ],
               "respuesta_correcta": 0,
               "explicacion": "400 es un error de petición del cliente."
             },
             {
               "pregunta": "¿Qué código FTP indica transferencia completada?",
-              "opciones": ["220", "226", "331"],
+              "opciones": [
+                "220",
+                "226",
+                "331"
+              ],
               "respuesta_correcta": 1,
               "explicacion": "226 indica que la transferencia se ha completado correctamente."
             }
