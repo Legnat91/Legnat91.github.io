@@ -1,53 +1,60 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>DAW Notes</title>
-  <meta name="theme-color" content="#0f172a">
+  <title>DAW Study Flow</title>
+  <meta name="theme-color" content="#102033">
+  <meta name="description" content="App estatica para estudiar asignaturas DAW desde movil o escritorio.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div class="brand" role="button" tabindex="0" data-action="go-home">
-        <div class="brand-mark" aria-hidden="true">
-          <span></span><span></span><span></span>
-        </div>
-        <div>
-          <p class="eyebrow">Plataforma de estudio</p>
-          <h1>DAW Notes</h1>
-        </div>
+  <div class="page-shell">
+    <header class="app-header">
+      <div class="brand-block">
+        <button class="brand-button" type="button" data-action="go-home" aria-label="Volver al inicio">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+          <span class="brand-copy">
+            <span class="brand-kicker">Study flow</span>
+            <span class="brand-title">DAW Study Flow</span>
+          </span>
+        </button>
+        <p class="brand-summary">Temas, conceptos clave y tests en una interfaz pensada primero para movil.</p>
       </div>
 
-      <div class="topbar-actions">
-        <button id="theme-toggle" class="btn btn-ghost" type="button" aria-label="Cambiar tema">
-          <span class="theme-icon">🌙</span>
-          <span class="theme-label">Modo oscuro</span>
+      <div class="header-actions">
+        <button id="theme-toggle" class="icon-button" type="button" aria-label="Cambiar tema">
+          <span class="theme-icon" aria-hidden="true">☾</span>
+          <span class="theme-label">Tema oscuro</span>
         </button>
-        <button id="home-button" class="btn btn-soft hidden" type="button">Inicio</button>
+        <button id="back-button" class="soft-button hidden" type="button">Volver</button>
       </div>
     </header>
 
-    <main id="app" class="view-root" aria-live="polite">
-      <section class="loading-state card">
+    <main id="app" class="app-main" aria-live="polite">
+      <section class="surface loading-state">
         <div class="spinner" aria-hidden="true"></div>
         <div>
-          <h2>Cargando contenido…</h2>
-          <p>Preparando temario, claves y tests desde JSON.</p>
+          <p class="section-kicker">Preparando app</p>
+          <h1>Cargando contenido</h1>
+          <p>Estamos montando asignaturas, temas y tests desde el archivo JSON.</p>
         </div>
       </section>
     </main>
   </div>
 
   <template id="empty-state-template">
-    <section class="empty-state card">
-      <div class="empty-icon">📘</div>
+    <section class="surface empty-state">
+      <p class="empty-icon" aria-hidden="true">::</p>
       <h2>No hay contenido disponible</h2>
-      <p>Cuando añadas más asignaturas o temas al JSON, aparecerán aquí automáticamente.</p>
+      <p>Cuando anadas mas asignaturas o temas en <strong>datos.json</strong>, apareceran aqui automaticamente.</p>
     </section>
   </template>
 

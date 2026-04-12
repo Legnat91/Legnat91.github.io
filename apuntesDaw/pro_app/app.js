@@ -1,16 +1,23 @@
-const app = document.getElementById('app');
+﻿const app = document.getElementById('app');
 const themeToggle = document.getElementById('theme-toggle');
-const homeButton = document.getElementById('home-button');
+const backButton = document.getElementById('back-button');
+const emptyStateTemplate = document.getElementById('empty-state-template');
 
 const STORAGE_KEYS = {
-  theme: 'daw_theme',
+  theme: 'daw_theme_v3',
   scoresLegacy: 'daw_notas',
-  scores: 'daw_notes_scores_v2',
-  appState: 'daw_notes_app_state_v2'
+  scores: 'daw_study_scores_v3',
+  appState: 'daw_study_state_v3'
+};
+
+const QUIZ_TYPES = {
+  ia: 'Test IA',
+  profesor: 'Test profesor',
+  total: 'Test mixto'
 };
 
 const state = {
-  db: null,
+  db: { asignaturas: [] },
   view: 'home',
   subjectId: null,
   topicId: null,
@@ -18,20 +25,28 @@ const state = {
   topicSearch: '',
   test: null,
   results: null,
-  scores: migrateScores()
+  scores: loadScores()
 };
 
-function migrateScores() {
-  const modern = JSON.parse(localStorage.getItem(STORAGE_KEYS.scores) || '{}');
-  const legacy = JSON.parse(localStorage.getItem(STORAGE_KEYS.scoresLegacy) || '{}');
+function safeParse(value, fallback) {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
+
+function loadScores() {
+  const modern = safeParse(localStorage.getItem(STORAGE_KEYS.scores) || '{}', {});
+  const legacy = safeParse(localStorage.getItem(STORAGE_KEYS.scoresLegacy) || '{}', {});
   const merged = { ...legacy, ...modern };
-  localStorage.setItem(STORAGE_KEYS.scores, JSON.stringify(merged));
+  persistScores(merged);
   return merged;
 }
 
-function saveScores() {
-  localStorage.setItem(STORAGE_KEYS.scores, JSON.stringify(state.scores));
-  localStorage.setItem(STORAGE_KEYS.scoresLegacy, JSON.stringify(state.scores));
+function persistScores(scores) {
+  localStorage.setItem(STORAGE_KEYS.scores, JSON.stringify(scores));
+  localStorage.setItem(STORAGE_KEYS.scoresLegacy, JSON.stringify(scores));
 }
 
 function saveAppState() {
@@ -46,22 +61,25 @@ function saveAppState() {
 }
 
 function restoreAppState() {
-  const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.appState) || 'null');
-  if (!saved) return;
-  state.view = saved.view || 'home';
-  state.subjectId = saved.subjectId || null;
-  state.topicId = saved.topicId || null;
-  state.contentTab = saved.contentTab || 'resumen';
-  state.topicSearch = saved.topicSearch || '';
+  const saved = safeParse(localStorage.getItem(STORAGE_KEYS.appState) || 'null', null);
+  if (!saved || typeof saved !== 'object') return;
+
+  state.view = typeof saved.view === 'string' ? saved.view : 'home';
+  state.subjectId = typeof saved.subjectId === 'string' ? saved.subjectId : null;
+  state.topicId = typeof saved.topicId === 'string' ? saved.topicId : null;
+  state.contentTab = saved.contentTab === 'claves' ? 'claves' : 'resumen';
+  state.topicSearch = typeof saved.topicSearch === 'string' ? saved.topicSearch : '';
 }
 
 function setTheme(theme) {
-  const dark = theme === 'dark';
-  document.body.toggleAttribute('data-theme', dark);
-  document.body.setAttribute('data-theme', dark ? 'dark' : 'light');
-  localStorage.setItem(STORAGE_KEYS.theme, dark ? 'dark' : 'light');
-  themeToggle.querySelector('.theme-icon').textContent = dark ? '☀️' : '🌙';
-  themeToggle.querySelector('.theme-label').textContent = dark ? 'Modo claro' : 'Modo oscuro';
+  const isDark = theme === 'dark';
+  document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  localStorage.setItem(STORAGE_KEYS.theme, isDark ? 'dark' : 'light');
+
+  const icon = themeToggle.querySelector('.theme-icon');
+  const label = themeToggle.querySelector('.theme-label');
+  icon.textContent = isDark ? '☀' : '☾';
+  label.textContent = isDark ? 'Tema claro' : 'Tema oscuro';
 }
 
 function initTheme() {
@@ -70,7 +88,7 @@ function initTheme() {
 }
 
 function escapeHtml(value) {
-  return String(value)
+  return String(value ?? '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -78,39 +96,29 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
-function getSubject(subjectId) {
-  return state.db?.asignaturas.find(a => a.id === subjectId) || null;
+function stripHtml(html) {
+  const container = document.createElement('div');
+  container.innerHTML = String(html || '');
+  return (container.textContent || container.innerText || '').trim();
 }
 
-function getTopic(subjectId, topicId) {
-  return getSubject(subjectId)?.temas.find(t => t.id === topicId) || null;
+function excerpt(html, maxLength = 150) {
+  const text = stripHtml(html);
+  if (!text) return 'Este tema aun no tiene resumen disponible.';
+  if (text.length <= maxLength) return text;
+  return `${text.slice(0, maxLength).trim()}...`;
+}
+
+function clampPercent(value) {
+  return Math.max(0, Math.min(100, Math.round(value || 0)));
+}
+
+function pluralize(count, singular, plural) {
+  return `${count} ${count === 1 ? singular : plural}`;
 }
 
 function scoreKey(subjectId, topicId, type) {
   return `${subjectId}-${topicId}-${type}`;
-}
-
-function subjectStats(subject) {
-  return subject.temas.reduce((acc, topic) => {
-    acc.temas += 1;
-    acc.ia += (topic.preguntas || []).length;
-    acc.profesor += (topic.preguntas_profesor || []).length;
-    return acc;
-  }, { temas: 0, ia: 0, profesor: 0 });
-}
-
-function globalStats() {
-  const stats = { asignaturas: state.db.asignaturas.length, temas: 0, ia: 0, profesor: 0, realizados: 0 };
-  state.db.asignaturas.forEach(subject => {
-    const s = subjectStats(subject);
-    stats.temas += s.temas;
-    stats.ia += s.ia;
-    stats.profesor += s.profesor;
-  });
-  Object.values(state.scores).forEach(score => {
-    if (score?.intentos) stats.realizados += score.intentos;
-  });
-  return stats;
 }
 
 function getBestScore(subjectId, topicId, type) {
@@ -119,7 +127,7 @@ function getBestScore(subjectId, topicId, type) {
 
 function saveScore(subjectId, topicId, type, score, total) {
   const key = scoreKey(subjectId, topicId, type);
-  const previous = state.scores[key];
+  const previous = state.scores[key] || null;
   const next = {
     puntuacion: previous ? Math.max(previous.puntuacion, score) : score,
     total,
@@ -127,54 +135,182 @@ function saveScore(subjectId, topicId, type, score, total) {
     ultimoResultado: score,
     updatedAt: new Date().toISOString()
   };
+
   state.scores[key] = next;
-  saveScores();
+  persistScores(state.scores);
 }
 
-function getCoverage(subject) {
-  const types = ['ia', 'profesor', 'global-total', 'global-profesor'];
-  let completed = 0;
-  let total = types.length;
-  subject.temas.forEach(() => total += 2);
-  subject.temas.forEach(topic => {
-    if (getBestScore(subject.id, topic.id, 'ia')) completed += 1;
-    if (getBestScore(subject.id, topic.id, 'profesor')) completed += 1;
-  });
-  if (getBestScore(subject.id, 'global', 'total')) completed += 1;
-  if (getBestScore(subject.id, 'global', 'profesor')) completed += 1;
-  return { completed, total, percentage: Math.round((completed / total) * 100) || 0 };
-}
-
-function stripHtml(html) {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-}
-
-function excerpt(html, length = 180) {
-  const text = stripHtml(html).trim();
-  return text.length > length ? `${text.slice(0, length).trim()}…` : text;
-}
-
-function shuffle(array) {
-  const copy = [...array];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+function shuffle(items) {
+  const copy = [...items];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[randomIndex]] = [copy[randomIndex], copy[index]];
   }
   return copy;
 }
 
 function normalizeQuestion(question, source) {
-  const correctText = question.opciones[question.respuesta_correcta];
-  const options = shuffle(question.opciones);
+  const prompt = typeof question?.pregunta === 'string' ? question.pregunta.trim() : '';
+  const options = Array.isArray(question?.opciones)
+    ? question.opciones.filter((item) => typeof item === 'string' && item.trim())
+    : [];
+  const rawIndex = Number(question?.respuesta_correcta);
+
+  if (!prompt || options.length < 2 || !Number.isInteger(rawIndex) || rawIndex < 0 || rawIndex >= options.length) {
+    return null;
+  }
+
+  const shuffled = shuffle(options);
+  const correctText = options[rawIndex];
+
   return {
-    pregunta: question.pregunta,
-    opciones: options,
-    respuesta_correcta: options.indexOf(correctText),
-    explicacion: question.explicacion || 'Sin explicación adicional.',
+    pregunta: prompt,
+    opciones: shuffled,
+    respuesta_correcta: shuffled.indexOf(correctText),
+    explicacion: typeof question?.explicacion === 'string' && question.explicacion.trim()
+      ? question.explicacion.trim()
+      : 'Sin explicacion adicional.',
     source
   };
+}
+
+function normalizeTopic(topic, index) {
+  const resumen = typeof topic?.resumen === 'string' && topic.resumen.trim()
+    ? topic.resumen
+    : '<p>Este tema aun no tiene resumen disponible.</p>';
+  const claves = Array.isArray(topic?.claves)
+    ? topic.claves.filter((item) => typeof item === 'string' && item.trim())
+    : [];
+  const preguntas = Array.isArray(topic?.preguntas)
+    ? topic.preguntas.map((question) => normalizeQuestion(question, null)).filter(Boolean)
+    : [];
+  const preguntasProfesor = Array.isArray(topic?.preguntas_profesor)
+    ? topic.preguntas_profesor.map((question) => normalizeQuestion(question, null)).filter(Boolean)
+    : [];
+
+  return {
+    id: typeof topic?.id === 'string' && topic.id.trim() ? topic.id : `tema_${index + 1}`,
+    titulo: typeof topic?.titulo === 'string' && topic.titulo.trim() ? topic.titulo.trim() : `Tema ${index + 1}`,
+    resumen,
+    claves,
+    preguntas,
+    preguntas_profesor: preguntasProfesor
+  };
+}
+
+function normalizeSubject(subject, index) {
+  const temas = Array.isArray(subject?.temas)
+    ? subject.temas.map((topic, topicIndex) => normalizeTopic(topic, topicIndex))
+    : [];
+
+  return {
+    id: typeof subject?.id === 'string' && subject.id.trim() ? subject.id : `asignatura_${index + 1}`,
+    nombre: typeof subject?.nombre === 'string' && subject.nombre.trim() ? subject.nombre.trim() : `Asignatura ${index + 1}`,
+    temas
+  };
+}
+
+function normalizeDatabase(data) {
+  const subjects = Array.isArray(data?.asignaturas)
+    ? data.asignaturas.map((subject, index) => normalizeSubject(subject, index))
+    : [];
+
+  subjects.forEach((subject) => {
+    subject.temas.forEach((topic) => {
+      topic.preguntas = topic.preguntas.map((question) => ({
+        ...question,
+        source: { subjectId: subject.id, topicId: topic.id, title: topic.titulo, type: 'ia' }
+      }));
+      topic.preguntas_profesor = topic.preguntas_profesor.map((question) => ({
+        ...question,
+        source: { subjectId: subject.id, topicId: topic.id, title: topic.titulo, type: 'profesor' }
+      }));
+    });
+  });
+
+  return { asignaturas: subjects };
+}
+
+function getSubject(subjectId) {
+  return state.db.asignaturas.find((subject) => subject.id === subjectId) || null;
+}
+
+function getTopic(subjectId, topicId) {
+  return getSubject(subjectId)?.temas.find((topic) => topic.id === topicId) || null;
+}
+
+function subjectStats(subject) {
+  return subject.temas.reduce((acc, topic) => {
+    acc.temas += 1;
+    acc.ia += topic.preguntas.length;
+    acc.profesor += topic.preguntas_profesor.length;
+    acc.claves += topic.claves.length;
+    return acc;
+  }, { temas: 0, ia: 0, profesor: 0, claves: 0 });
+}
+
+function getCoverage(subject) {
+  const total = subject.temas.reduce((acc, topic) => {
+    let next = acc;
+    if (topic.preguntas.length) next += 1;
+    if (topic.preguntas_profesor.length) next += 1;
+    return next;
+  }, 0);
+
+  const completed = subject.temas.reduce((acc, topic) => {
+    let next = acc;
+    if (topic.preguntas.length && getBestScore(subject.id, topic.id, 'ia')) next += 1;
+    if (topic.preguntas_profesor.length && getBestScore(subject.id, topic.id, 'profesor')) next += 1;
+    return next;
+  }, 0);
+
+  return {
+    total,
+    completed,
+    percentage: total ? clampPercent((completed / total) * 100) : 0
+  };
+}
+
+function globalStats() {
+  return state.db.asignaturas.reduce((acc, subject) => {
+    const stats = subjectStats(subject);
+    acc.asignaturas += 1;
+    acc.temas += stats.temas;
+    acc.ia += stats.ia;
+    acc.profesor += stats.profesor;
+    acc.claves += stats.claves;
+    return acc;
+  }, { asignaturas: 0, temas: 0, ia: 0, profesor: 0, claves: 0 });
+}
+
+function findContinueTopic() {
+  const savedTopic = state.subjectId && state.topicId ? getTopic(state.subjectId, state.topicId) : null;
+  if (savedTopic) {
+    return { subject: getSubject(state.subjectId), topic: savedTopic };
+  }
+
+  let latest = null;
+
+  state.db.asignaturas.forEach((subject) => {
+    subject.temas.forEach((topic) => {
+      ['ia', 'profesor'].forEach((type) => {
+        const score = getBestScore(subject.id, topic.id, type);
+        if (!score?.updatedAt) return;
+
+        const stamp = new Date(score.updatedAt).getTime();
+        if (!latest || stamp > latest.stamp) {
+          latest = { subject, topic, stamp, type, score };
+        }
+      });
+    });
+  });
+
+  if (latest) return { subject: latest.subject, topic: latest.topic, score: latest.score, type: latest.type };
+
+  const firstSubject = state.db.asignaturas[0] || null;
+  const firstTopic = firstSubject?.temas[0] || null;
+  if (!firstSubject || !firstTopic) return null;
+  return { subject: firstSubject, topic: firstTopic };
 }
 
 function buildQuestionSet(subjectId, topicId, type) {
@@ -182,93 +318,156 @@ function buildQuestionSet(subjectId, topicId, type) {
   if (!subject) return [];
 
   if (topicId === 'global') {
-    let pool = [];
-    subject.temas.forEach(topic => {
+    const pool = [];
+
+    subject.temas.forEach((topic) => {
       if (type === 'total') {
-        pool.push(...(topic.preguntas || []).map(q => normalizeQuestion(q, { subjectId, topicId: topic.id, title: topic.titulo, type: 'ia' })));
+        pool.push(...topic.preguntas.map((question) => ({ ...question })));
       }
       if (type === 'total' || type === 'profesor') {
-        pool.push(...(topic.preguntas_profesor || []).map(q => normalizeQuestion(q, { subjectId, topicId: topic.id, title: topic.titulo, type: 'profesor' })));
+        pool.push(...topic.preguntas_profesor.map((question) => ({ ...question })));
       }
     });
+
     return shuffle(pool).slice(0, 30);
   }
 
   const topic = getTopic(subjectId, topicId);
   if (!topic) return [];
-  const questions = type === 'profesor' ? (topic.preguntas_profesor || []) : (topic.preguntas || []);
-  return shuffle(questions.map(q => normalizeQuestion(q, { subjectId, topicId, title: topic.titulo, type })));
+
+  return type === 'profesor'
+    ? shuffle(topic.preguntas_profesor.map((question) => ({ ...question })))
+    : shuffle(topic.preguntas.map((question) => ({ ...question })));
 }
 
-function setView(view, extra = {}) {
+function getAdjacentTopic(subjectId, topicId, direction = 1) {
+  const subject = getSubject(subjectId);
+  if (!subject) return null;
+  const index = subject.temas.findIndex((topic) => topic.id === topicId);
+  if (index === -1) return null;
+  return subject.temas[index + direction] || null;
+}
+
+function setView(view, extra = {}, options = {}) {
   state.view = view;
   Object.assign(state, extra);
   saveAppState();
   render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
 
-function render() {
-  homeButton.classList.toggle('hidden', state.view === 'home');
-  switch (state.view) {
-    case 'home':
-      renderHome();
-      break;
-    case 'subject':
-      renderSubject();
-      break;
-    case 'content':
-      renderContent();
-      break;
-    case 'test':
-      renderTest();
-      break;
-    case 'results':
-      renderResults();
-      break;
-    default:
-      renderHome();
+  if (!options.skipScroll) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
 
+function renderBadge(text) {
+  return `<span class="badge">${escapeHtml(text)}</span>`;
+}
+
+function renderEmpty(messageTitle, messageBody) {
+  return `
+    <section class="surface empty-state">
+      <p class="empty-icon" aria-hidden="true">::</p>
+      <h2>${escapeHtml(messageTitle)}</h2>
+      <p>${escapeHtml(messageBody)}</p>
+    </section>
+  `;
+}
+
+function renderProgress(percentage) {
+  return `
+    <div class="progress-track" aria-hidden="true">
+      <span style="width:${clampPercent(percentage)}%;"></span>
+    </div>
+  `;
+}
 function renderHome() {
   const stats = globalStats();
-  const subjects = state.db.asignaturas;
+  const continueCard = findContinueTopic();
+  const subjectCards = state.db.asignaturas.map(renderSubjectCard).join('');
 
   app.innerHTML = `
-    <div class="stack-xl">
-      <section class="grid-2">
-        <article class="card hero">
-          <span class="badge">Diseño renovado · móvil y escritorio</span>
-          <h2>Una app de estudio más seria, más legible y mejor preparada para crecer.</h2>
-          <p>Se mantiene el concepto original: asignaturas, resumen, conceptos clave, test IA y test de profesor.</p>
-          <div class="hero-actions" style="margin-top: 22px;">
-            <button class="btn btn-primary" data-action="open-first-subject">Entrar a la asignatura actual</button>
-            <button class="btn btn-secondary" data-action="focus-subjects">Ver asignaturas</button>
+    <div class="view-stack">
+      <section class="surface hero-panel stack-lg">
+        <div class="stack-md">
+          <p class="section-kicker">Version mobile-first</p>
+          <h1 class="hero-title">Estudiar rapido, leer mejor y volver al punto justo.</h1>
+          <p class="lead">La app ahora prioriza lo que importa en movil: retomar tema, entender el progreso, abrir lectura sin ruido y lanzar tests desde un flujo mucho mas claro.</p>
+        </div>
+        <div class="hero-actions">
+          <button class="primary-button" type="button" data-action="continue-study">Seguir estudiando</button>
+          <button class="secondary-button" type="button" data-action="focus-subjects">Ver asignaturas</button>
+        </div>
+      </section>
+
+      <section class="info-grid">
+        <article class="surface summary-panel stack-md">
+          <div class="stack-sm">
+            <p class="section-kicker">Resumen general</p>
+            <h2 class="subject-title">Todo el temario en una sola vista</h2>
+            <p class="section-copy">Consulta volumen de estudio, cobertura y acceso rapido a la siguiente pantalla util sin perderte en una home saturada.</p>
+          </div>
+          <div class="stat-grid">
+            <article class="stat-card"><span class="stat-label">Asignaturas</span><strong class="stat-value">${stats.asignaturas}</strong></article>
+            <article class="stat-card"><span class="stat-label">Temas</span><strong class="stat-value">${stats.temas}</strong></article>
+            <article class="stat-card"><span class="stat-label">Preguntas IA</span><strong class="stat-value">${stats.ia}</strong></article>
+            <article class="stat-card"><span class="stat-label">Preguntas profesor</span><strong class="stat-value">${stats.profesor}</strong></article>
           </div>
         </article>
 
-        <aside class="card stats-panel">
-          <h3>Resumen general</h3>
-          <div class="stat-grid">
-            <div class="stat-item"><span class="label">Asignaturas</span><strong>${stats.asignaturas}</strong></div>
-            <div class="stat-item"><span class="label">Temas</span><strong>${stats.temas}</strong></div>
-            <div class="stat-item"><span class="label">Preguntas IA</span><strong>${stats.ia}</strong></div>
-            <div class="stat-item"><span class="label">Preguntas profesor</span><strong>${stats.profesor}</strong></div>
-            <div class="stat-item"><span class="label">Intentos guardados</span><strong>${stats.realizados}</strong></div>
-            <div class="stat-item"><span class="label">Lectura</span><strong>JSON</strong></div>
+        <aside class="surface info-panel stack-md">
+          <div class="stack-sm">
+            <p class="section-kicker">Seguir estudiando</p>
+            <h3>${continueCard ? escapeHtml(continueCard.topic.titulo) : 'Todavia no hay temas'}</h3>
+            <p>${continueCard ? escapeHtml(continueCard.subject.nombre) : 'Carga asignaturas en datos.json para activar este bloque.'}</p>
           </div>
+          ${continueCard ? `
+            <div class="meta-row">
+              <span class="status-pill">${escapeHtml(pluralize(continueCard.topic.claves.length, 'clave', 'claves'))}</span>
+              <span class="meta-pill">${escapeHtml(pluralize(continueCard.topic.preguntas.length + continueCard.topic.preguntas_profesor.length, 'pregunta', 'preguntas'))}</span>
+            </div>
+            <p class="helper-text">${escapeHtml(excerpt(continueCard.topic.resumen, 120))}</p>
+            <div class="inline-actions">
+              <button class="primary-button" type="button" data-action="open-content" data-subject="${escapeHtml(continueCard.subject.id)}" data-topic="${escapeHtml(continueCard.topic.id)}" data-tab="resumen">Abrir tema</button>
+              <button class="secondary-button" type="button" data-action="open-subject" data-subject="${escapeHtml(continueCard.subject.id)}">Ir a asignatura</button>
+            </div>
+          ` : ''}
         </aside>
       </section>
 
-      <section id="subjects-section" class="stack-md">
-        <div class="section-head">
-          <div>
-            <h3>Asignaturas disponibles</h3>
-            <p>La estructura ya queda lista para añadir las dos asignaturas restantes sin tocar el diseño.</p>
+      <section class="surface summary-panel stack-md">
+        <div class="header-row">
+          <div class="stack-sm">
+            <p class="section-kicker">Accesos rapidos</p>
+            <h3>Entradas utiles para estudiar desde movil</h3>
           </div>
         </div>
-        ${subjects.length ? `<div class="grid-3">${subjects.map(renderSubjectCard).join('')}</div>` : document.getElementById('empty-state-template').innerHTML}
+        <div class="quick-grid">
+          <a class="quick-link" href="#subjects-section">
+            <span class="small-label">Explorar</span>
+            <strong>Ir al listado de asignaturas</strong>
+            <p class="muted-text">Acceso directo al catalogo principal sin hacer scroll a ojo.</p>
+          </a>
+          <div class="quick-link">
+            <span class="small-label">Cobertura</span>
+            <strong>${stats.claves} conceptos clave disponibles</strong>
+            <p class="muted-text">La lectura y el repaso rapido quedan mejor separados en la nueva estructura.</p>
+          </div>
+          <div class="quick-link">
+            <span class="small-label">Ritmo</span>
+            <strong>Flujo corto para estudiar desde el telefono</strong>
+            <p class="muted-text">Primero contexto, despues lectura, luego repaso y finalmente test con feedback inmediato.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="subjects-section" class="stack-md">
+        <div class="header-row">
+          <div class="stack-sm">
+            <p class="section-kicker">Asignaturas</p>
+            <h2 class="subject-title">Elige donde seguir</h2>
+          </div>
+        </div>
+        ${state.db.asignaturas.length ? `<div class="subject-grid">${subjectCards}</div>` : emptyStateTemplate.innerHTML}
       </section>
     </div>
   `;
@@ -277,29 +476,31 @@ function renderHome() {
 function renderSubjectCard(subject) {
   const stats = subjectStats(subject);
   const coverage = getCoverage(subject);
-  const lastTopic = subject.temas[0];
+  const nextTopic = subject.temas[0] || null;
 
   return `
-    <article class="card subject-card">
-      <div class="subject-card-head">
-        <div>
-          <span class="badge">Asignatura</span>
-          <h3>${escapeHtml(subject.nombre)}</h3>
+    <article class="subject-card" tabindex="0">
+      <div class="stack-md">
+        <div class="meta-row">
+          ${renderBadge(subject.nombre)}
+          <span class="status-pill">${coverage.percentage}% completado</span>
         </div>
-        <span class="chip primary">${coverage.percentage}% completado</span>
-      </div>
-      <p>${lastTopic ? `Incluye ${stats.temas} temas con resumen, claves, test IA y test del profesor.` : 'Sin temas por ahora.'}</p>
-      <div class="mini-stats">
-        <div class="mini-stat"><span>Temas</span><strong>${stats.temas}</strong></div>
-        <div class="mini-stat"><span>Preguntas IA</span><strong>${stats.ia}</strong></div>
-        <div class="mini-stat"><span>Preguntas profesor</span><strong>${stats.profesor}</strong></div>
-      </div>
-      <div class="subject-meta">
-        <span class="chip">Cobertura ${coverage.completed}/${coverage.total}</span>
-        <span class="chip">Fuente datos.json</span>
-      </div>
-      <div class="action-row">
-        <button class="btn btn-primary" data-action="open-subject" data-subject="${subject.id}">Abrir asignatura</button>
+        <div class="stack-sm">
+          <h3>${escapeHtml(subject.nombre)}</h3>
+          <p class="section-copy">${nextTopic ? escapeHtml(excerpt(nextTopic.resumen, 110)) : 'Esta asignatura todavia no tiene temas cargados.'}</p>
+        </div>
+        ${renderProgress(coverage.percentage)}
+        <div class="metrics-grid">
+          <article class="metric-card"><span class="metric-label">Temas</span><strong class="metric-value">${stats.temas}</strong></article>
+          <article class="metric-card"><span class="metric-label">Tests</span><strong class="metric-value">${stats.ia + stats.profesor}</strong></article>
+        </div>
+        <div class="meta-row">
+          <span class="meta-pill">${escapeHtml(pluralize(stats.claves, 'clave', 'claves'))}</span>
+          <span class="meta-pill">${escapeHtml(pluralize(coverage.completed, 'avance', 'avances'))}</span>
+        </div>
+        <div class="inline-actions">
+          <button class="primary-button" type="button" data-action="open-subject" data-subject="${escapeHtml(subject.id)}">Abrir asignatura</button>
+        </div>
       </div>
     </article>
   `;
@@ -308,104 +509,99 @@ function renderSubjectCard(subject) {
 function renderSubject() {
   const subject = getSubject(state.subjectId);
   if (!subject) {
-    setView('home');
+    setView('home', { subjectId: null, topicId: null, topicSearch: '' }, { skipScroll: true });
     return;
   }
 
   const stats = subjectStats(subject);
   const coverage = getCoverage(subject);
   const query = state.topicSearch.trim().toLowerCase();
-  const topics = subject.temas.filter(topic => topic.titulo.toLowerCase().includes(query) || stripHtml(topic.resumen).toLowerCase().includes(query));
+  const topics = subject.temas.filter((topic) => {
+    const haystack = `${topic.titulo} ${stripHtml(topic.resumen)} ${topic.claves.join(' ')}`.toLowerCase();
+    return haystack.includes(query);
+  });
 
   app.innerHTML = `
-    <div class="stack-xl">
-      <section class="card subject-summary">
-        <div class="section-head">
-          <div>
-            <span class="badge">${escapeHtml(subject.nombre)}</span>
-            <h2 style="margin: 10px 0 8px; font-size: clamp(2rem, 3.5vw, 2.8rem); letter-spacing: -0.05em;">Panel de estudio</h2>
-            <p>Acceso directo a resúmenes, conceptos clave, test de IA y test del profesor, con métricas guardadas en localStorage.</p>
+    <div class="view-stack">
+      <section class="surface subject-hero stack-lg">
+        <div class="breadcrumbs">
+          <button type="button" data-action="go-home">Inicio</button>
+          <span>/</span>
+          <span>${escapeHtml(subject.nombre)}</span>
+        </div>
+
+        <div class="stack-md">
+          <div class="meta-row">
+            ${renderBadge('Panel de asignatura')}
+            <span class="status-pill">${coverage.percentage}% cubierto</span>
           </div>
-          <span class="chip primary">${coverage.percentage}% de cobertura</span>
+          <h1 class="subject-title">${escapeHtml(subject.nombre)}</h1>
+          <p class="lead">Busca un tema, entra a la lectura y lanza cada test desde un flujo mas corto y mas claro.</p>
         </div>
 
-        <div class="mini-stats">
-          <div class="mini-stat"><span>Temas</span><strong>${stats.temas}</strong></div>
-          <div class="mini-stat"><span>Preguntas IA</span><strong>${stats.ia}</strong></div>
-          <div class="mini-stat"><span>Preguntas profesor</span><strong>${stats.profesor}</strong></div>
+        <div class="stat-grid">
+          <article class="stat-card"><span class="stat-label">Temas</span><strong class="stat-value">${stats.temas}</strong></article>
+          <article class="stat-card"><span class="stat-label">Claves</span><strong class="stat-value">${stats.claves}</strong></article>
+          <article class="stat-card"><span class="stat-label">Preguntas IA</span><strong class="stat-value">${stats.ia}</strong></article>
+          <article class="stat-card"><span class="stat-label">Preguntas profesor</span><strong class="stat-value">${stats.profesor}</strong></article>
         </div>
 
-        <div class="action-row" style="margin-top: 18px;">
-          <button class="btn btn-primary" data-action="start-global" data-type="total">Test global mixto</button>
-          <button class="btn btn-warning" data-action="start-global" data-type="profesor">Test global profesor</button>
+        <div class="hero-actions">
+          <button class="primary-button" type="button" data-action="start-global" data-type="total">Test global mixto</button>
+          <button class="warning-button" type="button" data-action="start-global" data-type="profesor">Test global profesor</button>
         </div>
       </section>
 
-      <section class="card filters-bar panel-pad stack-md">
-        <div class="section-head" style="margin-bottom: 0;">
-          <div>
-            <h3>Temas de la asignatura</h3>
-            <p>Busca un tema y entra al resumen, a las claves o a cualquiera de los tests.</p>
-          </div>
+      <section class="surface filters-panel stack-md">
+        <div class="stack-sm">
+          <p class="section-kicker">Buscar tema</p>
+          <h3>Filtra por titulo, resumen o claves</h3>
+          <p class="section-copy">Menos scroll, mas acceso directo al bloque que necesitas repasar.</p>
         </div>
-        <input class="search-input" id="topic-search" type="search" placeholder="Buscar por título o contenido del resumen" value="${escapeHtml(state.topicSearch)}">
+        <input id="topic-search" class="search-input" type="search" placeholder="Ejemplo: servidor, sesiones, seguridad" value="${escapeHtml(state.topicSearch)}">
       </section>
 
-      <section class="topics-grid">
-        ${topics.length ? topics.map(topic => renderTopicCard(subject, topic)).join('') : renderEmptyTopics()}
-      </section>
+      ${topics.length ? `<section class="topic-grid">${topics.map((topic) => renderTopicCard(subject, topic)).join('')}</section>` : renderEmpty('No hay coincidencias', 'Prueba con otro termino para volver a ver temas disponibles.')}
     </div>
   `;
 
   const searchInput = document.getElementById('topic-search');
-  searchInput?.addEventListener('input', (event) => {
-    state.topicSearch = event.target.value;
-    saveAppState();
-    renderSubject();
-  });
-}
-
-function renderEmptyTopics() {
-  return `
-    <section class="card empty-state" style="grid-column: 1 / -1;">
-      <div class="empty-icon">🔎</div>
-      <h2>Sin coincidencias</h2>
-      <p>Ajusta el texto de búsqueda para volver a ver los temas disponibles.</p>
-    </section>
-  `;
+  if (searchInput) {
+    searchInput.addEventListener('input', (event) => {
+      state.topicSearch = event.target.value;
+      saveAppState();
+      renderSubject();
+    });
+  }
 }
 
 function renderTopicCard(subject, topic) {
   const bestIA = getBestScore(subject.id, topic.id, 'ia');
   const bestProfesor = getBestScore(subject.id, topic.id, 'profesor');
-  const aiCount = (topic.preguntas || []).length;
-  const teacherCount = (topic.preguntas_profesor || []).length;
 
   return `
-    <article class="card topic-card" tabindex="0">
-      <div class="topic-card-head">
-        <div>
-          <span class="badge">${escapeHtml(topic.id)}</span>
-          <h3>${escapeHtml(topic.titulo)}</h3>
+    <article class="topic-card" tabindex="0">
+      <div class="stack-md">
+        <div class="meta-row">
+          <span class="status-pill">${escapeHtml(topic.id)}</span>
+          <span class="meta-pill">${escapeHtml(pluralize(topic.claves.length, 'clave', 'claves'))}</span>
         </div>
-      </div>
-      <p class="excerpt">${escapeHtml(excerpt(topic.resumen, 210))}</p>
-      <div class="pills">
-        <span class="pill">🧠 <strong>${topic.claves.length}</strong> claves</span>
-        <span class="pill">✅ <strong>${aiCount}</strong> IA</span>
-        <span class="pill">🎓 <strong>${teacherCount}</strong> profesor</span>
-      </div>
-      <div class="topic-meta">
-        <span class="chip ${bestIA ? 'success' : ''}">Test IA: ${bestIA ? `${bestIA.puntuacion}/${bestIA.total}` : 'sin intento'}</span>
-        <span class="chip ${bestProfesor ? 'warning' : ''}">Test profesor: ${bestProfesor ? `${bestProfesor.puntuacion}/${bestProfesor.total}` : 'sin intento'}</span>
-      </div>
-      <div class="action-row">
-        <button class="btn btn-secondary" data-action="open-content" data-tab="resumen" data-topic="${topic.id}">Resumen</button>
-        <button class="btn btn-secondary" data-action="open-content" data-tab="claves" data-topic="${topic.id}">Claves</button>
-      </div>
-      <div class="action-row">
-        <button class="btn btn-primary" data-action="start-topic-test" data-topic="${topic.id}" data-type="ia" ${aiCount ? '' : 'disabled'}>Test IA</button>
-        <button class="btn btn-warning" data-action="start-topic-test" data-topic="${topic.id}" data-type="profesor" ${teacherCount ? '' : 'disabled'}>Test profesor</button>
+        <div class="stack-sm">
+          <h3>${escapeHtml(topic.titulo)}</h3>
+          <p class="section-copy">${escapeHtml(excerpt(topic.resumen, 150))}</p>
+        </div>
+        <div class="meta-row">
+          <span class="status-pill ${bestIA ? 'success' : ''}">IA ${bestIA ? `${bestIA.puntuacion}/${bestIA.total}` : 'sin intento'}</span>
+          <span class="status-pill ${bestProfesor ? 'warning' : ''}">Profesor ${bestProfesor ? `${bestProfesor.puntuacion}/${bestProfesor.total}` : 'sin intento'}</span>
+        </div>
+        <div class="topic-actions">
+          <button class="secondary-button" type="button" data-action="open-content" data-subject="${escapeHtml(subject.id)}" data-topic="${escapeHtml(topic.id)}" data-tab="resumen">Resumen</button>
+          <button class="secondary-button" type="button" data-action="open-content" data-subject="${escapeHtml(subject.id)}" data-topic="${escapeHtml(topic.id)}" data-tab="claves">Claves</button>
+        </div>
+        <div class="topic-actions">
+          <button class="primary-button" type="button" data-action="start-topic-test" data-topic="${escapeHtml(topic.id)}" data-type="ia" ${topic.preguntas.length ? '' : 'disabled'}>Test IA</button>
+          <button class="warning-button" type="button" data-action="start-topic-test" data-topic="${escapeHtml(topic.id)}" data-type="profesor" ${topic.preguntas_profesor.length ? '' : 'disabled'}>Test profesor</button>
+        </div>
       </div>
     </article>
   `;
@@ -414,79 +610,128 @@ function renderTopicCard(subject, topic) {
 function renderContent() {
   const subject = getSubject(state.subjectId);
   const topic = getTopic(state.subjectId, state.topicId);
+
   if (!subject || !topic) {
-    setView('subject', { subjectId: state.subjectId || subject?.id || null });
+    setView('subject', { subjectId: state.subjectId, topicId: null }, { skipScroll: true });
     return;
   }
 
+  const body = state.contentTab === 'claves'
+    ? renderKeyList(topic.claves)
+    : `<div class="body-copy">${topic.resumen}</div>`;
   const bestIA = getBestScore(subject.id, topic.id, 'ia');
   const bestProfesor = getBestScore(subject.id, topic.id, 'profesor');
-  const tab = state.contentTab;
-  const body = tab === 'resumen'
-    ? `<div class="body-copy">${topic.resumen}</div>`
-    : `<div class="key-list">${topic.claves.map((item, index) => `<article class="key-item"><div class="key-icon">${index + 1}</div><div><strong>${escapeHtml(item)}</strong></div></article>`).join('')}</div>`;
+  const previousTopic = getAdjacentTopic(subject.id, topic.id, -1);
+  const nextTopic = getAdjacentTopic(subject.id, topic.id, 1);
 
   app.innerHTML = `
-    <div class="stack-xl">
-      <section class="content-shell">
-        <article class="card reading-layout">
-          <div class="stack-md">
-            <div>
-              <div class="tab-group">
-                <button class="tab ${tab === 'resumen' ? 'active' : ''}" data-action="switch-tab" data-tab="resumen">Resumen</button>
-                <button class="tab ${tab === 'claves' ? 'active' : ''}" data-action="switch-tab" data-tab="claves">Claves</button>
-              </div>
-            </div>
-            <div>
-              <span class="badge">${escapeHtml(subject.nombre)}</span>
-              <h2 style="margin: 14px 0 10px; font-size: clamp(2rem, 3vw, 2.75rem); letter-spacing: -0.05em;">${escapeHtml(topic.titulo)}</h2>
-              <p class="helper-text">Contenido cargado desde JSON. Puedes reorganizar el fichero por asignatura o tema más adelante sin perder esta interfaz.</p>
-            </div>
-            <div class="divider"></div>
-            ${body}
+    <div class="view-stack">
+      <section class="content-grid">
+        <article class="surface reading-panel stack-lg">
+          <div class="breadcrumbs">
+            <button type="button" data-action="go-home">Inicio</button>
+            <span>/</span>
+            <button type="button" data-action="open-subject" data-subject="${escapeHtml(subject.id)}">${escapeHtml(subject.nombre)}</button>
+            <span>/</span>
+            <span>${escapeHtml(topic.titulo)}</span>
           </div>
+
+          <div class="stack-md">
+            <div class="meta-row">
+              ${renderBadge(subject.nombre)}
+              <span class="meta-pill">${escapeHtml(pluralize(topic.claves.length, 'concepto', 'conceptos'))}</span>
+            </div>
+            <h1 class="topic-title">${escapeHtml(topic.titulo)}</h1>
+            <p class="lead">Lectura limpia arriba, acciones utiles a un toque y bloques separados para no mezclar resumen con repaso rapido.</p>
+          </div>
+
+          <div class="tab-row">
+            <button class="tab-button ${state.contentTab === 'resumen' ? 'active' : ''}" type="button" data-action="switch-tab" data-tab="resumen">Resumen</button>
+            <button class="tab-button ${state.contentTab === 'claves' ? 'active' : ''}" type="button" data-action="switch-tab" data-tab="claves">Claves</button>
+          </div>
+
+          <div class="context-strip">
+            <div class="stack-sm">
+              <strong>${state.contentTab === 'resumen' ? 'Modo lectura' : 'Modo repaso rapido'}</strong>
+              <p class="helper-text">${state.contentTab === 'resumen'
+                ? 'Lee el bloque principal sin ruido y usa el lateral para evaluarte cuando termines.'
+                : 'Revisa las ideas esenciales una a una antes de pasar al test o al siguiente tema.'}</p>
+            </div>
+            <div class="context-actions">
+              ${previousTopic ? `<button class="secondary-button" type="button" data-action="jump-topic" data-topic="${escapeHtml(previousTopic.id)}">Tema anterior</button>` : ''}
+              ${nextTopic ? `<button class="secondary-button" type="button" data-action="jump-topic" data-topic="${escapeHtml(nextTopic.id)}">Tema siguiente</button>` : ''}
+            </div>
+          </div>
+
+          ${body}
         </article>
 
-        <aside class="card aside-panel">
-          <div class="aside-section">
-            <h3>Acciones del tema</h3>
-            <p>Desde aquí puedes lanzar cada tipo de test sin salir de la lectura.</p>
-            <div class="content-actions">
-              <button class="btn btn-primary block" data-action="start-topic-test" data-topic="${topic.id}" data-type="ia" ${(topic.preguntas || []).length ? '' : 'disabled'}>Iniciar test IA</button>
-              <button class="btn btn-warning block" data-action="start-topic-test" data-topic="${topic.id}" data-type="profesor" ${(topic.preguntas_profesor || []).length ? '' : 'disabled'}>Iniciar test profesor</button>
-            </div>
+        <aside class="surface summary-panel stack-md">
+          <div class="stack-sm">
+            <p class="section-kicker">Acciones del tema</p>
+            <h3>Repasar o evaluarte sin salir de aqui</h3>
           </div>
-          <div class="aside-section">
+
+          <div class="stack-sm">
+            <button class="primary-button" type="button" data-action="start-topic-test" data-topic="${escapeHtml(topic.id)}" data-type="ia" ${topic.preguntas.length ? '' : 'disabled'}>Iniciar test IA</button>
+            <button class="warning-button" type="button" data-action="start-topic-test" data-topic="${escapeHtml(topic.id)}" data-type="profesor" ${topic.preguntas_profesor.length ? '' : 'disabled'}>Iniciar test profesor</button>
+          </div>
+
+          <div class="overview-card stack-sm">
             <h3>Seguimiento</h3>
-            <div class="stack-md">
-              <span class="chip ${bestIA ? 'success' : ''}">Mejor IA: ${bestIA ? `${bestIA.puntuacion}/${bestIA.total}` : 'sin intento'}</span>
-              <span class="chip ${bestProfesor ? 'warning' : ''}">Mejor profesor: ${bestProfesor ? `${bestProfesor.puntuacion}/${bestProfesor.total}` : 'sin intento'}</span>
-              <span class="chip">${topic.claves.length} conceptos clave</span>
-            </div>
+            <span class="status-pill ${bestIA ? 'success' : ''}">Mejor IA: ${bestIA ? `${bestIA.puntuacion}/${bestIA.total}` : 'sin intento'}</span>
+            <span class="status-pill ${bestProfesor ? 'warning' : ''}">Mejor profesor: ${bestProfesor ? `${bestProfesor.puntuacion}/${bestProfesor.total}` : 'sin intento'}</span>
           </div>
+
+          <div class="overview-card stack-sm">
+            <h3>Lectura rapida</h3>
+            <p class="review-copy">${escapeHtml(excerpt(topic.resumen, 110))}</p>
+          </div>
+
+          <p class="summary-note">Consejo: si estas en movil, usa primero claves para barrer conceptos y despues entra al test del tema.</p>
         </aside>
       </section>
     </div>
   `;
 }
 
+function renderKeyList(keys) {
+  if (!keys.length) {
+    return renderEmpty('Sin conceptos clave', 'Este tema aun no tiene una lista de claves definida.');
+  }
+
+  return `
+    <div class="key-list">
+      ${keys.map((item, index) => `
+        <article class="key-point">
+          <div class="key-index">${index + 1}</div>
+          <div class="stack-sm">
+            <strong>Punto clave</strong>
+            <p class="review-copy">${escapeHtml(item)}</p>
+          </div>
+        </article>
+      `).join('')}
+    </div>
+  `;
+}
 function startTest(subjectId, topicId, type) {
   const questions = buildQuestionSet(subjectId, topicId, type);
+
   if (!questions.length) {
-    alert('No hay preguntas disponibles para este test.');
+    window.alert('No hay preguntas disponibles para este test.');
     return;
   }
 
   const subject = getSubject(subjectId);
   const topic = topicId === 'global'
-    ? { id: 'global', titulo: type === 'total' ? `Test global mixto · ${subject.nombre}` : `Test global profesor · ${subject.nombre}` }
+    ? { id: 'global', titulo: `${QUIZ_TYPES[type] || 'Test global'} · ${subject?.nombre || 'Asignatura'}` }
     : getTopic(subjectId, topicId);
 
   state.test = {
     subjectId,
     topicId,
     type,
-    topicTitle: topic.titulo,
+    topicTitle: topic?.titulo || 'Test',
     questions,
     currentIndex: 0,
     selectedIndex: null,
@@ -495,45 +740,52 @@ function startTest(subjectId, topicId, type) {
     answers: []
   };
   state.results = null;
+
   setView('test');
 }
 
 function renderTest() {
   const test = state.test;
   if (!test) {
-    setView('subject', { subjectId: state.subjectId });
+    setView('subject', { subjectId: state.subjectId }, { skipScroll: true });
     return;
   }
 
   const current = test.questions[test.currentIndex];
-  const progress = Math.round((test.currentIndex / test.questions.length) * 100);
-  const answered = test.locked;
-  const feedback = answered ? renderFeedback(current, test.selectedIndex) : '';
+  const progress = clampPercent((test.currentIndex / test.questions.length) * 100);
+  const answeredCount = test.currentIndex + (test.locked ? 1 : 0);
 
   app.innerHTML = `
-    <div class="stack-xl">
-      <section class="card test-shell stack-lg">
-        <div class="section-head" style="margin-bottom: 0; align-items: center;">
-          <div>
-            <span class="question-badge">Pregunta ${test.currentIndex + 1} de ${test.questions.length}</span>
-            <h2 style="margin: 12px 0 6px; font-size: clamp(1.7rem, 3vw, 2.3rem); letter-spacing: -0.05em;">${escapeHtml(test.topicTitle)}</h2>
-            <p class="helper-text">${test.type === 'profesor' ? 'Modo test del profesor' : test.type === 'total' ? 'Modo global mixto' : 'Modo test IA'}</p>
+    <div class="view-stack">
+      <section class="surface test-panel stack-lg">
+        <div class="header-row">
+          <div class="test-meta">
+            <span class="status-pill">Pregunta ${test.currentIndex + 1} de ${test.questions.length}</span>
+            <h1 class="topic-title">${escapeHtml(test.topicTitle)}</h1>
+            <p class="helper-text">${escapeHtml(QUIZ_TYPES[test.type] || 'Modo test')} con feedback inmediato para repasar sin perder el hilo.</p>
           </div>
-          <button class="btn btn-ghost" data-action="exit-test">Salir del test</button>
+          <button class="ghost-button" type="button" data-action="exit-test">Salir</button>
         </div>
 
-        <div class="progress-bar"><span style="width:${progress}%;"></span></div>
+        ${renderProgress(progress)}
+
+        <div class="context-strip">
+          <div class="stack-sm">
+            <strong>${answeredCount} de ${test.questions.length} respuestas gestionadas</strong>
+            <p class="helper-text">Responde, lee la explicacion y continua. El flujo esta pensado para repasos cortos desde movil.</p>
+          </div>
+        </div>
 
         <article class="stack-md">
-          <h3 class="question-title">${escapeHtml(current.pregunta)}</h3>
+          <h2 class="question-title">${escapeHtml(current.pregunta)}</h2>
           <div class="options-list">
             ${current.opciones.map((option, index) => renderOption(option, index, test)).join('')}
           </div>
-          ${feedback}
+          ${test.locked ? renderFeedback(current, test.selectedIndex) : ''}
         </article>
 
         <div class="test-actions">
-          ${answered ? `<button class="btn btn-primary" data-action="next-question">${test.currentIndex + 1 === test.questions.length ? 'Ver resultado' : 'Siguiente pregunta'}</button>` : ''}
+          ${test.locked ? `<button class="primary-button" type="button" data-action="next-question">${test.currentIndex + 1 >= test.questions.length ? 'Ver resultado' : 'Siguiente pregunta'}</button>` : ''}
         </div>
       </section>
     </div>
@@ -541,24 +793,24 @@ function renderTest() {
 }
 
 function renderOption(option, index, test) {
-  let cls = 'option';
+  let className = 'option-button';
+  const current = test.questions[test.currentIndex];
+
   if (test.locked) {
-    if (index === test.questions[test.currentIndex].respuesta_correcta) cls += ' correct';
-    else if (index === test.selectedIndex) cls += ' wrong';
+    if (index === current.respuesta_correcta) className += ' correct';
+    else if (index === test.selectedIndex) className += ' wrong';
   }
-  return `<button class="${cls}" data-action="answer" data-index="${index}" ${test.locked ? 'disabled' : ''}>${escapeHtml(option)}</button>`;
+
+  return `<button class="${className}" type="button" data-action="answer" data-index="${index}" ${test.locked ? 'disabled' : ''}>${escapeHtml(option)}</button>`;
 }
 
 function renderFeedback(question, selectedIndex) {
-  const correct = selectedIndex === question.respuesta_correcta;
-  const klass = correct ? 'success' : 'error';
-  const title = correct ? 'Respuesta correcta' : 'Respuesta incorrecta';
-  const extra = correct ? '' : `<p style="margin-top:10px;"><strong>Correcta:</strong> ${escapeHtml(question.opciones[question.respuesta_correcta])}</p>`;
+  const isCorrect = selectedIndex === question.respuesta_correcta;
   return `
-    <div class="feedback-box ${klass}">
-      <h4>${title}</h4>
-      <p>${escapeHtml(question.explicacion)}</p>
-      ${extra}
+    <div class="feedback-box ${isCorrect ? 'success' : 'error'}">
+      <h3>${isCorrect ? 'Respuesta correcta' : 'Respuesta incorrecta'}</h3>
+      <p class="review-copy">${escapeHtml(question.explicacion)}</p>
+      ${isCorrect ? '' : `<p class="review-copy"><strong>Correcta:</strong> ${escapeHtml(question.opciones[question.respuesta_correcta])}</p>`}
     </div>
   `;
 }
@@ -568,8 +820,11 @@ function answerQuestion(index) {
   if (!test || test.locked) return;
 
   const question = test.questions[test.currentIndex];
-  const correct = index === question.respuesta_correcta;
-  if (correct) test.score += 1;
+  const isCorrect = index === question.respuesta_correcta;
+
+  if (isCorrect) {
+    test.score += 1;
+  }
 
   test.selectedIndex = index;
   test.locked = true;
@@ -577,10 +832,11 @@ function answerQuestion(index) {
     pregunta: question.pregunta,
     marcada: question.opciones[index],
     correcta: question.opciones[question.respuesta_correcta],
-    esCorrecta: correct,
+    esCorrecta: isCorrect,
     explicacion: question.explicacion,
     source: question.source
   });
+
   renderTest();
 }
 
@@ -609,56 +865,60 @@ function nextQuestion() {
 function renderResults() {
   const result = state.results;
   if (!result) {
-    setView('subject', { subjectId: state.subjectId });
+    setView('home', {}, { skipScroll: true });
     return;
   }
 
-  const percent = Math.round((result.score / result.questions.length) * 100);
+  const percent = clampPercent((result.score / result.questions.length) * 100);
   const wrong = result.questions.length - result.score;
-  const goodLabel = percent >= 80 ? 'Excelente resultado' : percent >= 60 ? 'Buen avance' : 'Necesita repaso';
+  const message = percent >= 85
+    ? 'Dominas bastante bien este bloque.'
+    : percent >= 60
+      ? 'Vas bien, pero aun hay margen de repaso.'
+      : 'Conviene releer el tema y repetir el test.';
 
   app.innerHTML = `
-    <div class="stack-xl">
-      <section class="card results-shell stack-lg">
-        <div>
-          <span class="badge">Resultado final</span>
-          <h2 style="margin: 14px 0 0; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.06em;">${escapeHtml(result.topicTitle)}</h2>
+    <div class="view-stack">
+      <section class="surface results-panel stack-lg">
+        <div class="score-hero">
+          ${renderBadge('Resultado final')}
+          <h1 class="score-title">${escapeHtml(result.topicTitle)}</h1>
+          <p class="lead">${message}</p>
         </div>
 
-        <div>
-          <p class="score-big">${percent}%</p>
-          <p class="score-caption">${goodLabel} · ${result.score} aciertos de ${result.questions.length}</p>
+        <div class="metrics-grid">
+          <article class="metric-card"><span class="metric-label">Puntuacion</span><strong class="metric-value">${percent}%</strong></article>
+          <article class="metric-card"><span class="metric-label">Aciertos</span><strong class="metric-value">${result.score}</strong></article>
+          <article class="metric-card"><span class="metric-label">Fallos</span><strong class="metric-value">${wrong}</strong></article>
+          <article class="metric-card"><span class="metric-label">Mejor nota</span><strong class="metric-value">${result.best?.puntuacion || result.score}/${result.best?.total || result.questions.length}</strong></article>
         </div>
 
-        <div class="result-summary">
-          <div class="result-box"><span>Aciertos</span><strong>${result.score}</strong></div>
-          <div class="result-box"><span>Fallos</span><strong>${wrong}</strong></div>
-          <div class="result-box"><span>Mejor nota</span><strong>${result.best?.puntuacion || result.score}/${result.best?.total || result.questions.length}</strong></div>
+        <div class="results-actions">
+          <button class="primary-button" type="button" data-action="repeat-test">Repetir test</button>
+          <button class="secondary-button" type="button" data-action="back-after-results">Volver al tema</button>
         </div>
 
-        <div class="result-actions">
-          <button class="btn btn-primary" data-action="repeat-test">Repetir test</button>
-          <button class="btn btn-secondary" data-action="back-after-results">Volver al tema</button>
+        <div class="context-strip">
+          <div class="stack-sm">
+            <strong>Siguiente paso recomendado</strong>
+            <p class="helper-text">${percent >= 85 ? 'Pasa al siguiente tema o intenta el test global para consolidar.' : 'Vuelve al resumen o a claves y repite el test para fijar conceptos.'}</p>
+          </div>
         </div>
       </section>
 
       <section class="stack-md">
-        <div class="section-head">
-          <div>
-            <h3>Revisión detallada</h3>
-            <p>Repasa qué marcaste, cuál era la correcta y la explicación asociada.</p>
-          </div>
+        <div class="stack-sm">
+          <p class="section-kicker">Revision detallada</p>
+          <h2 class="subject-title">Que has marcado y que debias marcar</h2>
         </div>
         <div class="review-list">
           ${result.answers.map((answer, index) => `
-            <article class="card review-item ${answer.esCorrecta ? 'ok' : 'fail'}">
-              <h4>${index + 1}. ${escapeHtml(answer.pregunta)}</h4>
-              <div class="review-meta">
-                <p><strong>Tu respuesta:</strong> ${escapeHtml(answer.marcada)} ${answer.esCorrecta ? '✅' : '❌'}</p>
-                ${answer.esCorrecta ? '' : `<p><strong>Respuesta correcta:</strong> ${escapeHtml(answer.correcta)}</p>`}
-                <p><strong>Explicación:</strong> ${escapeHtml(answer.explicacion)}</p>
-                <p class="small-note"><strong>Origen:</strong> ${escapeHtml(answer.source.title)} · ${answer.source.type === 'profesor' ? 'test del profesor' : 'test IA'}</p>
-              </div>
+            <article class="review-card ${answer.esCorrecta ? 'ok' : 'fail'} stack-sm">
+              <h3>${index + 1}. ${escapeHtml(answer.pregunta)}</h3>
+              <p class="review-copy"><strong>Tu respuesta:</strong> ${escapeHtml(answer.marcada)} ${answer.esCorrecta ? 'OK' : 'Fallo'}</p>
+              ${answer.esCorrecta ? '' : `<p class="review-copy"><strong>Respuesta correcta:</strong> ${escapeHtml(answer.correcta)}</p>`}
+              <p class="review-copy"><strong>Explicacion:</strong> ${escapeHtml(answer.explicacion)}</p>
+              <p class="review-copy"><strong>Origen:</strong> ${escapeHtml(answer.source?.title || 'Tema')} · ${escapeHtml(answer.source?.type === 'profesor' ? 'test profesor' : 'test IA')}</p>
             </article>
           `).join('')}
         </div>
@@ -676,42 +936,95 @@ function openAfterResults() {
 
   if (result.topicId === 'global') {
     setView('subject', { subjectId: result.subjectId, topicId: null });
-  } else {
-    setView('content', {
-      subjectId: result.subjectId,
-      topicId: result.topicId,
-      contentTab: 'resumen'
-    });
+    return;
+  }
+
+  setView('content', {
+    subjectId: result.subjectId,
+    topicId: result.topicId,
+    contentTab: 'resumen'
+  });
+}
+
+function updateHeaderControls() {
+  const showBack = state.view !== 'home';
+  backButton.classList.toggle('hidden', !showBack);
+}
+
+function render() {
+  updateHeaderControls();
+
+  switch (state.view) {
+    case 'subject':
+      renderSubject();
+      break;
+    case 'content':
+      renderContent();
+      break;
+    case 'test':
+      renderTest();
+      break;
+    case 'results':
+      renderResults();
+      break;
+    case 'home':
+    default:
+      renderHome();
+      break;
   }
 }
 
-function bindGlobalEvents() {
-  document.addEventListener('click', (event) => {
-    const actionEl = event.target.closest('[data-action]');
-    if (!actionEl) return;
+function onBack() {
+  if (state.view === 'content' || state.view === 'test') {
+    state.test = null;
+    setView('subject', { subjectId: state.subjectId, topicId: null });
+    return;
+  }
 
-    const { action, subject, topic, type, tab, index } = actionEl.dataset;
+  if (state.view === 'results') {
+    openAfterResults();
+    return;
+  }
+
+  setView('home', { subjectId: null, topicId: null, topicSearch: '' });
+}
+
+function bindEvents() {
+  document.addEventListener('click', (event) => {
+    const actionElement = event.target.closest('[data-action]');
+    if (!actionElement) return;
+
+    const { action, subject, topic, type, tab, index } = actionElement.dataset;
 
     switch (action) {
       case 'go-home':
         setView('home', { subjectId: null, topicId: null, topicSearch: '' });
         break;
-      case 'open-first-subject': {
-        const first = state.db?.asignaturas?.[0];
-        if (first) setView('subject', { subjectId: first.id, topicId: null });
-        break;
-      }
       case 'focus-subjects':
         document.getElementById('subjects-section')?.scrollIntoView({ behavior: 'smooth' });
         break;
+      case 'continue-study': {
+        const resume = findContinueTopic();
+        if (resume) {
+          setView('content', {
+            subjectId: resume.subject.id,
+            topicId: resume.topic.id,
+            contentTab: 'resumen'
+          });
+        }
+        break;
+      }
       case 'open-subject':
         setView('subject', { subjectId: subject, topicId: null, topicSearch: '' });
         break;
       case 'open-content':
-        setView('content', { subjectId: state.subjectId, topicId: topic, contentTab: tab });
+        setView('content', { subjectId: subject || state.subjectId, topicId: topic, contentTab: tab || 'resumen' });
+        break;
+      case 'jump-topic':
+        setView('content', { subjectId: state.subjectId, topicId: topic, contentTab: 'resumen' });
         break;
       case 'switch-tab':
-        state.contentTab = tab;
+        state.contentTab = tab === 'claves' ? 'claves' : 'resumen';
         saveAppState();
         renderContent();
         break;
@@ -728,9 +1041,9 @@ function bindGlobalEvents() {
         nextQuestion();
         break;
       case 'exit-test':
-        if (confirm('¿Quieres salir del test actual? Perderás el progreso de este intento.')) {
-          setView('subject', { subjectId: state.test.subjectId });
+        if (window.confirm('Si sales ahora perderas el progreso de este intento.')) {
           state.test = null;
+          setView('subject', { subjectId: state.subjectId, topicId: null });
         }
         break;
       case 'repeat-test':
@@ -738,6 +1051,8 @@ function bindGlobalEvents() {
         break;
       case 'back-after-results':
         openAfterResults();
+        break;
+      default:
         break;
     }
   });
@@ -747,45 +1062,47 @@ function bindGlobalEvents() {
     setTheme(current === 'dark' ? 'light' : 'dark');
   });
 
-  homeButton.addEventListener('click', () => {
-    setView('home', { subjectId: null, topicId: null, topicSearch: '' });
-  });
+  backButton.addEventListener('click', onBack);
+}
+
+function repairStateAfterLoad() {
+  const validSubject = state.subjectId ? getSubject(state.subjectId) : null;
+
+  if (state.view !== 'home' && !validSubject) {
+    state.view = 'home';
+    state.subjectId = null;
+    state.topicId = null;
+    state.topicSearch = '';
+    return;
+  }
+
+  if (state.view === 'content' && state.subjectId && state.topicId && !getTopic(state.subjectId, state.topicId)) {
+    state.view = 'subject';
+    state.topicId = null;
+  }
 }
 
 async function init() {
   initTheme();
-  bindGlobalEvents();
+  bindEvents();
   restoreAppState();
 
   try {
     const response = await fetch('datos.json', { cache: 'no-store' });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const db = await response.json();
-    if (!db?.asignaturas || !Array.isArray(db.asignaturas)) throw new Error('Estructura JSON no válida');
-    state.db = db;
-
-    const validSubject = state.subjectId ? getSubject(state.subjectId) : null;
-    if (state.view !== 'home' && !validSubject) {
-      state.view = 'home';
-      state.subjectId = null;
-      state.topicId = null;
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
     }
 
-    if (state.view === 'content' && state.subjectId && state.topicId && !getTopic(state.subjectId, state.topicId)) {
-      state.view = 'subject';
-      state.topicId = null;
-    }
-
+    const data = await response.json();
+    state.db = normalizeDatabase(data);
+    repairStateAfterLoad();
     render();
   } catch (error) {
     console.error(error);
-    app.innerHTML = `
-      <section class="card empty-state">
-        <div class="empty-icon">⚠️</div>
-        <h2>No se ha podido cargar la aplicación</h2>
-        <p>Comprueba que estás ejecutando la app en un servidor local y que <strong>datos.json</strong> existe y tiene una estructura válida.</p>
-      </section>
-    `;
+    app.innerHTML = renderEmpty(
+      'No se pudo cargar la aplicacion',
+      'Comprueba que estas ejecutando la app desde un servidor local y que datos.json tiene una estructura valida.'
+    );
   }
 }
 
