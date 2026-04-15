@@ -972,7 +972,7 @@ button:disabled {
     align-items: start;
   }
 
-  .summary-panel {
+  .content-grid > .summary-panel {
     position: sticky;
     top: 7.25rem;
   }
@@ -989,7 +989,6 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 }
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1001,4 +1000,70 @@ button:disabled {
     animation: none !important;
     transition: none !important;
   }
+}
+
+
+.practice-list {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.practice-card {
+  padding: var(--space-4);
+}
+
+.practice-card h2 {
+  margin: 0;
+  font-family: 'Outfit', system-ui, sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.code-block {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+  overflow: hidden;
+}
+
+.code-block pre {
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.code-editor {
+  width: 100%;
+  min-height: 11rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-solid);
+  color: var(--text);
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.practice-toggle {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+  padding: 0.85rem 1rem;
+}
+
+.practice-toggle summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.practice-toggle[open] {
+  background: var(--surface-solid);
+}
+
+.practice-toggle p {
+  margin: 0.8rem 0 0;
 }

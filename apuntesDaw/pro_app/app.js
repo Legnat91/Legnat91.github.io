@@ -174,6 +174,35 @@ function normalizeQuestion(question, source) {
   };
 }
 
+function normalizeCodeExercise(exercise) {
+  const title = typeof exercise?.titulo === 'string' ? exercise.titulo.trim() : '';
+  const statement = typeof exercise?.enunciado === 'string' ? exercise.enunciado.trim() : '';
+  const solution = typeof exercise?.solucion === 'string' ? exercise.solucion.trim() : '';
+
+  if (!title || !statement || !solution) {
+    return null;
+  }
+
+  return {
+    titulo: title,
+    dificultad: typeof exercise?.dificultad === 'string' && exercise.dificultad.trim()
+      ? exercise.dificultad.trim()
+      : 'Media',
+    enunciado: statement,
+    codigo_base: typeof exercise?.codigo_base === 'string' ? exercise.codigo_base : '',
+    placeholder: typeof exercise?.placeholder === 'string' && exercise.placeholder.trim()
+      ? exercise.placeholder.trim()
+      : 'Escribe aqui tu respuesta...',
+    pista: typeof exercise?.pista === 'string' && exercise.pista.trim()
+      ? exercise.pista.trim()
+      : 'Piensa en el metodo y el operador que mejor encajan con el enunciado.',
+    solucion: solution,
+    explicacion: typeof exercise?.explicacion === 'string' && exercise.explicacion.trim()
+      ? exercise.explicacion.trim()
+      : 'Repasa la sintaxis y compara tu respuesta con la solucion propuesta.'
+  };
+}
+
 function normalizeTopic(topic, index) {
   const resumen = typeof topic?.resumen === 'string' && topic.resumen.trim()
     ? topic.resumen
@@ -187,6 +216,9 @@ function normalizeTopic(topic, index) {
   const preguntasProfesor = Array.isArray(topic?.preguntas_profesor)
     ? topic.preguntas_profesor.map((question) => normalizeQuestion(question, null)).filter(Boolean)
     : [];
+  const ejerciciosCodigo = Array.isArray(topic?.ejercicios_codigo)
+    ? topic.ejercicios_codigo.map((exercise) => normalizeCodeExercise(exercise)).filter(Boolean)
+    : [];
 
   return {
     id: typeof topic?.id === 'string' && topic.id.trim() ? topic.id : `tema_${index + 1}`,
@@ -194,7 +226,8 @@ function normalizeTopic(topic, index) {
     resumen,
     claves,
     preguntas,
-    preguntas_profesor: preguntasProfesor
+    preguntas_profesor: preguntasProfesor,
+    ejercicios_codigo: ejerciciosCodigo
   };
 }
 
@@ -245,8 +278,9 @@ function subjectStats(subject) {
     acc.ia += topic.preguntas.length;
     acc.profesor += topic.preguntas_profesor.length;
     acc.claves += topic.claves.length;
+    acc.codigo += Array.isArray(topic.ejercicios_codigo) ? topic.ejercicios_codigo.length : 0;
     return acc;
-  }, { temas: 0, ia: 0, profesor: 0, claves: 0 });
+  }, { temas: 0, ia: 0, profesor: 0, claves: 0, codigo: 0 });
 }
 
 function getCoverage(subject) {
@@ -279,8 +313,9 @@ function globalStats() {
     acc.ia += stats.ia;
     acc.profesor += stats.profesor;
     acc.claves += stats.claves;
+    acc.codigo += stats.codigo;
     return acc;
-  }, { asignaturas: 0, temas: 0, ia: 0, profesor: 0, claves: 0 });
+  }, { asignaturas: 0, temas: 0, ia: 0, profesor: 0, claves: 0, codigo: 0 });
 }
 
 function findContinueTopic() {
@@ -411,6 +446,7 @@ function renderHome() {
             <article class="stat-card"><span class="stat-label">Temas</span><strong class="stat-value">${stats.temas}</strong></article>
             <article class="stat-card"><span class="stat-label">Preguntas IA</span><strong class="stat-value">${stats.ia}</strong></article>
             <article class="stat-card"><span class="stat-label">Preguntas profesor</span><strong class="stat-value">${stats.profesor}</strong></article>
+            <article class="stat-card"><span class="stat-label">Practica codigo</span><strong class="stat-value">${stats.codigo}</strong></article>
           </div>
         </article>
 
@@ -544,6 +580,7 @@ function renderSubject() {
           <article class="stat-card"><span class="stat-label">Claves</span><strong class="stat-value">${stats.claves}</strong></article>
           <article class="stat-card"><span class="stat-label">Preguntas IA</span><strong class="stat-value">${stats.ia}</strong></article>
           <article class="stat-card"><span class="stat-label">Preguntas profesor</span><strong class="stat-value">${stats.profesor}</strong></article>
+          <article class="stat-card"><span class="stat-label">Practica codigo</span><strong class="stat-value">${stats.codigo}</strong></article>
         </div>
 
         <div class="hero-actions">
@@ -585,6 +622,7 @@ function renderTopicCard(subject, topic) {
         <div class="meta-row">
           <span class="status-pill">${escapeHtml(topic.id)}</span>
           <span class="meta-pill">${escapeHtml(pluralize(topic.claves.length, 'clave', 'claves'))}</span>
+          ${topic.ejercicios_codigo.length ? `<span class="meta-pill">${escapeHtml(pluralize(topic.ejercicios_codigo.length, 'ejercicio', 'ejercicios'))}</span>` : ''}
         </div>
         <div class="stack-sm">
           <h3>${escapeHtml(topic.titulo)}</h3>
@@ -601,6 +639,9 @@ function renderTopicCard(subject, topic) {
         <div class="topic-actions">
           <button class="primary-button" type="button" data-action="start-topic-test" data-topic="${escapeHtml(topic.id)}" data-type="ia" ${topic.preguntas.length ? '' : 'disabled'}>Test IA</button>
           <button class="warning-button" type="button" data-action="start-topic-test" data-topic="${escapeHtml(topic.id)}" data-type="profesor" ${topic.preguntas_profesor.length ? '' : 'disabled'}>Test profesor</button>
+        </div>
+        <div class="topic-actions">
+          <button class="secondary-button" type="button" data-action="open-practice" data-topic="${escapeHtml(topic.id)}" ${topic.ejercicios_codigo.length ? '' : 'disabled'}>Examen practico</button>
         </div>
       </div>
     </article>
@@ -675,6 +716,7 @@ function renderContent() {
           <div class="stack-sm">
             <button class="primary-button" type="button" data-action="start-topic-test" data-topic="${escapeHtml(topic.id)}" data-type="ia" ${topic.preguntas.length ? '' : 'disabled'}>Iniciar test IA</button>
             <button class="warning-button" type="button" data-action="start-topic-test" data-topic="${escapeHtml(topic.id)}" data-type="profesor" ${topic.preguntas_profesor.length ? '' : 'disabled'}>Iniciar test profesor</button>
+            <button class="secondary-button" type="button" data-action="open-practice" data-topic="${escapeHtml(topic.id)}" ${topic.ejercicios_codigo.length ? '' : 'disabled'}>Abrir examen practico</button>
           </div>
 
           <div class="overview-card stack-sm">
@@ -688,7 +730,14 @@ function renderContent() {
             <p class="review-copy">${escapeHtml(excerpt(topic.resumen, 110))}</p>
           </div>
 
-          <p class="summary-note">Consejo: si estas en movil, usa primero claves para barrer conceptos y despues entra al test del tema.</p>
+          ${topic.ejercicios_codigo.length ? `
+            <div class="overview-card stack-sm">
+              <h3>Practica de codigo</h3>
+              <p class="review-copy">${escapeHtml(pluralize(topic.ejercicios_codigo.length, 'ejercicio', 'ejercicios'))} con input libre, pista, solucion y una explicacion corta.</p>
+            </div>
+          ` : ''}
+
+          <p class="summary-note">Consejo: si estas en movil, usa primero claves para barrer conceptos, despues haz el test y termina con el examen practico.</p>
         </aside>
       </section>
     </div>
@@ -714,6 +763,85 @@ function renderKeyList(keys) {
     </div>
   `;
 }
+
+function renderPractice() {
+  const subject = getSubject(state.subjectId);
+  const topic = getTopic(state.subjectId, state.topicId);
+
+  if (!subject || !topic) {
+    setView('subject', { subjectId: state.subjectId, topicId: null }, { skipScroll: true });
+    return;
+  }
+
+  if (!topic.ejercicios_codigo.length) {
+    window.alert('Este tema no tiene ejercicios practicos disponibles.');
+    setView('content', { subjectId: subject.id, topicId: topic.id, contentTab: 'resumen' }, { skipScroll: true });
+    return;
+  }
+
+  app.innerHTML = `
+    <div class="view-stack">
+      <section class="surface test-panel stack-lg">
+        <div class="header-row">
+          <div class="test-meta">
+            <span class="status-pill">Examen practico · ${topic.ejercicios_codigo.length} ejercicios</span>
+            <h1 class="topic-title">${escapeHtml(topic.titulo)}</h1>
+            <p class="helper-text">Rellena o escribe codigo, consulta una pista cuando la necesites y compara despues con la solucion explicada.</p>
+          </div>
+          <button class="ghost-button" type="button" data-action="close-practice">Salir</button>
+        </div>
+
+        <div class="context-strip">
+          <div class="stack-sm">
+            <strong>Propuesta de repaso</strong>
+            <p class="helper-text">Intenta resolver cada ejercicio sin abrir la solucion. Usa la pista solo si te bloqueas y revisa la explicacion al final.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="practice-list">
+        ${topic.ejercicios_codigo.map((exercise, index) => `
+          <article class="practice-card surface stack-md">
+            <div class="header-row">
+              <div class="stack-sm">
+                <span class="status-pill">Ejercicio ${index + 1}</span>
+                <h2>${escapeHtml(exercise.titulo)}</h2>
+              </div>
+              <span class="meta-pill">${escapeHtml(exercise.dificultad)}</span>
+            </div>
+
+            <p class="review-copy">${escapeHtml(exercise.enunciado)}</p>
+
+            ${exercise.codigo_base ? `
+              <div class="code-block">
+                <pre><code>${escapeHtml(exercise.codigo_base)}</code></pre>
+              </div>
+            ` : ''}
+
+            <label class="small-label" for="practice-${index}">Tu respuesta</label>
+            <textarea id="practice-${index}" class="code-editor" rows="8" placeholder="${escapeHtml(exercise.placeholder)}">${escapeHtml(exercise.codigo_base)}</textarea>
+
+            <details class="practice-toggle">
+              <summary>Pista</summary>
+              <p class="review-copy">${escapeHtml(exercise.pista)}</p>
+            </details>
+
+            <details class="practice-toggle">
+              <summary>Solucion y explicacion</summary>
+              <div class="stack-sm">
+                <div class="code-block">
+                  <pre><code>${escapeHtml(exercise.solucion)}</code></pre>
+                </div>
+                <p class="review-copy">${escapeHtml(exercise.explicacion)}</p>
+              </div>
+            </details>
+          </article>
+        `).join('')}
+      </section>
+    </div>
+  `;
+}
+
 function startTest(subjectId, topicId, type) {
   const questions = buildQuestionSet(subjectId, topicId, type);
 
@@ -967,6 +1095,9 @@ function render() {
     case 'results':
       renderResults();
       break;
+    case 'practice':
+      renderPractice();
+      break;
     case 'home':
     default:
       renderHome();
@@ -975,7 +1106,7 @@ function render() {
 }
 
 function onBack() {
-  if (state.view === 'content' || state.view === 'test') {
+  if (state.view === 'content' || state.view === 'test' || state.view === 'practice') {
     state.test = null;
     setView('subject', { subjectId: state.subjectId, topicId: null });
     return;
@@ -1028,6 +1159,9 @@ function bindEvents() {
         saveAppState();
         renderContent();
         break;
+      case 'open-practice':
+        setView('practice', { subjectId: state.subjectId || subject, topicId: topic });
+        break;
       case 'start-topic-test':
         startTest(state.subjectId, topic, type);
         break;
@@ -1045,6 +1179,9 @@ function bindEvents() {
           state.test = null;
           setView('subject', { subjectId: state.subjectId, topicId: null });
         }
+        break;
+      case 'close-practice':
+        setView('content', { subjectId: state.subjectId, topicId: state.topicId, contentTab: 'resumen' });
         break;
       case 'repeat-test':
         startTest(state.results.subjectId, state.results.topicId, state.results.type);

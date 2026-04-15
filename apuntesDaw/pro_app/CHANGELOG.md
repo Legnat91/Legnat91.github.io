@@ -1,6 +1,21 @@
-﻿# CHANGELOG
+# CHANGELOG
 
-## 2026-04-12
+## 2026-04-15
+
+### Contenido
+
+- Separado MongoDB como tema propio dentro de Entorno servidor.
+- Reequilibrado el tema de acceso a datos para dejar MongoDB fuera del bloque relacional/PDO.
+- Anadidos test IA y test profesor especificos de MongoDB.
+- Anadido examen practico de MongoDB con ejercicios de dificultad progresiva.
+
+### Producto
+
+- Anadido acceso a practica de codigo desde las tarjetas de tema y desde la vista de lectura.
+- Implementado soporte para `ejercicios_codigo` en `datos.json`.
+- Cada ejercicio muestra editor, pista, solucion y breve explicacion.
+
+﻿## 2026-04-12
 
 ### UX y responsive
 

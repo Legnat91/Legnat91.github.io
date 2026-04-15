@@ -1097,6 +1097,479 @@
           ]
         },
         {
+          "id": "mongodb",
+          "titulo": "MongoDB y bases de datos NoSQL",
+          "resumen": "<p><strong>MongoDB</strong> es un sistema gestor de bases de datos <strong>NoSQL orientado a documentos</strong>. En lugar de trabajar con tablas y filas como en una base de datos relacional, trabaja con <strong>colecciones</strong> y <strong>documentos</strong>. Cada documento se representa de forma similar a JSON, aunque internamente MongoDB utiliza <strong>BSON</strong>, que añade soporte para tipos como <strong>ObjectId</strong> y <strong>Date</strong>.</p><p>La idea clave es que el esquema es <strong>flexible</strong>: los documentos de una misma colección pueden no tener exactamente la misma estructura, aunque en proyectos reales conviene mantener un modelo coherente y validar datos. Esto hace que MongoDB sea muy útil en aplicaciones web, APIs, catálogos, paneles de administración y sistemas con datos semiestructurados.</p><p>Los conceptos base que debes dominar son:</p><ul><li><strong>Base de datos</strong>: contenedor general.</li><li><strong>Colección</strong>: equivalente lógico a una tabla.</li><li><strong>Documento</strong>: equivalente lógico a una fila.</li><li><strong>Campo</strong>: cada propiedad del documento.</li><li><strong>_id</strong>: identificador único automático de cada documento.</li></ul><p>En <strong>MongoDB Compass</strong> puedes trabajar de forma visual con filtros, proyecciones, ordenaciones, límites, índices y agregaciones. Aun así, para examen es importante entender qué operación lógica hay detrás de cada acción de la interfaz.</p><p>El bloque más importante es el <strong>CRUD</strong>:</p><ul><li><strong>Crear</strong>: <code>insertOne()</code> e <code>insertMany()</code>.</li><li><strong>Leer</strong>: <code>find()</code> y <code>findOne()</code>.</li><li><strong>Actualizar</strong>: <code>updateOne()</code> y <code>updateMany()</code>, normalmente usando operadores como <code>$set</code>, <code>$inc</code>, <code>$push</code> o <code>$pull</code>.</li><li><strong>Borrar</strong>: <code>deleteOne()</code> y <code>deleteMany()</code>.</li></ul><p>Muy importante: si actualizas sin un operador como <code>$set</code>, puedes reemplazar el documento entero. Para cambiar solo un campo, lo normal es usar <code>$set</code>.</p><p>MongoDB también permite <strong>consultas</strong> con operadores como <code>$gt</code>, <code>$lt</code>, <code>$in</code>, <code>$and</code>, <code>$or</code> y filtros sobre arrays o subdocumentos. Además, puedes usar <strong>sort</strong>, <strong>skip</strong> y <strong>limit</strong> para ordenar y paginar resultados.</p><p>Otro punto importante son los <strong>índices</strong>. Un índice acelera búsquedas y ordenaciones frecuentes. Los más habituales en examen son el índice simple, el compuesto y el <strong>unique</strong>. No se debe indexar todo sin pensar: se indexan los campos que más se consultan.</p><p>Para análisis y resúmenes se usa el <strong>Aggregation Pipeline</strong>, encadenando etapas como <code>$match</code>, <code>$project</code>, <code>$group</code>, <code>$sort</code>, <code>$limit</code>, <code>$unwind</code> y <code>$lookup</code>. Debes entenderlo como una tubería: <strong>filtrar → transformar → agrupar → ordenar → limitar</strong>.</p><p>En PHP, el acceso a MongoDB suele trabajarse con <strong>Manager</strong>, <strong>Query</strong> y <strong>BulkWrite</strong>. <code>executeQuery()</code> sirve para consultas, mientras que <code>BulkWrite</code> gestiona inserciones, modificaciones y borrados. En una actualización, la opción <code>['multi' =&gt; true]</code> indica que se modifican <strong>todos</strong> los documentos que cumplan el filtro.</p><p>Buenas prácticas finales: mantener un modelo coherente, validar documentos, crear índices razonables, usar copias de seguridad, no exponer MongoDB sin control y no guardar contraseñas en texto plano.</p>",
+          "claves": [
+            "MongoDB es NoSQL orientado a documentos",
+            "Colección equivale a tabla y documento a fila",
+            "_id identifica de forma única cada documento",
+            "CRUD: insertOne, find, updateOne y deleteOne",
+            "Para modificar campos concretos se usa normalmente $set",
+            "updateMany modifica varios; ['multi' => true] afecta a todos en PHP BulkWrite",
+            "Compass ayuda visualmente, pero hay que entender filtros y operaciones",
+            "Índices aceleran consultas frecuentes; no se crean sin criterio",
+            "Aggregation Pipeline: $match → $project → $group → $sort → $limit"
+          ],
+          "preguntas": [
+            {
+              "pregunta": "¿Qué elemento equivale a una tabla en MongoDB?",
+              "opciones": [
+                "Documento",
+                "Colección",
+                "Índice",
+                "Pipeline"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "En MongoDB la estructura lógica similar a una tabla es la colección."
+            },
+            {
+              "pregunta": "¿Qué campo existe por defecto en cada documento de MongoDB?",
+              "opciones": [
+                "id",
+                "_id",
+                "uuid",
+                "key"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "Todos los documentos tienen un campo _id que actúa como identificador único."
+            },
+            {
+              "pregunta": "¿Qué comando inserta un único documento?",
+              "opciones": [
+                "insertMany()",
+                "saveOne()",
+                "insertOne()",
+                "createDoc()"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "insertOne() crea un solo documento en la colección."
+            },
+            {
+              "pregunta": "¿Qué diferencia principal hay entre find() y findOne()?",
+              "opciones": [
+                "No hay diferencia",
+                "findOne borra y find consulta",
+                "find devuelve conjunto/cursor y findOne un solo documento",
+                "find solo sirve en Compass"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "find() devuelve un conjunto de resultados y findOne() solo un documento."
+            },
+            {
+              "pregunta": "¿Qué operador conviene usar para cambiar solo un campo sin reemplazar el documento completo?",
+              "opciones": [
+                "$group",
+                "$set",
+                "$lookup",
+                "$sort"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "$set actualiza campos concretos y evita reemplazar todo el documento."
+            },
+            {
+              "pregunta": "¿Qué método modifica varios documentos a la vez en shell de MongoDB?",
+              "opciones": [
+                "updateOne()",
+                "updateMany()",
+                "replaceAll()",
+                "modifyMany()"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "updateMany() aplica cambios a todos los documentos que cumplan el filtro."
+            },
+            {
+              "pregunta": "¿Qué etapa del Aggregation Pipeline se usa para agrupar documentos y calcular resúmenes?",
+              "opciones": [
+                "$match",
+                "$project",
+                "$group",
+                "$limit"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "$group agrupa documentos y permite operaciones como sumas o medias."
+            },
+            {
+              "pregunta": "¿Qué tipo de índice impide valores duplicados?",
+              "opciones": [
+                "Simple",
+                "Text",
+                "Unique",
+                "Limit"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "Un índice unique evita duplicados en el campo indexado."
+            },
+            {
+              "pregunta": "En MongoDB Compass, ¿qué zona sirve para filtrar documentos?",
+              "opciones": [
+                "Aggregation",
+                "Indexes",
+                "Project",
+                "Filter"
+              ],
+              "respuesta_correcta": 3,
+              "explicacion": "La zona Filter permite indicar el criterio de búsqueda."
+            },
+            {
+              "pregunta": "En PHP con MongoDB, ¿qué clase se usa para acumular inserciones, updates y deletes?",
+              "opciones": [
+                "Query",
+                "Manager",
+                "BulkWrite",
+                "Cursor"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "BulkWrite se usa para preparar operaciones de escritura."
+            }
+          ],
+          "preguntas_profesor": [
+            {
+              "pregunta": "¿Qué formato usa MongoDB internamente además del estilo JSON visible?",
+              "opciones": [
+                "XML",
+                "BSON",
+                "CSV",
+                "YAML"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "MongoDB usa BSON internamente para soportar mejor ciertos tipos de datos."
+            },
+            {
+              "pregunta": "¿Qué operación de Compass limita cuántos documentos se muestran?",
+              "opciones": [
+                "Skip",
+                "Filter",
+                "Sort",
+                "Limit"
+              ],
+              "respuesta_correcta": 3,
+              "explicacion": "Limit restringe el número de documentos visibles en el resultado."
+            },
+            {
+              "pregunta": "¿Qué operador añade un elemento a un array?",
+              "opciones": [
+                "$pull",
+                "$push",
+                "$unset",
+                "$inc"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "$push inserta un nuevo elemento dentro de un array."
+            },
+            {
+              "pregunta": "¿Qué operador elimina un campo del documento?",
+              "opciones": [
+                "$unset",
+                "$set",
+                "$avg",
+                "$match"
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "$unset borra un campo del documento."
+            },
+            {
+              "pregunta": "¿Qué etapa se usa normalmente al comienzo del pipeline para filtrar documentos?",
+              "opciones": [
+                "$group",
+                "$match",
+                "$lookup",
+                "$project"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "$match filtra los documentos de entrada del pipeline."
+            },
+            {
+              "pregunta": "¿Qué relación es correcta en MongoDB?",
+              "opciones": [
+                "Tabla -> fila -> columna",
+                "Colección -> documento -> campo",
+                "Colección -> tabla -> objeto",
+                "Documento -> colección -> registro"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "La correspondencia correcta es colección, documento y campo."
+            },
+            {
+              "pregunta": "¿Qué opción en BulkWrite update() modifica todos los documentos que cumplan la condición?",
+              "opciones": [
+                "['all' => true]",
+                "['multi' => true]",
+                "['many' => true]",
+                "['updateAll' => true]"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "En el contexto explicado en clase, ['multi' => true] indica que el update afecta a todos los documentos coincidentes."
+            },
+            {
+              "pregunta": "¿Qué operación une datos de otra colección en una agregación?",
+              "opciones": [
+                "$union",
+                "$lookup",
+                "$join",
+                "$ref"
+              ],
+              "respuesta_correcta": 1,
+              "explicacion": "$lookup permite relacionar colecciones dentro del pipeline."
+            },
+            {
+              "pregunta": "¿Qué recomendación es correcta sobre índices?",
+              "opciones": [
+                "Indexar todos los campos siempre",
+                "No usar índices nunca",
+                "Crear índices razonables sobre consultas frecuentes",
+                "Los índices solo sirven en SQL"
+              ],
+              "respuesta_correcta": 2,
+              "explicacion": "Los índices deben crearse con criterio sobre filtros y ordenaciones habituales."
+            },
+            {
+              "pregunta": "¿Qué clase se usa para lanzar consultas en PHP a MongoDB?",
+              "opciones": [
+                "Manager y Query",
+                "BulkRead",
+                "PDO",
+                "Statement"
+              ],
+              "respuesta_correcta": 0,
+              "explicacion": "La conexión se apoya en Manager y las consultas usan Query junto con executeQuery()."
+            }
+          ],
+          "ejercicios_codigo": [
+            {
+              "tipo": "rellenar",
+              "titulo": "Insertar un documento",
+              "dificultad": "Facil",
+              "enunciado": "Completa la instrucción para insertar un alumno con nombre Lucía y edad 20 en la colección alumnos.",
+              "codigo_base": "db.alumnos.____({ nombre: \"Lucía\", edad: 20 })",
+              "placeholder": "Escribe el método que falta",
+              "pista": "Para insertar un único documento se usa un método terminado en One.",
+              "solucion": "db.alumnos.insertOne({ nombre: \"Lucía\", edad: 20 })",
+              "explicacion": "insertOne() añade un documento a la colección."
+            },
+            {
+              "tipo": "rellenar",
+              "titulo": "Buscar por filtro simple",
+              "dificultad": "Facil",
+              "enunciado": "Completa la consulta para obtener los alumnos cuya edad sea mayor que 18.",
+              "codigo_base": "db.alumnos.find({ edad: { ____: 18 } })",
+              "placeholder": "Escribe el operador",
+              "pista": "Es el operador de 'mayor que'.",
+              "solucion": "db.alumnos.find({ edad: { $gt: 18 } })",
+              "explicacion": "$gt significa greater than, es decir, mayor que."
+            },
+            {
+              "tipo": "rellenar",
+              "titulo": "Actualizar un campo",
+              "dificultad": "Facil",
+              "enunciado": "Rellena el operador que permite cambiar solo el campo curso sin reemplazar el documento completo.",
+              "codigo_base": "db.alumnos.updateOne({ nombre: \"Ana\" }, { ____: { curso: \"2DAW\" } })",
+              "placeholder": "Escribe el operador",
+              "pista": "Es el operador más habitual para asignar un valor.",
+              "solucion": "db.alumnos.updateOne({ nombre: \"Ana\" }, { $set: { curso: \"2DAW\" } })",
+              "explicacion": "$set modifica campos concretos del documento."
+            },
+            {
+              "tipo": "rellenar",
+              "titulo": "Borrar varios documentos",
+              "dificultad": "Facil",
+              "enunciado": "Completa el método para borrar todos los pedidos con estado cancelado.",
+              "codigo_base": "db.pedidos.____({ estado: \"cancelado\" })",
+              "placeholder": "Escribe el método",
+              "pista": "Si afecta a varios, termina en Many.",
+              "solucion": "db.pedidos.deleteMany({ estado: \"cancelado\" })",
+              "explicacion": "deleteMany() elimina todos los documentos que cumplen el filtro."
+            },
+            {
+              "tipo": "rellenar",
+              "titulo": "Ordenar resultados",
+              "dificultad": "Facil",
+              "enunciado": "Completa la ordenación para mostrar los productos por precio ascendente.",
+              "codigo_base": "db.productos.find().sort({ precio: ____ })",
+              "placeholder": "Escribe el valor numérico correcto",
+              "pista": "En MongoDB 1 es ascendente y -1 descendente.",
+              "solucion": "db.productos.find().sort({ precio: 1 })",
+              "explicacion": "sort({ campo: 1 }) ordena de menor a mayor."
+            },
+            {
+              "tipo": "escribir_codigo",
+              "titulo": "Consulta completa con filtro",
+              "dificultad": "Media",
+              "enunciado": "Escribe una consulta que devuelva todos los productos cuyo precio sea menor que 50.",
+              "codigo_base": "",
+              "placeholder": "Escribe aquí la consulta completa de MongoDB",
+              "pista": "Debes usar find() y el operador $lt.",
+              "solucion": "db.productos.find({ precio: { $lt: 50 } })",
+              "explicacion": "find() recupera documentos y $lt filtra los valores menores que el indicado."
+            },
+            {
+              "tipo": "escribir_codigo",
+              "titulo": "Actualizar varios documentos",
+              "dificultad": "Media",
+              "enunciado": "Escribe una instrucción que marque como activo:true a todos los alumnos del curso '2DAW'.",
+              "codigo_base": "",
+              "placeholder": "Escribe aquí la instrucción completa",
+              "pista": "Debes actualizar varios documentos, no solo uno.",
+              "solucion": "db.alumnos.updateMany({ curso: \"2DAW\" }, { $set: { activo: true } })",
+              "explicacion": "updateMany() modifica todos los documentos que cumplen el filtro."
+            },
+            {
+              "tipo": "escribir_codigo",
+              "titulo": "Borrar por condición",
+              "dificultad": "Media",
+              "enunciado": "Escribe una instrucción para eliminar todos los usuarios que tengan el campo bloqueado a true.",
+              "codigo_base": "",
+              "placeholder": "Escribe aquí la instrucción completa",
+              "pista": "Debes filtrar por bloqueado:true y borrar varios.",
+              "solucion": "db.usuarios.deleteMany({ bloqueado: true })",
+              "explicacion": "deleteMany() elimina todos los documentos coincidentes."
+            },
+            {
+              "tipo": "escribir_codigo",
+              "titulo": "Buscar uno por email",
+              "dificultad": "Media",
+              "enunciado": "Escribe una consulta que devuelva un único usuario cuyo email sea 'ana@correo.com'.",
+              "codigo_base": "",
+              "placeholder": "Escribe aquí la consulta completa",
+              "pista": "Usa findOne() porque solo quieres un documento.",
+              "solucion": "db.usuarios.findOne({ email: \"ana@correo.com\" })",
+              "explicacion": "findOne() devuelve un solo documento que cumpla el filtro."
+            },
+            {
+              "tipo": "escribir_codigo",
+              "titulo": "Añadir un elemento a un array",
+              "dificultad": "Media",
+              "enunciado": "Escribe una instrucción para añadir la etiqueta 'backend' al array tags del usuario con nombre 'Mario'.",
+              "codigo_base": "",
+              "placeholder": "Escribe aquí la instrucción completa",
+              "pista": "Necesitas updateOne() y el operador $push.",
+              "solucion": "db.usuarios.updateOne({ nombre: \"Mario\" }, { $push: { tags: \"backend\" } })",
+              "explicacion": "$push añade un nuevo valor al final de un array."
+            },
+            {
+              "tipo": "escribir_codigo",
+              "titulo": "Eliminar un campo",
+              "dificultad": "Media",
+              "enunciado": "Escribe una instrucción para borrar el campo telefono del usuario con nombre 'Laura'.",
+              "codigo_base": "",
+              "placeholder": "Escribe aquí la instrucción completa",
+              "pista": "Debes usar updateOne() y un operador que quite campos.",
+              "solucion": "db.usuarios.updateOne({ nombre: \"Laura\" }, { $unset: { telefono: \"\" } })",
+              "explicacion": "$unset elimina un campo del documento."
+            },
+            {
+              "tipo": "escribir_funcion",
+              "titulo": "Función para buscar un usuario por email",
+              "dificultad": "Media",
+              "enunciado": "Escribe una función JavaScript llamada buscarUsuarioPorEmail que reciba la colección y un email, y devuelva la consulta para buscar un único usuario por ese email.",
+              "codigo_base": "function buscarUsuarioPorEmail(coleccion, email) {\n  \n}",
+              "placeholder": "Escribe la función completa",
+              "pista": "Debes devolver un findOne usando el campo email.",
+              "solucion": "function buscarUsuarioPorEmail(coleccion, email) {\n  return coleccion.findOne({ email: email });\n}",
+              "explicacion": "findOne() obtiene un único documento. La función reutiliza la colección recibida por parámetro."
+            },
+            {
+              "tipo": "escribir_funcion",
+              "titulo": "Función para insertar un libro",
+              "dificultad": "Media",
+              "enunciado": "Escribe una función llamada insertarLibro que reciba la colección, un titulo y un autor, e inserte un documento con esos datos.",
+              "codigo_base": "function insertarLibro(coleccion, titulo, autor) {\n  \n}",
+              "placeholder": "Escribe la función completa",
+              "pista": "Usa insertOne() con un objeto que tenga titulo y autor.",
+              "solucion": "function insertarLibro(coleccion, titulo, autor) {\n  return coleccion.insertOne({ titulo: titulo, autor: autor });\n}",
+              "explicacion": "insertOne() inserta un documento nuevo en la colección."
+            },
+            {
+              "tipo": "escribir_funcion",
+              "titulo": "Función para activar usuarios",
+              "dificultad": "Media",
+              "enunciado": "Escribe una función llamada activarUsuariosPorRol que reciba la colección y un rol, y marque como activo:true a todos los usuarios con ese rol.",
+              "codigo_base": "function activarUsuariosPorRol(coleccion, rol) {\n  \n}",
+              "placeholder": "Escribe la función completa",
+              "pista": "Necesitas updateMany() y $set.",
+              "solucion": "function activarUsuariosPorRol(coleccion, rol) {\n  return coleccion.updateMany({ rol: rol }, { $set: { activo: true } });\n}",
+              "explicacion": "La función aplica el cambio a todos los documentos cuyo rol coincida."
+            },
+            {
+              "tipo": "escribir_codigo",
+              "titulo": "Consulta con $in",
+              "dificultad": "Media",
+              "enunciado": "Escribe una consulta que obtenga los productos cuya categoria sea 'hardware' o 'software'.",
+              "codigo_base": "",
+              "placeholder": "Escribe aquí la consulta completa",
+              "pista": "Puedes resolverlo con el operador $in.",
+              "solucion": "db.productos.find({ categoria: { $in: [\"hardware\", \"software\"] } })",
+              "explicacion": "$in permite comprobar si un valor pertenece a una lista."
+            },
+            {
+              "tipo": "escribir_codigo",
+              "titulo": "Proyección de campos",
+              "dificultad": "Media",
+              "enunciado": "Escribe una consulta que muestre solo nombre y email de todos los usuarios, ocultando _id.",
+              "codigo_base": "",
+              "placeholder": "Escribe aquí la consulta completa",
+              "pista": "El segundo objeto de find() sirve para proyectar campos.",
+              "solucion": "db.usuarios.find({}, { nombre: 1, email: 1, _id: 0 })",
+              "explicacion": "La proyección indica qué campos mostrar y permite ocultar _id."
+            },
+            {
+              "tipo": "escribir_codigo",
+              "titulo": "Paginación básica",
+              "dificultad": "Media",
+              "enunciado": "Escribe una consulta que obtenga 5 productos después de saltar los primeros 10.",
+              "codigo_base": "",
+              "placeholder": "Escribe aquí la consulta completa",
+              "pista": "Debes encadenar skip() y limit().",
+              "solucion": "db.productos.find().skip(10).limit(5)",
+              "explicacion": "skip() salta resultados y limit() restringe cuántos documentos devolver."
+            },
+            {
+              "tipo": "escribir_codigo",
+              "titulo": "Agregación con recuento",
+              "dificultad": "Dificil",
+              "enunciado": "Escribe un pipeline que filtre pedidos pagados y agrupe por cliente calculando el total de pedidos de cada uno.",
+              "codigo_base": "",
+              "placeholder": "Escribe aquí la agregación completa",
+              "pista": "Empieza con $match y luego usa $group con $sum: 1.",
+              "solucion": "db.pedidos.aggregate([{ $match: { estado: \"pagado\" } }, { $group: { _id: \"$cliente\", totalPedidos: { $sum: 1 } } }])",
+              "explicacion": "Primero se filtran los pedidos pagados y después se agrupan por cliente para contarlos."
+            },
+            {
+              "tipo": "escribir_codigo",
+              "titulo": "Agregación con media",
+              "dificultad": "Dificil",
+              "enunciado": "Escribe un pipeline que agrupe productos por categoria y calcule el precio medio en cada una.",
+              "codigo_base": "",
+              "placeholder": "Escribe aquí la agregación completa",
+              "pista": "Necesitas $group y el acumulador $avg sobre el campo precio.",
+              "solucion": "db.productos.aggregate([{ $group: { _id: \"$categoria\", precioMedio: { $avg: \"$precio\" } } }])",
+              "explicacion": "$avg calcula la media de los valores de un campo dentro de cada grupo."
+            },
+            {
+              "tipo": "escribir_funcion",
+              "titulo": "Función para borrar usuarios inactivos",
+              "dificultad": "Dificil",
+              "enunciado": "Escribe una función llamada borrarInactivos que reciba la colección y elimine todos los usuarios con activo:false.",
+              "codigo_base": "function borrarInactivos(coleccion) {\n  \n}",
+              "placeholder": "Escribe la función completa",
+              "pista": "Debes usar deleteMany() con un filtro por activo:false.",
+              "solucion": "function borrarInactivos(coleccion) {\n  return coleccion.deleteMany({ activo: false });\n}",
+              "explicacion": "La función encapsula el borrado múltiple de documentos inactivos."
+            },
+            {
+              "tipo": "escribir_funcion",
+              "titulo": "Función para incrementar stock",
+              "dificultad": "Dificil",
+              "enunciado": "Escribe una función llamada incrementarStock que reciba la colección, el id de un producto y una cantidad, y aumente el stock de ese producto.",
+              "codigo_base": "function incrementarStock(coleccion, id, cantidad) {\n  \n}",
+              "placeholder": "Escribe la función completa",
+              "pista": "Usa updateOne() y el operador $inc sobre el campo stock.",
+              "solucion": "function incrementarStock(coleccion, id, cantidad) {\n  return coleccion.updateOne({ _id: id }, { $inc: { stock: cantidad } });\n}",
+              "explicacion": "$inc incrementa un valor numérico sin tener que leerlo antes manualmente."
+            }
+          ]
+        },
+        {
           "id": "frameworks_laravel",
           "titulo": "Frameworks PHP: Laravel y MVC",
           "resumen": "<p>Un <strong>framework</strong> es una estructura que facilita el desarrollo de aplicaciones web, proporcionando herramientas, librerías y una organización del código que permite desarrollar más rápido y de forma más segura :contentReference[oaicite:0]{index=0}. En el entorno PHP, uno de los frameworks más utilizados es <strong>Laravel</strong>, debido a su popularidad, facilidad de uso y gran comunidad.</p><p>La mayoría de frameworks siguen el patrón <strong>MVC (Modelo-Vista-Controlador)</strong>, que divide la aplicación en tres partes: <strong>Modelo</strong> (gestiona datos y lógica), <strong>Vista</strong> (presentación al usuario) y <strong>Controlador</strong> (gestiona peticiones y coordina todo el flujo). Esta separación mejora la organización, el mantenimiento y la escalabilidad de las aplicaciones.</p><p>Para trabajar con Laravel es necesario instalar previamente <strong>Composer</strong>, que es el gestor de dependencias encargado de instalar el framework. También se necesita un entorno con <strong>PHP 8.x</strong>, servidor web (Apache o el propio servidor interno de Laravel) y herramientas como Node.js para dependencias del cliente :contentReference[oaicite:1]{index=1}.</p><p>Laravel utiliza el comando <strong>artisan</strong> como herramienta de línea de comandos para gestionar el proyecto. Permite crear controladores, rutas, migraciones y ejecutar el servidor con <strong>php artisan serve</strong>.</p><p>Las <strong>rutas</strong> se definen en <strong>routes/web.php</strong> y permiten gestionar las peticiones HTTP (GET, POST, etc.). Pueden ser simples, con parámetros o con alias (named routes). Las rutas dirigen las peticiones hacia los <strong>controladores</strong>, que contienen la lógica de la aplicación.</p><p>Los <strong>controladores</strong> pueden tener un solo método (<strong>invoke</strong>) o múltiples métodos (controladores de recursos con index, create, store, show, update, destroy). Se crean con comandos artisan como <strong>php artisan make:controller</strong>.</p><p>Las <strong>vistas</strong> se gestionan mediante el motor de plantillas <strong>Blade</strong>, que permite escribir HTML con una sintaxis más limpia. Se utilizan expresiones como <strong>{{ $variable }}</strong> para mostrar datos y directivas como <strong>@if, @foreach, @forelse</strong> para control de flujo. La directiva <strong>@forelse</strong> es especialmente importante porque controla si una variable existe y si tiene contenido.</p><p>Laravel permite pasar datos a las vistas mediante arrays o la función <strong>compact()</strong>. También se pueden crear plantillas reutilizables con <strong>@extends</strong> y <strong>@yield</strong>.</p><p>Los <strong>formularios</strong> en Laravel envían datos a través de rutas hacia controladores. Es obligatorio usar <strong>@csrf</strong> para evitar ataques. La validación se realiza en el servidor mediante <strong>$request->validate()</strong>, pudiendo definir reglas como required o min. Los errores se almacenan en la variable <strong>$errors</strong>, que permite mostrar mensajes con métodos como <strong>all()</strong> o <strong>first()</strong>.</p><p>En resumen, Laravel combina organización (MVC), seguridad, reutilización de código y facilidad de desarrollo, siendo una herramienta clave para aplicaciones web modernas.</p>",
@@ -1371,6 +1844,408 @@
               ],
               "respuesta_correcta": 1,
               "explicacion": "Blade es el motor de plantillas."
+            }
+          ],
+          "ejercicios_codigo": [
+            {
+              "titulo": "Rellena la ruta GET básica",
+              "dificultad": "Facil",
+              "enunciado": "Completa el hueco para definir una ruta GET a /clientes que devuelva la vista clientes.index.",
+              "codigo_base": "Route::___('/clientes', function () {\n    return view('clientes.index');\n});",
+              "placeholder": "Escribe el método que falta",
+              "pista": "Es el método HTTP más usado para mostrar páginas.",
+              "solucion": "Route::get('/clientes', function () {\n    return view('clientes.index');\n});",
+              "explicacion": "Route::get() define una ruta que responde a peticiones GET."
+            },
+            {
+              "titulo": "Rellena el nombre de una ruta",
+              "dificultad": "Facil",
+              "enunciado": "Completa el hueco para asignar a la ruta el nombre clientes.index.",
+              "codigo_base": "Route::get('/clientes', [ClienteController::class, 'index'])->___('clientes.index');",
+              "placeholder": "Escribe el método que falta",
+              "pista": "Sirve para poner alias a una ruta.",
+              "solucion": "Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');",
+              "explicacion": "name() asigna un alias a la ruta para poder usar route('clientes.index')."
+            },
+            {
+              "titulo": "Qué hace este controlador",
+              "dificultad": "Facil",
+              "enunciado": "Explica qué hace el siguiente código.",
+              "codigo_base": "class ClienteController extends Controller\n{\n    public function alta()\n    {\n        return 'Llamando al metodo alta()';\n    }\n}",
+              "placeholder": "Describe con tus palabras qué hace este código",
+              "pista": "Piensa en qué devuelve el método al navegador.",
+              "solucion": "Define un controlador llamado ClienteController con un método alta() que devuelve un texto plano al navegador.",
+              "explicacion": "No carga una vista ni accede a base de datos; simplemente responde con una cadena."
+            },
+            {
+              "titulo": "Qué está mal en este formulario",
+              "dificultad": "Facil",
+              "enunciado": "Detecta el error principal del siguiente formulario Laravel.",
+              "codigo_base": "<form action=\"{{ route('clientes.store') }}\" method=\"post\">\n    <input type=\"text\" name=\"nombre\">\n    <button type=\"submit\">Guardar</button>\n</form>",
+              "placeholder": "Explica qué falta o qué está mal",
+              "pista": "Laravel protege los formularios POST.",
+              "solucion": "Falta la directiva @csrf dentro del formulario.",
+              "explicacion": "En Laravel, los formularios POST deben incluir @csrf para enviar el token y evitar errores de validación CSRF."
+            },
+            {
+              "titulo": "Rellena el hueco de CSRF",
+              "dificultad": "Facil",
+              "enunciado": "Completa el hueco para añadir la protección CSRF al formulario.",
+              "codigo_base": "<form action=\"{{ route('clientes.store') }}\" method=\"post\">\n    ___\n    <input type=\"text\" name=\"nombre\">\n</form>",
+              "placeholder": "Escribe la directiva correcta",
+              "pista": "Empieza por arroba.",
+              "solucion": "<form action=\"{{ route('clientes.store') }}\" method=\"post\">\n    @csrf\n    <input type=\"text\" name=\"nombre\">\n</form>",
+              "explicacion": "@csrf inserta el token CSRF necesario en formularios POST."
+            },
+            {
+              "titulo": "Rellena la directiva de Blade",
+              "dificultad": "Facil",
+              "enunciado": "Completa el hueco para recorrer la colección $clientes en Blade.",
+              "codigo_base": "@___($clientes as $cliente)\n    <li>{{ $cliente->nombre }}</li>\n@endforeach",
+              "placeholder": "Escribe la directiva",
+              "pista": "Es la directiva más habitual para bucles.",
+              "solucion": "@foreach($clientes as $cliente)\n    <li>{{ $cliente->nombre }}</li>\n@endforeach",
+              "explicacion": "@foreach permite recorrer arrays o colecciones en Blade."
+            },
+            {
+              "titulo": "Qué hace old()",
+              "dificultad": "Facil",
+              "enunciado": "Explica qué hace este código dentro de un input.",
+              "codigo_base": "<input type=\"text\" name=\"nombre\" value=\"{{ old('nombre') }}\">",
+              "placeholder": "Explica la función de old('nombre')",
+              "pista": "Se usa mucho tras errores de validación.",
+              "solucion": "Recupera el valor anterior enviado en el campo nombre para no perderlo si el formulario falla y vuelve a mostrarse.",
+              "explicacion": "old() mantiene los datos introducidos por el usuario tras una redirección con errores."
+            },
+            {
+              "titulo": "Qué está mal en un controlador invokable",
+              "dificultad": "Media",
+              "enunciado": "Indica el error principal del siguiente controlador invokable.",
+              "codigo_base": "class PruebaController extends Controller\n{\n    public function invoke(Request $request)\n    {\n        return view('prueba');\n    }\n}",
+              "placeholder": "Explica qué está mal",
+              "pista": "El nombre del método mágico importa.",
+              "solucion": "El método debería llamarse __invoke() y no invoke().",
+              "explicacion": "En Laravel, los controladores invokable usan el método mágico __invoke para ser llamados automáticamente."
+            },
+            {
+              "titulo": "Rellena el método mágico correcto",
+              "dificultad": "Media",
+              "enunciado": "Completa el hueco para crear correctamente un controlador invokable.",
+              "codigo_base": "class PruebaController extends Controller\n{\n    public function ___(Request $request)\n    {\n        return view('prueba');\n    }\n}",
+              "placeholder": "Escribe el método correcto",
+              "pista": "Empieza por doble guion bajo.",
+              "solucion": "class PruebaController extends Controller\n{\n    public function __invoke(Request $request)\n    {\n        return view('prueba');\n    }\n}",
+              "explicacion": "__invoke permite que el controlador funcione como acción única."
+            },
+            {
+              "titulo": "Qué hace compact()",
+              "dificultad": "Facil",
+              "enunciado": "Explica qué hace este return.",
+              "codigo_base": "return view('clientes.index', compact('clientes'));",
+              "placeholder": "Describe qué hace compact('clientes')",
+              "pista": "Piensa en pasar datos a la vista.",
+              "solucion": "Carga la vista clientes.index y le pasa la variable $clientes para que pueda usarse dentro de la plantilla.",
+              "explicacion": "compact('clientes') crea un array asociativo con la variable clientes para enviarla a la vista."
+            },
+            {
+              "titulo": "Qué está mal en route()",
+              "dificultad": "Facil",
+              "enunciado": "Localiza el error del siguiente enlace Blade.",
+              "codigo_base": "<a href=\"{{ route('/clientes') }}\">Clientes</a>",
+              "placeholder": "Explica el error",
+              "pista": "route() no recibe una URL literal.",
+              "solucion": "route() debe recibir el nombre de una ruta, no la URL '/clientes'.",
+              "explicacion": "Si la ruta se llama clientes.index, lo correcto sería route('clientes.index')."
+            },
+            {
+              "titulo": "Rellena el enlace a una ruta nombrada",
+              "dificultad": "Facil",
+              "enunciado": "Completa el hueco para enlazar correctamente a la ruta llamada clientes.index.",
+              "codigo_base": "<a href=\"{{ route('___') }}\">Clientes</a>",
+              "placeholder": "Escribe el nombre de la ruta",
+              "pista": "Es un alias tipo recurso habitual.",
+              "solucion": "<a href=\"{{ route('clientes.index') }}\">Clientes</a>",
+              "explicacion": "route('clientes.index') genera la URL asociada a esa ruta nombrada."
+            },
+            {
+              "titulo": "Qué hace la validación",
+              "dificultad": "Media",
+              "enunciado": "Explica con tus palabras qué hace este código.",
+              "codigo_base": "$request->validate([\n    'nombre' => 'required|min:4',\n    'dni' => 'required|min:9'\n]);",
+              "placeholder": "Describe qué valida este fragmento",
+              "pista": "Piensa en campos obligatorios y longitud mínima.",
+              "solucion": "Valida que nombre y dni sean obligatorios y que nombre tenga al menos 4 caracteres y dni al menos 9.",
+              "explicacion": "validate() comprueba las reglas y, si fallan, redirige con errores automáticamente."
+            },
+            {
+              "titulo": "Qué está mal en la validación",
+              "dificultad": "Media",
+              "enunciado": "Detecta el error del siguiente código de validación.",
+              "codigo_base": "$request->validate([\n    nombre => 'required|min:4'\n]);",
+              "placeholder": "Explica el error",
+              "pista": "Observa la clave del array.",
+              "solucion": "La clave nombre debería ir entre comillas: 'nombre' => 'required|min:4'.",
+              "explicacion": "En PHP las claves de texto deben ir entre comillas si no son constantes definidas."
+            },
+            {
+              "titulo": "Rellena el hueco de errores",
+              "dificultad": "Media",
+              "enunciado": "Completa el hueco para comprobar si existen errores de validación en Blade.",
+              "codigo_base": "@if($errors->___())\n    <ul>\n        @foreach($errors->all() as $error)\n            <li>{{ $error }}</li>\n        @endforeach\n    </ul>\n@endif",
+              "placeholder": "Escribe el método correcto",
+              "pista": "Devuelve true si hay errores.",
+              "solucion": "@if($errors->any())\n    <ul>\n        @foreach($errors->all() as $error)\n            <li>{{ $error }}</li>\n        @endforeach\n    </ul>\n@endif",
+              "explicacion": "any() indica si el contenedor de errores tiene al menos uno."
+            },
+            {
+              "titulo": "Qué hace @extends",
+              "dificultad": "Facil",
+              "enunciado": "Explica la función de la siguiente línea en una vista Blade.",
+              "codigo_base": "@extends('layouts.app')",
+              "placeholder": "Explica qué hace @extends",
+              "pista": "Tiene que ver con plantillas base.",
+              "solucion": "Hace que la vista herede o use la plantilla base layouts.app como layout principal.",
+              "explicacion": "@extends permite reutilizar una estructura común y rellenar sus secciones."
+            },
+            {
+              "titulo": "Qué está mal en @section",
+              "dificultad": "Media",
+              "enunciado": "Detecta el problema en esta plantilla Blade.",
+              "codigo_base": "@extends('layouts.app')\n@section('contenido')\n    <h1>Hola</h1>",
+              "placeholder": "Explica qué falta",
+              "pista": "Las secciones deben cerrarse.",
+              "solucion": "Falta cerrar la sección con @endsection.",
+              "explicacion": "Las secciones largas en Blade necesitan @section ... @endsection."
+            },
+            {
+              "titulo": "Rellena la directiva para cerrar sección",
+              "dificultad": "Facil",
+              "enunciado": "Completa el hueco para cerrar correctamente una sección en Blade.",
+              "codigo_base": "@section('contenido')\n    <h1>Listado</h1>\n@___",
+              "placeholder": "Escribe la directiva correcta",
+              "pista": "Empieza por end.",
+              "solucion": "@section('contenido')\n    <h1>Listado</h1>\n@endsection",
+              "explicacion": "@endsection cierra una sección abierta con @section."
+            },
+            {
+              "titulo": "Qué hace php artisan serve",
+              "dificultad": "Facil",
+              "enunciado": "Indica qué hace el siguiente comando.",
+              "codigo_base": "php artisan serve",
+              "placeholder": "Explica para qué sirve",
+              "pista": "No crea proyectos ni migraciones.",
+              "solucion": "Levanta el servidor de desarrollo de Laravel, normalmente accesible en localhost:8000.",
+              "explicacion": "Sirve para probar la aplicación en local sin configurar Apache como entrada principal del proyecto."
+            },
+            {
+              "titulo": "Qué está mal en el archivo .env",
+              "dificultad": "Media",
+              "enunciado": "Señala el problema principal de esta configuración.",
+              "codigo_base": "DB_CONNECTION=mysql\nDB_HOST=127.0.0.1\nDB_PORT=3306\nDB_DATABASE=\nDB_USERNAME=root\nDB_PASSWORD=",
+              "placeholder": "Explica qué está mal o incompleto",
+              "pista": "Falta un dato clave para conectar.",
+              "solucion": "Falta indicar el nombre de la base de datos en DB_DATABASE.",
+              "explicacion": "Sin DB_DATABASE Laravel no sabrá a qué base de datos conectarse."
+            },
+            {
+              "titulo": "Qué hace un modelo Eloquent",
+              "dificultad": "Facil",
+              "enunciado": "Explica qué representa esta clase.",
+              "codigo_base": "class Libro extends Model\n{\n}",
+              "placeholder": "Describe qué papel tiene la clase",
+              "pista": "Piensa en tabla y ORM.",
+              "solucion": "Define un modelo Eloquent llamado Libro para trabajar con una tabla de la base de datos, normalmente libros.",
+              "explicacion": "Eloquent relaciona clases PHP con tablas y permite CRUD sin escribir SQL en muchos casos."
+            },
+            {
+              "titulo": "Qué está mal en el nombre de tabla",
+              "dificultad": "Media",
+              "enunciado": "Señala el error conceptual de esta afirmación: 'El modelo Libro se asocia por convención a la tabla libro'.",
+              "codigo_base": "class Libro extends Model\n{\n}",
+              "placeholder": "Explica qué está mal",
+              "pista": "Laravel pluraliza la tabla por defecto.",
+              "solucion": "Por convención, el modelo Libro se asocia a la tabla libros, no a libro.",
+              "explicacion": "Laravel usa el nombre del modelo en singular y genera el nombre de tabla en plural y minúsculas."
+            },
+            {
+              "titulo": "Rellena el hueco del modelo",
+              "dificultad": "Media",
+              "enunciado": "Completa el hueco para indicar que el modelo use la tabla mislibros.",
+              "codigo_base": "class Libro extends Model\n{\n    protected $table = '___';\n}",
+              "placeholder": "Escribe el nombre de la tabla",
+              "pista": "Es el nombre que da el enunciado.",
+              "solucion": "class Libro extends Model\n{\n    protected $table = 'mislibros';\n}",
+              "explicacion": "$table permite sobrescribir la tabla asociada por convención."
+            },
+            {
+              "titulo": "Qué hace Libro::all()",
+              "dificultad": "Facil",
+              "enunciado": "Explica qué hace la siguiente instrucción.",
+              "codigo_base": "$libros = Libro::all();",
+              "placeholder": "Describe qué devuelve",
+              "pista": "Piensa en colección completa.",
+              "solucion": "Obtiene todos los registros de la tabla asociada al modelo Libro.",
+              "explicacion": "all() devuelve una colección con todos los registros del modelo."
+            },
+            {
+              "titulo": "Qué está mal en findOrFail",
+              "dificultad": "Media",
+              "enunciado": "Localiza el problema en este código.",
+              "codigo_base": "$libro = Libro::findOrFail();",
+              "placeholder": "Explica qué falta",
+              "pista": "Ese método necesita localizar un registro concreto.",
+              "solucion": "Falta pasar el id o clave del registro a buscar.",
+              "explicacion": "findOrFail($id) necesita un identificador; si no encuentra el registro lanza una excepción 404."
+            },
+            {
+              "titulo": "Rellena el hueco de findOrFail",
+              "dificultad": "Facil",
+              "enunciado": "Completa el hueco para buscar un libro por su id.",
+              "codigo_base": "$libro = Libro::findOrFail(___);",
+              "placeholder": "Escribe la variable o valor que falta",
+              "pista": "Suele venir en el método del controlador.",
+              "solucion": "$libro = Libro::findOrFail($id);",
+              "explicacion": "findOrFail($id) busca un registro por id y falla con 404 si no existe."
+            },
+            {
+              "titulo": "Qué hace save()",
+              "dificultad": "Facil",
+              "enunciado": "Explica qué hace este código.",
+              "codigo_base": "$libro = new Libro();\n$libro->titulo = 'Nuevo libro';\n$libro->precio = 9.95;\n$libro->save();",
+              "placeholder": "Describe la operación realizada",
+              "pista": "No está actualizando un registro ya existente.",
+              "solucion": "Crea un nuevo objeto Libro, le asigna valores y lo guarda en la base de datos como un nuevo registro.",
+              "explicacion": "save() persiste el modelo; en un modelo nuevo realiza una inserción."
+            },
+            {
+              "titulo": "Qué está mal en una migración",
+              "dificultad": "Media",
+              "enunciado": "Detecta el error principal del siguiente método up.",
+              "codigo_base": "public function up()\n{\n    Schema::create('users', function (Blueprint $table) {\n        $table->id();\n        $table->string('name');\n    });\n",
+              "placeholder": "Explica qué está mal",
+              "pista": "Mira el cierre del método.",
+              "solucion": "Falta cerrar correctamente el método y las llaves finales del bloque.",
+              "explicacion": "El ejemplo está incompleto: deben cerrarse la función anónima, la llamada a Schema::create y el método up()."
+            },
+            {
+              "titulo": "Rellena el hueco de una migración",
+              "dificultad": "Media",
+              "enunciado": "Completa el hueco para hacer el campo email único.",
+              "codigo_base": "$table->string('email')->___();",
+              "placeholder": "Escribe el método que falta",
+              "pista": "Evita duplicados.",
+              "solucion": "$table->string('email')->unique();",
+              "explicacion": "unique() crea una restricción de unicidad en la columna."
+            },
+            {
+              "titulo": "Qué hace migrate:rollback",
+              "dificultad": "Media",
+              "enunciado": "Explica qué hace este comando.",
+              "codigo_base": "php artisan migrate:rollback",
+              "placeholder": "Describe su función",
+              "pista": "No ejecuta nuevas migraciones.",
+              "solucion": "Deshace las migraciones del último lote ejecutando el método down() de esas migraciones.",
+              "explicacion": "rollback revierte cambios recientes del esquema de base de datos."
+            },
+            {
+              "titulo": "Qué está mal en migrate:fresh en producción",
+              "dificultad": "Dificil",
+              "enunciado": "Explica por qué sería un error usar este comando en producción.",
+              "codigo_base": "php artisan migrate:fresh",
+              "placeholder": "Explica el problema",
+              "pista": "Piensa en los datos de las tablas.",
+              "solucion": "Es peligroso porque elimina todas las tablas y sus datos antes de recrearlas.",
+              "explicacion": "migrate:fresh es destructivo y solo debería usarse en desarrollo o pruebas controladas."
+            },
+            {
+              "titulo": "Qué hace una relación hasMany",
+              "dificultad": "Media",
+              "enunciado": "Explica qué representa este método.",
+              "codigo_base": "class Autor extends Model\n{\n    public function libros()\n    {\n        return $this->hasMany(Libro::class);\n    }\n}",
+              "placeholder": "Describe la relación",
+              "pista": "Un autor puede tener varios libros.",
+              "solucion": "Define una relación uno a muchos: un autor puede estar relacionado con muchos libros.",
+              "explicacion": "hasMany() indica que el modelo actual posee varios registros del modelo relacionado."
+            },
+            {
+              "titulo": "Qué está mal en belongsTo",
+              "dificultad": "Media",
+              "enunciado": "Detecta el error del siguiente código.",
+              "codigo_base": "class Libro extends Model\n{\n    public function autor()\n    {\n        return $this->belongsTo('Autor');\n    }\n}",
+              "placeholder": "Explica qué está mal o mejorable",
+              "pista": "En clase se suele usar la referencia de clase.",
+              "solucion": "Lo habitual y recomendado es usar Autor::class en lugar de una cadena literal.",
+              "explicacion": "return $this->belongsTo(Autor::class); es más seguro y coherente con Laravel moderno."
+            },
+            {
+              "titulo": "Rellena el hueco de la relación",
+              "dificultad": "Media",
+              "enunciado": "Completa el hueco para indicar que un libro pertenece a un autor.",
+              "codigo_base": "return $this->___(Autor::class);",
+              "placeholder": "Escribe el método correcto",
+              "pista": "Es la relación inversa de hasMany.",
+              "solucion": "return $this->belongsTo(Autor::class);",
+              "explicacion": "belongsTo indica que el modelo actual pertenece a otro modelo relacionado."
+            },
+            {
+              "titulo": "Qué hace with('autor')",
+              "dificultad": "Dificil",
+              "enunciado": "Explica qué hace este código y por qué es útil.",
+              "codigo_base": "$libros = Libro::with('autor')->get();",
+              "placeholder": "Describe la operación y su ventaja",
+              "pista": "Tiene relación con el problema N+1.",
+              "solucion": "Carga los libros junto con su relación autor mediante eager loading, evitando consultas repetidas al acceder al autor de cada libro.",
+              "explicacion": "with('autor') reduce el número de consultas y mejora el rendimiento."
+            },
+            {
+              "titulo": "Qué está mal en una redirección",
+              "dificultad": "Media",
+              "enunciado": "Localiza el fallo en este método de controlador.",
+              "codigo_base": "public function store(Request $request)\n{\n    redirect()->route('inicio');\n}",
+              "placeholder": "Explica el error",
+              "pista": "La redirección debe surtir efecto.",
+              "solucion": "Falta devolver la redirección con return.",
+              "explicacion": "Lo correcto es return redirect()->route('inicio'); para que la respuesta sea la redirección."
+            },
+            {
+              "titulo": "Rellena el hueco de redirección con mensaje",
+              "dificultad": "Media",
+              "enunciado": "Completa el hueco para redirigir a inicio enviando un mensaje flash.",
+              "codigo_base": "return redirect()->route('inicio')->___('mensaje', 'Guardado correctamente');",
+              "placeholder": "Escribe el método correcto",
+              "pista": "Añade datos a la siguiente petición.",
+              "solucion": "return redirect()->route('inicio')->with('mensaje', 'Guardado correctamente');",
+              "explicacion": "with() añade datos flash a la sesión para mostrarlos en la siguiente carga."
+            },
+            {
+              "titulo": "Qué está mal en un helper no cargado",
+              "dificultad": "Dificil",
+              "enunciado": "La función setActivo() existe en app/helpers.php pero Laravel dice que no está definida. ¿Qué suele faltar?",
+              "codigo_base": "function setActivo($nombreRuta)\n{\n    return request()->routeIs($nombreRuta) ? 'activo' : '';\n}",
+              "placeholder": "Explica qué suele faltar para que funcione",
+              "pista": "Piensa en composer.json y el autoload.",
+              "solucion": "Suele faltar registrar el archivo en composer.json dentro de autoload/files y ejecutar composer dump-autoload.",
+              "explicacion": "Laravel carga clases automáticamente, pero no archivos sueltos de funciones si no se indican en el autoload."
+            },
+            {
+              "titulo": "Qué hace request()->routeIs()",
+              "dificultad": "Media",
+              "enunciado": "Explica para qué sirve esta expresión.",
+              "codigo_base": "request()->routeIs('inicio') ? 'activo' : ''",
+              "placeholder": "Describe qué comprueba",
+              "pista": "Se usa mucho en menús.",
+              "solucion": "Comprueba si la ruta actual coincide con el nombre indicado y devuelve 'activo' si coincide.",
+              "explicacion": "Es útil para resaltar enlaces de navegación según la ruta actual."
+            },
+            {
+              "titulo": "Qué está mal en make:model",
+              "dificultad": "Media",
+              "enunciado": "Detecta el problema conceptual en este comando si se pretende crear también migración y controlador resource.",
+              "codigo_base": "php artisan make:model Libro",
+              "placeholder": "Explica por qué no cumple el objetivo",
+              "pista": "Faltan opciones adicionales.",
+              "solucion": "Ese comando solo crea el modelo; para crear también migración y controlador resource habría que usar algo como php artisan make:model Libro -mcr.",
+              "explicacion": "Las banderas -m, -c y -r amplían la generación automática de archivos."
             }
           ]
         },
